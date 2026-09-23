@@ -51,14 +51,14 @@ Plataforma web institucional del **Instituto de Investigación en Inteligencia C
 ### 1. Clonar y configurar base de datos
 En PostgreSQL, crea la base de datos:
 ```sql
-CREATE DATABASE cursos_iiiccd;
+CREATE DATABASE cursos_2;
 ```
 
-Si tus credenciales locales difieren de `postgres/postgres`, configúralas en `src/main/resources/application.properties` o pásalas por variables de entorno:
+Si tus credenciales locales difieren de `postgres/fer123`, configúralas en `src/main/resources/application.properties` o pásalas por variables de entorno:
 ```properties
-spring.datasource.url=jdbc:postgresql://localhost:5432/cursos_iiiccd
-spring.datasource.username=tu_usuario
-spring.datasource.password=tu_contrasena
+spring.datasource.url=jdbc:postgresql://localhost:5432/cursos_2
+spring.datasource.username=postgres
+spring.datasource.password=fer123
 ```
 
 ### 2. Ejecutar la aplicación
