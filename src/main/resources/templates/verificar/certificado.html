@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/main :: head('Validación de Certificados')}"></head>
+<body>
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <div class="container" style="margin-top: 1.5rem;">
+        <div th:replace="~{fragments/alerts :: alerts}"></div>
+    </div>
+
+    <div class="container" style="padding: 3rem 1.5rem; max-width: 800px;">
+        <div class="section-header">
+            <span class="section-tag">Transparencia y Seguridad</span>
+            <h1 class="section-title">Validación de Certificados</h1>
+            <p>Ingresa el código único alfanumérico que figura al pie del documento oficial para verificar su autenticidad y registro en el IIICCD.</p>
+        </div>
+
+        <!-- Formulario de Búsqueda -->
+        <div class="card card-body" style="padding: 2rem; margin-bottom: 2.5rem; background: #FFFFFF; border-top: 4px solid var(--accent);">
+            <form th:action="@{/verificar}" method="get">
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 250px;">
+                        <input type="text" name="codigo" class="form-control" style="font-size: 1.1rem; text-transform: uppercase;"
+                               placeholder="Ej. IIICCD-A3F7K9" th:value="${codigoBuscado}" required autofocus>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="padding: 0.75rem 2rem;">
+                        🔍 Validar Código
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Resultado: Certificado Encontrado -->
+        <div th:if="${encontrado == true}" class="card card-body"
+             style="border: 2px solid var(--success); border-radius: var(--radius-md); padding: 2.5rem; background: #FAFCFA;">
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                <div style="width: 54px; height: 54px; border-radius: 50%; background: var(--success-light); color: var(--success); font-size: 1.8rem; display: flex; align-items: center; justify-content: center;">
+                    ✓
+                </div>
+                <div>
+                    <span class="badge badge-success" style="font-size: 0.85rem;">Documento Oficial Auténtico</span>
+                    <h2 style="font-size: 1.45rem; color: var(--success); margin-top: 0.2rem;">Certificado Válido y Registrado</h2>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; border-top: 1px solid var(--border); padding-top: 1.5rem;">
+                <div>
+                    <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Participante:</span>
+                    <div style="font-size: 1.15rem; font-weight: 800; color: var(--text);" th:text="${certificado.nombreParticipante}">
+                        Nombre
+                    </div>
+                </div>
+
+                <div>
+                    <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Código de Verificación:</span>
+                    <div style="font-family: monospace; font-size: 1.15rem; font-weight: 800; color: var(--primary);" th:text="${certificado.codigoVerificacion}">
+                        IIICCD-XXXXXX
+                    </div>
+                </div>
+
+                <div style="grid-column: 1 / -1;">
+                    <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Curso Especializado:</span>
+                    <div style="font-size: 1.25rem; font-weight: 700; color: var(--primary);" th:text="${certificado.nombreCurso}">
+                        Curso
+                    </div>
+                </div>
+
+                <div>
+                    <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Línea de Investigación:</span>
+                    <div style="font-weight: 600;" th:text="${certificado.lineaInvestigacion}">Línea</div>
+                </div>
+
+                <div>
+                    <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Área:</span>
+                    <div style="font-weight: 600;" th:text="${certificado.areaInvestigacion}">Área</div>
+                </div>
+
+                <div>
+                    <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Docente Responsable:</span>
+                    <div th:text="${certificado.docente}">Docente</div>
+                </div>
+
+                <div>
+                    <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Duración:</span>
+                    <div th:text="${certificado.duracion}">40 horas</div>
+                </div>
+
+                <div>
+                    <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Fecha de Emisión:</span>
+                    <div th:text="${#temporals.format(certificado.fechaEmision, 'dd/MM/yyyy')}">Fecha</div>
+                </div>
+
+                <div>
+                    <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Institución Emisora:</span>
+                    <div>IIICCD - FINESI / UNA Puno</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resultado: No Encontrado -->
+        <div th:if="${encontrado == false}" class="alert alert-danger" style="padding: 2rem;">
+            <div style="font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem;">
+                ❌ Certificado No Encontrado
+            </div>
+            <p style="margin-bottom: 0;">
+                No existe ningún certificado registrado con el código ingresado. Asegúrate de escribirlo exactamente como figura en el documento (incluyendo el prefijo <code>IIICCD-</code>).
+            </p>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/main :: head('Mi Panel de Participante')}"></head>
+<body>
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <div class="container" style="margin-top: 1.5rem;">
+        <div th:replace="~{fragments/alerts :: alerts}"></div>
+    </div>
+
+    <div class="container" style="padding: 2.5rem 1.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+            <div>
+                <h1 style="font-size: 2rem; margin-bottom: 0.25rem;">Panel del Participante</h1>
+                <p style="color: var(--text-muted);">Bienvenido(a), <strong th:text="${usuario.nombreCompleto}">Usuario</strong></p>
+            </div>
+            <a th:href="@{/catalogo}" class="btn btn-primary">+ Explorar Nuevos Cursos</a>
+        </div>
+
+        <div th:if="${inscripciones.empty}" class="card card-body" style="text-align: center; padding: 4rem 2rem;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">🎓</div>
+            <h3>Aún no estás inscrito en ningún curso</h3>
+            <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Explora nuestra oferta de capacitación e inscríbete a través de Yape.</p>
+            <div>
+                <a th:href="@{/catalogo}" class="btn btn-primary">Ir al Catálogo de Cursos</a>
+            </div>
+        </div>
+
+        <div th:unless="${inscripciones.empty}" style="display: flex; flex-direction: column; gap: 1.5rem;">
+            <div th:each="ins : ${inscripciones}" class="card card-body" style="border-left: 6px solid var(--primary);">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+                    <div>
+                        <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem; align-items: center;">
+                            <span class="badge badge-secondary" th:text="${ins.curso.areaInvestigacion.lineaInvestigacion.nombre}">Línea</span>
+                            
+                            <!-- Badges de Estado -->
+                            <span th:if="${ins.estado.name() == 'PENDIENTE_PAGO'}" class="badge badge-warning">Pendiente de Pago</span>
+                            <span th:if="${ins.estado.name() == 'PENDIENTE_VERIFICACION'}" class="badge badge-warning">En Verificación</span>
+                            <span th:if="${ins.estado.name() == 'APROBADA'}" class="badge badge-success">Pago Aprobado (Activo)</span>
+                            <span th:if="${ins.estado.name() == 'RECHAZADA'}" class="badge badge-danger">Pago Observado/Rechazado</span>
+                            <span th:if="${ins.estado.name() == 'COMPLETADA'}" class="badge badge-accent">Curso Completado (Certificado Listo)</span>
+                        </div>
+
+                        <h3 style="font-size: 1.35rem; margin-bottom: 0.5rem;" th:text="${ins.curso.nombre}">Nombre del Curso</h3>
+                        <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">
+                            Docente: <strong th:text="${ins.curso.docenteResponsable}">Docente</strong> &bull;
+                            Duración: <strong th:text="${ins.curso.duracion}">40h</strong> &bull;
+                            Inscrito el: <span th:text="${#temporals.format(ins.fechaInscripcion, 'dd/MM/yyyy HH:mm')}">Fecha</span>
+                        </p>
+
+                        <!-- Observaciones de rechazo si las hay -->
+                        <div th:if="${ins.notasAdmin != null}" style="margin-top: 0.75rem; background: var(--danger-light); padding: 0.75rem; border-radius: var(--radius-sm); color: var(--danger); font-size: 0.88rem;">
+                            <strong>Motivo de observación:</strong> <span th:text="${ins.notasAdmin}">Motivo</span>
+                        </div>
+
+                        <!-- Enlace de Clase Zoom/Meet si está APROBADA o COMPLETADA -->
+                        <div th:if="${ins.estado.name() == 'APROBADA' or ins.estado.name() == 'COMPLETADA'}"
+                             style="margin-top: 1rem; background: var(--success-light); padding: 0.85rem 1.25rem; border-radius: var(--radius-sm); border-left: 3px solid var(--success);">
+                            <strong style="color: var(--success);">Acceso a Sesiones Virtuales:</strong>
+                            <div th:if="${ins.curso.enlaceClase != null and !ins.curso.enlaceClase.empty}">
+                                <a th:href="${ins.curso.enlaceClase}" target="_blank" class="btn btn-sm btn-success" style="margin-top: 0.5rem;">
+                                    📹 Unirse a la Clase (Zoom / Meet) &rarr;
+                                </a>
+                            </div>
+                            <div th:unless="${ins.curso.enlaceClase != null and !ins.curso.enlaceClase.empty}" style="font-size: 0.88rem; color: var(--secondary); margin-top: 0.2rem;">
+                                El enlace será habilitado por la coordinación antes de la primera sesión.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Acciones según estado -->
+                    <div style="display: flex; flex-direction: column; gap: 0.75rem; min-width: 200px;">
+                        <a th:if="${ins.estado.name() == 'PENDIENTE_PAGO' or ins.estado.name() == 'RECHAZADA'}"
+                           th:href="@{'/inscripcion/' + ${ins.id}}"
+                           class="btn btn-primary">
+                            Subir Voucher Yape
+                        </a>
+
+                        <div th:if="${ins.estado.name() == 'PENDIENTE_VERIFICACION'}" style="font-size: 0.85rem; color: var(--warning); text-align: center;">
+                            ⏳ Comprobante en revisión por la directiva
+                        </div>
+
+                        <a th:if="${ins.estado.name() == 'COMPLETADA' and ins.certificado != null}"
+                           th:href="@{'/participante/certificado/' + ${ins.id}}"
+                           class="btn btn-outline-primary">
+                            📜 Ver Certificado
+                        </a>
+
+                        <a th:if="${ins.estado.name() == 'COMPLETADA' and ins.certificado != null}"
+                           th:href="@{'/participante/certificado/' + ${ins.id} + '/pdf'}"
+                           class="btn btn-sm btn-secondary">
+                            📥 Descargar PDF
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

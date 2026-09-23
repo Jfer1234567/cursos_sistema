@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/main :: head('Pagos Pendientes de Verificación')}"></head>
+<body>
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <div class="container" style="margin-top: 1.5rem;">
+        <div th:replace="~{fragments/alerts :: alerts}"></div>
+    </div>
+
+    <div class="container" style="padding: 2.5rem 1.5rem;">
+        <div style="margin-bottom: 2rem;">
+            <a th:href="@{/admin}" class="btn btn-sm btn-outline">&larr; Volver al Panel</a>
+            <h1 style="font-size: 1.85rem; margin-top: 0.5rem;">Bandeja de Pagos por Verificar</h1>
+            <p style="color: var(--text-muted); font-size: 0.95rem;">Comprobantes de Yape subidos por participantes que requieren revisión manual.</p>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <div th:if="${inscripciones.empty}" style="text-align: center; padding: 4rem 2rem; color: var(--text-muted);">
+                    <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">✅</div>
+                    <h3>¡Al día! No hay pagos pendientes de revisión</h3>
+                    <p>Todos los comprobantes subidos han sido aprobados o procesados.</p>
+                </div>
+
+                <div th:unless="${inscripciones.empty}" class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Participante</th>
+                                <th>Curso Solicitado</th>
+                                <th>Monto</th>
+                                <th>Nro Operación</th>
+                                <th>Fecha Envío</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="ins : ${inscripciones}">
+                                <td>
+                                    <strong th:text="${ins.usuario.nombreCompleto}">Nombre</strong>
+                                    <div style="font-size: 0.8rem; color: var(--text-muted);" th:text="${ins.usuario.correo}">correo</div>
+                                </td>
+                                <td>
+                                    <div th:text="${ins.curso.nombre}" style="font-weight: 600;">Curso</div>
+                                    <div th:text="${ins.curso.areaInvestigacion.lineaInvestigacion.nombre}" style="font-size: 0.8rem; color: var(--text-muted);">Línea</div>
+                                </td>
+                                <td>
+                                    <strong th:text="${'S/ ' + ins.curso.precio}" style="color: var(--primary);">S/ 120.00</strong>
+                                </td>
+                                <td>
+                                    <span th:if="${ins.pago != null}">
+                                        <code th:text="${ins.pago.referenciaExterna}">12839182</code>
+                                    </span>
+                                </td>
+                                <td th:text="${#temporals.format(ins.fechaInscripcion, 'dd/MM/yyyy HH:mm')}">Fecha</td>
+                                <td>
+                                    <a th:href="@{'/admin/inscripciones/' + ${ins.id}}" class="btn btn-sm btn-primary">
+                                        🔍 Revisar y Validar
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

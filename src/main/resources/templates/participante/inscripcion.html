@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/main :: head('Completar Inscripción y Pago Yape')}"></head>
+<body>
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <div class="container" style="margin-top: 1.5rem;">
+        <div th:replace="~{fragments/alerts :: alerts}"></div>
+    </div>
+
+    <div class="container" style="padding: 2.5rem 1.5rem; max-width: 900px;">
+        <div style="margin-bottom: 1.5rem;">
+            <a th:href="@{/participante/dashboard}" class="btn btn-sm btn-outline">&larr; Volver a Mis Cursos</a>
+        </div>
+
+        <div class="card card-body" style="border-top: 5px solid var(--primary); padding: 2.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem;">
+                <div>
+                    <span class="badge badge-primary" style="margin-bottom: 0.5rem;">Paso de Pago</span>
+                    <h1 style="font-size: 1.85rem;" th:text="${inscripcion.curso.nombre}">Curso</h1>
+                    <p style="color: var(--text-muted); margin-bottom: 0;">
+                        Inversión total a cancelar: <strong style="color: var(--primary); font-size: 1.25rem;" th:text="${'S/ ' + inscripcion.curso.precio}">S/ 150.00</strong>
+                    </p>
+                </div>
+                <div th:if="${inscripcion.estado.name() == 'RECHAZADA'}" class="badge badge-danger">
+                    Pago Rechazado - Vuelva a enviar
+                </div>
+            </div>
+
+            <!-- Observación previa si fue rechazado -->
+            <div th:if="${inscripcion.notasAdmin != null}" class="alert alert-danger" style="margin-bottom: 2rem;">
+                <div>
+                    <strong>Observación del Administrador:</strong>
+                    <div th:text="${inscripcion.notasAdmin}">Motivo del rechazo</div>
+                </div>
+            </div>
+
+            <!-- Datos de Yape -->
+            <div style="background: #F8FAFC; border: 1px solid var(--border); border-radius: var(--radius-md); padding: 2rem; margin-bottom: 2.5rem;">
+                <h3 style="color: var(--primary); margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
+                    📱 Datos Oficiales para Pago por Yape
+                </h3>
+
+                <div style="display: grid; grid-template-columns: 1fr 180px; gap: 2rem; align-items: center;">
+                    <div>
+                        <div style="margin-bottom: 1rem;">
+                            <span style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Número de Celular:</span>
+                            <div style="font-size: 1.8rem; font-weight: 800; color: #7209B7; letter-spacing: 1px;" th:text="${configPago.numeroYape}">
+                                951 234 567
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 1rem;">
+                            <span style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Titular de la Cuenta:</span>
+                            <div style="font-size: 1.1rem; font-weight: 700; color: var(--text);" th:text="${configPago.titularYape}">
+                                Leonid Alemán Gonzales
+                            </div>
+                        </div>
+
+                        <div style="white-space: pre-line; font-size: 0.88rem; color: var(--secondary); line-height: 1.6;"
+                             th:text="${configPago.instrucciones}">
+                            Instrucciones para realizar el pago por Yape.
+                        </div>
+                    </div>
+
+                    <div style="text-align: center;">
+                        <img th:src="${configPago.qrImagenUrl != null ? configPago.qrImagenUrl : '/images/yape-qr-default.png'}"
+                             alt="QR de Pago Yape"
+                             style="width: 170px; height: 170px; object-fit: contain; border-radius: var(--radius-sm); border: 2px solid #7209B7; background: #FFFFFF; padding: 4px;">
+                        <span style="display: block; font-size: 0.75rem; color: var(--text-muted); margin-top: 0.3rem;">Escanea desde tu app Yape</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Formulario de Subida del Comprobante -->
+            <div>
+                <h3 style="margin-bottom: 1rem;">Subir Comprobante de Pago</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
+                    Por favor, adjunta la captura de pantalla legible del voucher de Yape y escribe el número de operación que figura en tu aplicativo.
+                </p>
+
+                <form th:action="@{'/inscripcion/' + ${inscripcion.id} + '/pago'}" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label class="form-label" for="referenciaExterna">Número de Operación / Código de Aprobación *</label>
+                        <input type="text" id="referenciaExterna" name="referenciaExterna" class="form-control" required placeholder="Ej. 12849302">
+                        <span class="form-text">Aparece en la parte inferior de tu voucher de Yape.</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="comprobante">Captura o PDF del Comprobante *</label>
+                        <input type="file" id="comprobante" name="comprobante" class="form-control" accept="image/*,application/pdf" required>
+                        <span class="form-text">Formatos permitidos: JPG, PNG o PDF (Máximo 5MB).</span>
+                    </div>
+
+                    <button type="submit" class="btn btn-lg btn-primary btn-block" style="margin-top: 1.5rem;">
+                        Enviar Comprobante para Verificación
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/main :: head('Quiénes Somos')}"></head>
+<body>
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <div class="container" style="margin-top: 1.5rem;">
+        <div th:replace="~{fragments/alerts :: alerts}"></div>
+    </div>
+
+    <div class="container" style="padding: 3rem 1.5rem;">
+        <div class="section-header">
+            <span class="section-tag">Marco Institucional</span>
+            <h1 class="section-title">Quiénes Somos</h1>
+            <p>Conoce la misión, visión y equipo de investigadores que lideran el Instituto de Investigación en Inteligencia Computacional y Ciencia de Datos (IIICCD).</p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; margin-bottom: 4rem;">
+            <div class="card card-body" style="border-top: 4px solid var(--primary);">
+                <h3 style="color: var(--primary); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                    🎯 Nuestra Misión
+                </h3>
+                <p>
+                    Fomentar, desarrollar y difundir la investigación científica rigurosa y la innovación tecnológica en las áreas de Inteligencia Artificial, Métodos Computacionales y Ciencia de Datos, aportando soluciones de alto impacto a las problemáticas sociales, económicas y productivas del país.
+                </p>
+            </div>
+
+            <div class="card card-body" style="border-top: 4px solid var(--accent);">
+                <h3 style="color: var(--accent); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                    🔭 Nuestra Visión
+                </h3>
+                <p>
+                    Consolidarnos como el centro de excelencia y referente científico en Inteligencia Computacional y Analítica Avanzada en el Perú y Latinoamérica, reconocidos por la calidad de nuestros investigadores, publicaciones de impacto y programas de formación de primer nivel.
+                </p>
+            </div>
+        </div>
+
+        <!-- Directiva Actual -->
+        <div style="margin-top: 3rem;">
+            <div class="section-header">
+                <span class="section-tag">Liderazgo</span>
+                <h2 class="section-title">Directiva Institucional</h2>
+                <p>Docentes investigadores responsables de la dirección estratégica, académica y administrativa del IIICCD.</p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2rem;">
+                <div class="card" style="text-align: center; padding: 2rem;">
+                    <div style="width: 80px; height: 80px; border-radius: 50%; background: #FDF2F2; color: var(--primary); font-size: 2rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem;">
+                        👨‍🏫
+                    </div>
+                    <span class="badge badge-primary" style="margin-bottom: 0.75rem;">Director</span>
+                    <h3 style="font-size: 1.15rem; margin-bottom: 0.5rem;">Leonid Alemán Gonzales</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0;">Facultad de Ingeniería Estadística e Informática</p>
+                </div>
+
+                <div class="card" style="text-align: center; padding: 2rem;">
+                    <div style="width: 80px; height: 80px; border-radius: 50%; background: #EFF6FF; color: #1E40AF; font-size: 2rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem;">
+                        📝
+                    </div>
+                    <span class="badge badge-secondary" style="margin-bottom: 0.75rem;">Secretario</span>
+                    <h3 style="font-size: 1.15rem; margin-bottom: 0.5rem;">Ángel Javier Quispe Carita</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0;">Docente Investigador FINESI</p>
+                </div>
+
+                <div class="card" style="text-align: center; padding: 2rem;">
+                    <div style="width: 80px; height: 80px; border-radius: 50%; background: #FEF3C7; color: #92400E; font-size: 2rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem;">
+                        💼
+                    </div>
+                    <span class="badge badge-warning" style="margin-bottom: 0.75rem;">Tesorero</span>
+                    <h3 style="font-size: 1.15rem; margin-bottom: 0.5rem;">Renzo Apaza Cutipa</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0;">Docente Investigador FINESI</p>
+                </div>
+
+                <div class="card" style="text-align: center; padding: 2rem;">
+                    <div style="width: 80px; height: 80px; border-radius: 50%; background: #E6F4F0; color: #065F46; font-size: 2rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem;">
+                        🚀
+                    </div>
+                    <span class="badge badge-success" style="margin-bottom: 0.75rem;">Director de Actividades</span>
+                    <h3 style="font-size: 1.15rem; margin-bottom: 0.5rem;">Roberto Elvis Roque Claros</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0;">Coordinación y Extensión Universitaria</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title} + ' — IIICCD | UNA Puno'">IIICCD — Instituto de Investigación UNA Puno</title>
+    <link rel="icon" th:href="@{/images/logo-iiiccd.jpg}" type="image/jpeg">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/components.css}">
+    <link rel="stylesheet" th:href="@{/css/pages.css}">
+    <script th:src="@{/js/main.js}" defer></script>
+</head>
+<body>
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <div class="container" style="margin-top: 1.5rem;">
+        <div th:replace="~{fragments/alerts :: alerts}"></div>
+    </div>
+
+    <main class="main-content">
+        <!-- Contenido dinámico inyectado por cada página -->
+        <div th:replace="${content}"></div>
+    </main>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

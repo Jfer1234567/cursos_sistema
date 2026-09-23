@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<footer th:fragment="footer" class="site-footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4>IIICCD - FINESI</h4>
+                <p>Instituto de Investigación en Inteligencia Computacional y Ciencia de Datos adscrito a la Facultad de Ingeniería Estadística e Informática de la Universidad Nacional del Altiplano - Puno.</p>
+                <p style="margin-top: 0.5rem; font-size: 0.85rem; color: #D1D5DB;">Comprometidos con la excelencia científica y la capacitación tecnológica de alto nivel.</p>
+            </div>
+
+            <div class="footer-col">
+                <h4>Líneas</h4>
+                <ul class="footer-links">
+                    <li><a th:href="@{/catalogo(lineaId=1)}">Ciencias de la Computación</a></li>
+                    <li><a th:href="@{/catalogo(lineaId=2)}">Ciencia de Datos</a></li>
+                    <li><a th:href="@{/catalogo(lineaId=3)}">Investigación Aplicada</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Enlaces Rápidos</h4>
+                <ul class="footer-links">
+                    <li><a th:href="@{/catalogo}">Catálogo de Cursos</a></li>
+                    <li><a th:href="@{/quienes-somos}">Directiva Institucional</a></li>
+                    <li><a th:href="@{/verificar}">Validación de Certificados</a></li>
+                    <li><a th:href="@{/contacto}">Mesa de Ayuda</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Sede Académica</h4>
+                <p>Ciudad Universitaria, Av. Floral Nº 1153<br>Pabellón FINESI, Puno - Perú</p>
+                <p style="margin-top: 0.5rem;">Email: iiiccd@unap.edu.pe<br>WhatsApp: +51 951 234 567</p>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <span>&copy; <span th:text="${#dates.year(#dates.createNow())}">2026</span> IIICCD - FINESI / UNA Puno. Todos los derechos reservados.</span>
+            <span>Sistema Oficial de Gestión Académica y Certificación</span>
+        </div>
+    </div>
+</footer>
+</html>

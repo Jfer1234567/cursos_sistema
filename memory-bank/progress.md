@@ -1,0 +1,32 @@
+# Progreso (Progress)
+
+**Tareas Completadas:**
+- [x] Configuración inicial y creación de estructura `memory-bank/`.
+- [x] Inicialización del proyecto Spring Boot con Gradle (Java 17).
+- [x] Configuración de `application.properties` para PostgreSQL, correo y uploads.
+- [x] Creación de entidades JPA (`Usuario`, `LineaInvestigacion`, `AreaInvestigacion`, `Curso`, `Inscripcion`, `Pago`, `Certificado`, `ConfigPago`) y enums asociados.
+- [x] Implementación de repositorios Spring Data JPA con consultas especializadas.
+- [x] Configuración de Spring Security con login por formulario, roles `PARTICIPANTE` y `ADMIN`, y codificación BCrypt.
+- [x] Creación del `DataInitializer` para sembrar las 3 líneas, 11 áreas, usuario administrador y configuración inicial de Yape.
+- [x] Sistema de diseño CSS modular institucional (`main.css`, `components.css`, `pages.css`) inspirado en los colores de la FINESI y del logo.
+- [x] Implementación de todas las páginas públicas:
+  - Portal de inicio (`/`) con estadísticas institucionales y destacados.
+  - Quiénes Somos (`/quienes-somos`) con reseña y directiva completa.
+  - Líneas de Investigación (`/lineas-investigacion`).
+  - Catálogo de Cursos (`/catalogo`) con buscador interactivo y filtro por línea.
+  - Detalle del curso (`/cursos/{id}`).
+  - Contacto institucional (`/contacto`).
+- [x] Autenticación y registro con DNI, correo institucional y validaciones Jakarta.
+- [x] Panel del Participante (`/participante/dashboard`, `/participante/perfil`, `/participante/certificado/{id}`).
+- [x] Flujo de inscripción y cobro con Yape, subida de vouchers y código de operación.
+- [x] Panel de Administración completo:
+  - Métricas en tiempo real (`/admin`).
+  - CRUD de cursos (`/admin/cursos`).
+  - Bandeja de revisión de comprobantes de pago (`/admin/inscripciones/pendientes`).
+  - Aprobación de pago con deducción de cupos y rechazo con notas explicativas.
+  - Marcado manual de curso completado con emisión automática de certificado.
+  - Edición en caliente de datos de Yape y QR (`/admin/config/pago`).
+  - Histórico de certificados (`/admin/certificados`).
+- [x] Motor de generación de certificados en PDF con OpenPDF y código único `IIICCD-XXXXXX`.
+- [x] Verificador público de autenticidad de certificados (`/verificar`).
+- [x] Suite de pruebas automatizadas con Gradle y H2 ejecutada con 100% de éxito.

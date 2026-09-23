@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/main :: head('Registro de Participante')}"></head>
+<body>
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <div class="container" style="margin-top: 1.5rem;">
+        <div th:replace="~{fragments/alerts :: alerts}"></div>
+    </div>
+
+    <div class="container">
+        <div class="auth-wrapper" style="max-width: 600px;">
+            <div class="card card-body" style="padding: 2.5rem; border-top: 4px solid var(--primary);">
+                <div class="auth-header">
+                    <img th:src="@{/images/logo-iiiccd.jpg}" alt="Logo IIICCD" style="height: 64px; margin-bottom: 1rem;">
+                    <h2 style="font-size: 1.6rem; color: var(--primary);">Registro de Participante</h2>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">Crea tu cuenta institucional para inscribirte a los cursos del IIICCD.</p>
+                </div>
+
+                <form th:action="@{/registro}" th:object="${registroDTO}" method="post">
+                    <div class="form-group">
+                        <label class="form-label" for="nombreCompleto">Nombre Completo (para certificados) *</label>
+                        <input type="text" id="nombreCompleto" th:field="*{nombreCompleto}" class="form-control" placeholder="Ej. Juan Pérez García">
+                        <div th:if="${#fields.hasErrors('nombreCompleto')}" th:errors="*{nombreCompleto}" class="form-error"></div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label class="form-label" for="tipoDocumento">Tipo Doc. *</label>
+                            <select id="tipoDocumento" th:field="*{tipoDocumento}" class="form-select">
+                                <option th:each="td : ${T(com.academy.cursos.model.enums.TipoDocumento).values()}"
+                                        th:value="${td}" th:text="${td}">DNI</option>
+                            </select>
+                            <div th:if="${#fields.hasErrors('tipoDocumento')}" th:errors="*{tipoDocumento}" class="form-error"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="numeroDocumento">Número de Documento *</label>
+                            <input type="text" id="numeroDocumento" th:field="*{numeroDocumento}" class="form-control" placeholder="Ej. 74839201">
+                            <div th:if="${#fields.hasErrors('numeroDocumento')}" th:errors="*{numeroDocumento}" class="form-error"></div>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label class="form-label" for="correo">Correo Electrónico *</label>
+                            <input type="email" id="correo" th:field="*{correo}" class="form-control" placeholder="juan.perez@ejemplo.com">
+                            <div th:if="${#fields.hasErrors('correo')}" th:errors="*{correo}" class="form-error"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="telefono">Teléfono / WhatsApp *</label>
+                            <input type="text" id="telefono" th:field="*{telefono}" class="form-control" placeholder="951234567">
+                            <div th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}" class="form-error"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="institucionProcedencia">Institución de Procedencia *</label>
+                        <input type="text" id="institucionProcedencia" th:field="*{institucionProcedencia}" class="form-control" placeholder="Ej. UNA Puno, UNI, Empresa XYZ">
+                        <div th:if="${#fields.hasErrors('institucionProcedencia')}" th:errors="*{institucionProcedencia}" class="form-error"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="password">Contraseña de Acceso *</label>
+                        <input type="password" id="password" th:field="*{password}" class="form-control" placeholder="Mínimo 6 caracteres">
+                        <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="form-error"></div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block" style="margin-top: 1.5rem;">
+                        Completar Registro
+                    </button>
+                </form>
+
+                <div style="margin-top: 1.5rem; text-align: center; border-top: 1px solid var(--border-subtle); padding-top: 1.25rem; font-size: 0.9rem;">
+                    ¿Ya tienes una cuenta registrada? <a th:href="@{/login}" style="font-weight: 600;">Inicia sesión</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/main :: head('Revisión de Comprobante')}"></head>
+<body>
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <div class="container" style="margin-top: 1.5rem;">
+        <div th:replace="~{fragments/alerts :: alerts}"></div>
+    </div>
+
+    <div class="container" style="padding: 2.5rem 1.5rem; max-width: 950px;">
+        <div style="margin-bottom: 1.5rem;">
+            <a th:href="@{/admin/inscripciones/pendientes}" class="btn btn-sm btn-outline">&larr; Volver a Pagos Pendientes</a>
+        </div>
+
+        <div class="card card-body" style="padding: 2.5rem; border-top: 4px solid var(--primary);">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+                <div>
+                    <span class="badge badge-warning">Verificación de Comprobante</span>
+                    <h1 style="font-size: 1.85rem; margin-top: 0.25rem;">Revisión de Inscripción</h1>
+                </div>
+                <div style="text-align: right;">
+                    <span style="font-size: 0.85rem; color: var(--text-muted);">Monto a Validar:</span>
+                    <div style="font-size: 2rem; font-weight: 800; color: var(--primary);" th:text="${'S/ ' + inscripcion.curso.precio}">
+                        S/ 120.00
+                    </div>
+                </div>
+            </div>
+
+            <!-- Datos del Participante y Curso -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; background: #F8FAFC; padding: 1.5rem; border-radius: var(--radius-sm); margin-bottom: 2rem; border: 1px solid var(--border);">
+                <div>
+                    <h4 style="margin-bottom: 0.75rem; color: var(--text);">Datos del Participante:</h4>
+                    <p style="margin-bottom: 0.3rem;"><strong>Nombre:</strong> <span th:text="${inscripcion.usuario.nombreCompleto}">Nombre</span></p>
+                    <p style="margin-bottom: 0.3rem;"><strong>Documento:</strong> <span th:text="${inscripcion.usuario.tipoDocumento + ': ' + inscripcion.usuario.numeroDocumento}">DNI</span></p>
+                    <p style="margin-bottom: 0.3rem;"><strong>Correo:</strong> <span th:text="${inscripcion.usuario.correo}">correo</span></p>
+                    <p style="margin-bottom: 0;"><strong>Institución:</strong> <span th:text="${inscripcion.usuario.institucionProcedencia}">UNA Puno</span></p>
+                </div>
+
+                <div>
+                    <h4 style="margin-bottom: 0.75rem; color: var(--text);">Detalle del Curso:</h4>
+                    <p style="margin-bottom: 0.3rem;"><strong>Curso:</strong> <span th:text="${inscripcion.curso.nombre}">Curso</span></p>
+                    <p style="margin-bottom: 0.3rem;"><strong>Línea:</strong> <span th:text="${inscripcion.curso.areaInvestigacion.lineaInvestigacion.nombre}">Línea</span></p>
+                    <p style="margin-bottom: 0.3rem;"><strong>Docente:</strong> <span th:text="${inscripcion.curso.docenteResponsable}">Docente</span></p>
+                    <p style="margin-bottom: 0;"><strong>Cupos Disponibles:</strong> <span th:text="${inscripcion.curso.cuposDisponibles}">10</span></p>
+                </div>
+            </div>
+
+            <!-- Datos del Pago y Comprobante -->
+            <div th:if="${inscripcion.pago != null}">
+                <h3 style="margin-bottom: 1rem;">Comprobante de Pago Yape</h3>
+                <div style="margin-bottom: 1.25rem;">
+                    <strong>Número de Operación declarado:</strong>
+                    <code style="font-size: 1.2rem; background: #FEF3C7; padding: 0.2rem 0.6rem; border-radius: 4px; color: #92400E;"
+                          th:text="${inscripcion.pago.referenciaExterna}">
+                        12839182
+                    </code>
+                </div>
+
+                <div th:if="${inscripcion.pago.comprobanteUrl != null}" style="margin-bottom: 2.5rem; text-align: center; background: #000000; padding: 1rem; border-radius: var(--radius-sm);">
+                    <div style="margin-bottom: 0.5rem;">
+                        <a th:href="@{'/' + ${inscripcion.pago.comprobanteUrl}}" target="_blank" class="btn btn-sm btn-outline" style="color: #FFFFFF; border-color: #666;">
+                            ↗ Abrir comprobante original en nueva pestaña
+                        </a>
+                    </div>
+                    <img th:src="@{'/' + ${inscripcion.pago.comprobanteUrl}}" alt="Comprobante de pago"
+                         style="max-width: 100%; max-height: 550px; object-fit: contain; border-radius: var(--radius-sm);">
+                </div>
+
+                <!-- Botones de Acción (Aprobar / Rechazar) -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; border-top: 1px solid var(--border); padding-top: 2rem;">
+                    <!-- Aprobar -->
+                    <div>
+                        <h4 style="color: var(--success); margin-bottom: 0.5rem;">¿El pago es correcto?</h4>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+                            Al aprobar, se descontará 1 cupo del curso, el participante tendrá acceso al enlace Zoom/Meet y se le notificará por correo.
+                        </p>
+                        <form th:action="@{'/admin/pagos/' + ${inscripcion.pago.id} + '/aprobar'}" method="post"
+                              onsubmit="return confirm('¿Confirmas que deseas APROBAR este pago?');">
+                            <button type="submit" class="btn btn-lg btn-success btn-block">
+                                ✓ Aprobar Pago e Inscripción
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Rechazar -->
+                    <div>
+                        <h4 style="color: var(--danger); margin-bottom: 0.5rem;">¿Observar o rechazar?</h4>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+                            Indica el motivo (voucher borroso, monto incompleto, etc.). El participante podrá reintentar.
+                        </p>
+                        <form th:action="@{'/admin/pagos/' + ${inscripcion.pago.id} + '/rechazar'}" method="post" class="form-rechazar-pago">
+                            <div class="form-group" style="margin-bottom: 0.75rem;">
+                                <input type="text" name="motivo" class="form-control" required placeholder="Motivo de observación o rechazo...">
+                            </div>
+                            <button type="submit" class="btn btn-lg btn-danger btn-block">
+                                ✕ Rechazar Comprobante
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div th:unless="${inscripcion.pago != null}" style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                El participante aún no ha subido ningún comprobante para esta inscripción.
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/admin.js}"></script>
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

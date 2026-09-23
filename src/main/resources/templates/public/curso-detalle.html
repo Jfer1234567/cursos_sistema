@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{layout/main :: head(${curso.nombre})}"></head>
+<body>
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <div class="container" style="margin-top: 1.5rem;">
+        <div th:replace="~{fragments/alerts :: alerts}"></div>
+    </div>
+
+    <div class="container" style="padding: 2.5rem 1.5rem;">
+        <div style="margin-bottom: 1.5rem;">
+            <a th:href="@{/catalogo}" class="btn btn-sm btn-outline">&larr; Volver al Catálogo</a>
+        </div>
+
+        <div class="curso-detail-layout">
+            <!-- Columna Principal -->
+            <div>
+                <div style="display: flex; gap: 0.5rem; margin-bottom: 0.75rem; flex-wrap: wrap;">
+                    <span class="badge badge-primary" th:text="${curso.areaInvestigacion.lineaInvestigacion.nombre}">Línea</span>
+                    <span class="badge badge-secondary" th:text="${curso.areaInvestigacion.nombre}">Área</span>
+                    <span class="badge badge-accent">Modalidad Virtual (Zoom/Meet)</span>
+                </div>
+
+                <h1 style="font-size: 2.4rem; margin-bottom: 1.25rem;" th:text="${curso.nombre}">Título del Curso</h1>
+
+                <div class="card card-body" style="margin-bottom: 2rem;">
+                    <h3 style="margin-bottom: 1rem; color: var(--primary);">Descripción del Curso</h3>
+                    <div style="white-space: pre-line; line-height: 1.8; color: var(--secondary); font-size: 1.05rem;"
+                         th:text="${curso.descripcion}">
+                        Descripción detallada del contenido del curso.
+                    </div>
+                </div>
+
+                <div class="card card-body">
+                    <h3 style="margin-bottom: 1.25rem;">Información Académica</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                        <div>
+                            <strong>Docente Responsable:</strong>
+                            <p style="margin-top: 0.2rem;" th:text="${curso.docenteResponsable}">Docente</p>
+                        </div>
+                        <div>
+                            <strong>Duración Académica:</strong>
+                            <p style="margin-top: 0.2rem;" th:text="${curso.duracion}">40 horas</p>
+                        </div>
+                        <div th:if="${curso.fechaInicio != null}">
+                            <strong>Fecha de Inicio:</strong>
+                            <p style="margin-top: 0.2rem;" th:text="${#temporals.format(curso.fechaInicio, 'dd/MM/yyyy')}">Fecha</p>
+                        </div>
+                        <div th:if="${curso.fechaFin != null}">
+                            <strong>Fecha de Culminación:</strong>
+                            <p style="margin-top: 0.2rem;" th:text="${#temporals.format(curso.fechaFin, 'dd/MM/yyyy')}">Fecha</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Columna Lateral de Inscripción -->
+            <div class="curso-sidebar-card">
+                <div class="card" style="box-shadow: var(--shadow-lg); border-top: 5px solid var(--primary);">
+                    <div class="card-body" style="text-align: center; padding: 2rem;">
+                        <span style="font-size: 0.9rem; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Inversión</span>
+                        <div style="font-size: 2.8rem; font-weight: 800; color: var(--primary); margin: 0.5rem 0 1rem;"
+                             th:text="${'S/ ' + curso.precio}">
+                            S/ 150.00
+                        </div>
+
+                        <div style="background: #F8FAFC; border-radius: var(--radius-sm); padding: 1rem; margin-bottom: 1.5rem; text-align: left;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <span>Cupos Disponibles:</span>
+                                <strong th:text="${curso.cuposDisponibles + ' / ' + curso.cuposTotales}">10 / 25</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span>Pago vía:</span>
+                                <strong>Yape Directo</strong>
+                            </div>
+                        </div>
+
+                        <!-- Si está autenticado -->
+                        <div sec:authorize="isAuthenticated()">
+                            <form th:action="@{'/inscripcion/curso/' + ${curso.id}}" method="post">
+                                <button type="submit"
+                                        class="btn btn-lg btn-primary btn-block"
+                                        th:disabled="${curso.cuposDisponibles <= 0}">
+                                    <span th:if="${curso.cuposDisponibles > 0}">Inscribirme Ahora</span>
+                                    <span th:unless="${curso.cuposDisponibles > 0}">Cupos Agotados</span>
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Si NO está autenticado -->
+                        <div sec:authorize="!isAuthenticated()">
+                            <a th:href="@{/login}" class="btn btn-lg btn-primary btn-block">
+                                Iniciar Sesión para Inscribirte
+                            </a>
+                            <p style="font-size: 0.82rem; margin-top: 0.75rem; color: var(--text-muted);">
+                                ¿No tienes cuenta? <a th:href="@{/registro}">Regístrate aquí</a>
+                            </p>
+                        </div>
+
+                        <div style="margin-top: 1.5rem; font-size: 0.85rem; color: var(--text-muted); text-align: left; border-top: 1px solid var(--border-subtle); padding-top: 1rem;">
+                            ✓ Certificado oficial emitido por IIICCD - FINESI<br>
+                            ✓ Verificación digital mediante código único QR/web<br>
+                            ✓ Clases sincrónicas y materiales de apoyo
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

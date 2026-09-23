@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<header th:fragment="header" class="site-header">
+    <div class="top-bar">
+        <div class="container">
+            <span>Universidad Nacional del Altiplano - Puno &nbsp;|&nbsp; FINESI</span>
+            <span>Instituto de Investigación IIICCD</span>
+        </div>
+    </div>
+
+    <div class="container nav-container">
+        <a th:href="@{/}" class="brand-link">
+            <img th:src="@{/images/logo-iiiccd.jpg}" alt="Logo IIICCD UNA Puno" class="brand-logo">
+            <div class="brand-info">
+                <span class="brand-acronym">IIICCD</span>
+                <span class="brand-sub">Inteligencia Computacional & Ciencia de Datos</span>
+            </div>
+        </a>
+
+        <button class="menu-toggle" aria-label="Abrir menú de navegación">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <nav class="main-nav">
+            <a th:href="@{/}" class="nav-link">Inicio</a>
+            <a th:href="@{/quienes-somos}" class="nav-link">Quiénes Somos</a>
+            <a th:href="@{/lineas-investigacion}" class="nav-link">Líneas</a>
+            <a th:href="@{/catalogo}" class="nav-link">Cursos</a>
+            <a th:href="@{/verificar}" class="nav-link">Verificar Certificado</a>
+            <a th:href="@{/contacto}" class="nav-link">Contacto</a>
+
+            <!-- Si NO está autenticado -->
+            <div sec:authorize="!isAuthenticated()" class="nav-auth">
+                <a th:href="@{/login}" class="btn btn-sm btn-outline">Ingresar</a>
+                <a th:href="@{/registro}" class="btn btn-sm btn-primary">Registrarse</a>
+            </div>
+
+            <!-- Si está autenticado como PARTICIPANTE -->
+            <div sec:authorize="hasRole('PARTICIPANTE')" class="nav-auth">
+                <a th:href="@{/participante/dashboard}" class="btn btn-sm btn-outline-primary">Mis Cursos</a>
+                <a th:href="@{/participante/perfil}" class="btn btn-sm btn-outline">Perfil</a>
+                <form th:action="@{/logout}" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-sm btn-secondary">Salir</button>
+                </form>
+            </div>
+
+            <!-- Si está autenticado como ADMIN -->
+            <div sec:authorize="hasRole('ADMIN')" class="nav-auth">
+                <a th:href="@{/admin}" class="btn btn-sm btn-primary">Panel Admin</a>
+                <a th:href="@{/admin/inscripciones/pendientes}" class="btn btn-sm btn-outline-primary">Pagos</a>
+                <form th:action="@{/logout}" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-sm btn-secondary">Salir</button>
+                </form>
+            </div>
+        </nav>
+    </div>
+</header>
+</html>

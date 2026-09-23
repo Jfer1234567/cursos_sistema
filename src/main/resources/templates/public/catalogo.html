@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/main :: head('Catálogo de Cursos')}"></head>
+<body>
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <div class="container" style="margin-top: 1.5rem;">
+        <div th:replace="~{fragments/alerts :: alerts}"></div>
+    </div>
+
+    <div class="container" style="padding: 2.5rem 1.5rem;">
+        <div class="section-header" style="margin-bottom: 2rem;">
+            <span class="section-tag">Oferta Académica</span>
+            <h1 class="section-title">Catálogo de Cursos</h1>
+            <p>Capacítate en las tecnologías más demandadas en Inteligencia Artificial y Ciencia de Datos con certificación oficial.</p>
+        </div>
+
+        <!-- Barra de Filtros y Búsqueda -->
+        <div class="card card-body" style="margin-bottom: 2.5rem; background: #FFFFFF;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem;">
+                <!-- Filtros de Línea -->
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                    <a th:href="@{/catalogo}"
+                       class="btn btn-sm"
+                       th:classappend="${lineaSeleccionada == null} ? 'btn-primary' : 'btn-outline'">
+                        Todas las Líneas
+                    </a>
+                    <a th:each="linea : ${lineas}"
+                       th:href="@{/catalogo(lineaId=${linea.id})}"
+                       class="btn btn-sm"
+                       th:classappend="${lineaSeleccionada == linea.id} ? 'btn-primary' : 'btn-outline'"
+                       th:text="${linea.nombre}">
+                        Línea
+                    </a>
+                </div>
+
+                <!-- Buscador Rápido -->
+                <div style="min-width: 260px;">
+                    <input type="text" id="searchCurso" class="form-control" placeholder="🔍 Buscar curso por nombre...">
+                </div>
+            </div>
+        </div>
+
+        <!-- Listado de Cursos -->
+        <div th:if="${cursos.empty}" class="card" style="text-align: center; padding: 4rem 2rem;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">📚</div>
+            <h3 style="margin-bottom: 0.5rem;">No se encontraron cursos disponibles</h3>
+            <p style="color: var(--text-muted);">No hay convocatorias activas para el filtro seleccionado en este momento.</p>
+            <div style="margin-top: 1rem;">
+                <a th:href="@{/catalogo}" class="btn btn-primary">Ver Todos los Cursos</a>
+            </div>
+        </div>
+
+        <div th:unless="${cursos.empty}" class="cursos-grid">
+            <div th:each="c : ${cursos}" class="card curso-card">
+                <div class="curso-card-header">
+                    <div class="curso-meta">
+                        <span class="curso-linea-tag" th:text="${c.areaInvestigacion.lineaInvestigacion.nombre}">Línea</span>
+                        <span th:if="${c.cuposDisponibles > 0}" class="badge badge-success" th:text="${c.cuposDisponibles + ' cupos'}">10 cupos</span>
+                        <span th:unless="${c.cuposDisponibles > 0}" class="badge badge-danger">Agotado</span>
+                    </div>
+                    <div class="curso-precio" th:text="${'S/ ' + c.precio}">S/ 150.00</div>
+                </div>
+
+                <div class="curso-card-body">
+                    <h3 th:text="${c.nombre}">Título del Curso</h3>
+                    <p th:text="${c.descripcionCorta != null ? c.descripcionCorta : c.descripcion}">Descripción corta del curso.</p>
+
+                    <div class="curso-details">
+                        <div><strong>Área:</strong> <span th:text="${c.areaInvestigacion.nombre}">Área</span></div>
+                        <div><strong>Docente:</strong> <span th:text="${c.docenteResponsable}">Docente</span></div>
+                        <div><strong>Duración:</strong> <span th:text="${c.duracion}">Duración</span></div>
+                        <div th:if="${c.fechaInicio != null}">
+                            <strong>Inicio:</strong> <span th:text="${#temporals.format(c.fechaInicio, 'dd/MM/yyyy')}">Fecha</span>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 1.5rem;">
+                        <a th:href="@{'/cursos/' + ${c.id}}" class="btn btn-primary btn-block">
+                            Ver Detalles e Inscribirme
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/catalogo.js}"></script>
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

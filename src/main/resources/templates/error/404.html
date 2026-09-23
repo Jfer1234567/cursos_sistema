@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/main :: head('404 — Página No Encontrada')}"></head>
+<body>
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <div class="container" style="padding: 5rem 1.5rem; text-align: center;">
+        <div style="font-size: 5rem; font-weight: 800; color: var(--primary); margin-bottom: 0.5rem;">404</div>
+        <h1 style="font-size: 2rem; margin-bottom: 1rem;">Página No Encontrada</h1>
+        <p style="color: var(--text-muted); max-width: 500px; margin: 0 auto 2rem;">
+            La página o recurso que buscas no existe o ha sido trasladada.
+        </p>
+        <a th:href="@{/}" class="btn btn-primary">Volver al Inicio</a>
+    </div>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>
