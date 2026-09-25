@@ -1,13 +1,20 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{layout/main :: head('Registro de Participante | IIICCD')}"></head>
+<head th:replace="~{layout/main :: head('Registro de Participante | IIICCD - FINESI')}"></head>
 <body>
-    <div th:replace="~{fragments/header :: header}"></div>
+    <div th:replace="~{fragments/header-auth :: headerAuth('registro')}"></div>
 
     <main class="auth-page-container">
+        <!-- Marcas de agua decorativas en el fondo exterior (sin plataforma) -->
+        <img th:src="@{/images/logo-isotipo-watermark.png}" class="auth-bg-watermark auth-bg-watermark-left" alt="" />
+        <img th:src="@{/images/logo-isotipo-watermark.png}" class="auth-bg-watermark auth-bg-watermark-right" alt="" />
+
         <div class="auth-card-dual auth-register-card">
-            <!-- Columna Izquierda: Identidad Institucional & Prestigio -->
+            <!-- Columna Izquierda: Identidad Institucional Minimalista -->
             <div class="auth-brand-pane">
+                <!-- Marca de Agua con Isotipo Oficial sin plataforma -->
+                <img th:src="@{/images/logo-isotipo-watermark.png}" class="auth-brand-watermark" alt="Isotipo IIICCD" />
+
                 <div class="auth-brand-content">
                     <div class="auth-brand-badge">
                         <svg viewBox="0 0 24 24">
@@ -16,60 +23,44 @@
                         FINESI • UNA PUNO
                     </div>
 
-                    <div class="auth-brand-logo">
-                        <img th:src="@{/images/logo-iiiccd.jpeg}" alt="Logo IIICCD" />
+                    <!-- Logo institucional limpio con isotipo puro -->
+                    <div class="auth-brand-logo-clean">
+                        <img th:src="@{/images/logo-isotipo-watermark.png}" alt="Isotipo Oficial IIICCD" />
+                        <div class="auth-brand-logo-text">
+                            <span class="auth-brand-acronym">IIICCD</span>
+                            <span class="auth-brand-inst">FINESI • UNA PUNO</span>
+                        </div>
                     </div>
 
-                    <h1 class="auth-brand-title">
-                        Comunidad Académica de <br><span>Computación & IA</span>
+                    <h1 class="auth-brand-fullname">
+                        Instituto de Investigación en Inteligencia Computacional y Ciencia de Datos
                     </h1>
 
-                    <p class="auth-brand-desc">
-                        Crea tu perfil oficial para postular a cursos de especialización, laboratorios de investigación y recibir certificaciones respaldadas por la UNA Puno.
+                    <div class="auth-brand-divider"></div>
+
+                    <p class="auth-brand-motto">
+                        Registro oficial de participantes para inscripción a cursos de especialización y certificación universitaria respaldada por la UNA Puno.
                     </p>
 
-                    <div class="auth-brand-features">
-                        <div class="auth-brand-feature-item">
-                            <div class="auth-brand-feature-icon">
-                                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                                </svg>
-                            </div>
-                            <div class="auth-brand-feature-text">
-                                <strong>Inscripción Ágil y Directa</strong>
-                                Acceso inmediato al catálogo de cursos y diplomados vigentes.
-                            </div>
-                        </div>
-
-                        <div class="auth-brand-feature-item">
-                            <div class="auth-brand-feature-icon">
-                                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                                </svg>
-                            </div>
-                            <div class="auth-brand-feature-text">
-                                <strong>Certificación Oficial Digital</strong>
-                                Acreditación con código QR y validación pública permanente.
-                            </div>
-                        </div>
-
-                        <div class="auth-brand-feature-item">
-                            <div class="auth-brand-feature-icon">
-                                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                                </svg>
-                            </div>
-                            <div class="auth-brand-feature-text">
-                                <strong>Red Universitaria de Investigación</strong>
-                                Conexión con docentes RENACYT, investigadores y estudiantes.
-                            </div>
-                        </div>
+                    <div class="auth-brand-pills">
+                        <span class="auth-brand-pill">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                            </svg>
+                            Facultad de Ingeniería Estadística e Informática
+                        </span>
+                        <span class="auth-brand-pill">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                            </svg>
+                            Universidad Nacional del Altiplano de Puno
+                        </span>
                     </div>
                 </div>
 
                 <div class="auth-brand-footer">
-                    <span>Instituto de Investigación IIICCD</span>
-                    <span>UNA Puno • 2026</span>
+                    <span>Ciudad Universitaria • Puno, Perú</span>
+                    <span>&copy; <span th:text="${#dates.year(#dates.createNow())}">2026</span> IIICCD</span>
                 </div>
             </div>
 

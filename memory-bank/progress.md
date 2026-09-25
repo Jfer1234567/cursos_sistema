@@ -134,6 +134,14 @@
   - Botón de submit principal con gradiente granate, elevación dinámica en hover y flecha indicadora SVG.
   - Diseño 100% responsivo para pantallas móviles, tablets y desktops.
   - Verificado con `./gradlew test` (100% de éxito, código de salida 0) y validación de endpoints HTTP 200 en `http://localhost:8085/login` y `/registro`.
+- [x] **Cabecera de Autenticación sin Distracciones (`header-auth.html`):**
+  - Desacoplamiento de la cabecera minimalista en su propio archivo de plantilla (`fragments/header-auth.html`) para evitar colisiones de selectores en Thymeleaf y corregir la duplicación de cabeceras en la portada.
+  - Interfaz enfocada exclusivamente en la conversión y acceso: logotipo oficial a la izquierda, enlace `← Volver al Portal` y botón contextual (`Registrarse` en login / `Ingresar` en registro), eliminando menús distractores.
+- [x] **Ambientación Visual con Isotipo Puro en Páginas Públicas:**
+  - Incorporación del isotipo institucional puro del IIICCD (`logo-isotipo-watermark.png` — sin pedestal ni plataforma ploma) como marca de agua ambiental suave (4.5% opacidad) en **Inicio (`/`)**, **Líneas de Investigación (`/lineas-investigacion`)**, **Catálogo de Cursos (`/catalogo`)**, **Detalle del Curso (`/cursos/{id}`)** y **Validación de Certificados (`/verificar`)**.
+  - Eliminación de la sensación de "fondo blanco plano", dotando a todo el portal de identidad visual y académica de alta gama.
+  - Implementación de `.public-page-wrapper` y `.ambient-watermark` con adaptación responsiva.
+
 
 
 

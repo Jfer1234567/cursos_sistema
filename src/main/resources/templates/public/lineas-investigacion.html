@@ -8,39 +8,46 @@
         <div th:replace="~{fragments/alerts :: alerts}"></div>
     </div>
 
-    <div class="container" style="padding: 3rem 1.5rem;">
-        <div class="section-header">
-            <span class="section-tag">Campos del Conocimiento</span>
-            <h1 class="section-title">Líneas y Áreas de Investigación</h1>
-            <p>Estructura temática y científica oficial del Instituto adscrito a la FINESI - Universidad Nacional del Altiplano.</p>
-        </div>
+    <main class="public-page-wrapper">
+        <!-- Marcas de agua institucionales del Isotipo (sin plataforma) -->
+        <img th:src="@{/images/logo-isotipo-watermark.png}" class="ambient-watermark ambient-watermark-left" alt="" />
+        <img th:src="@{/images/logo-isotipo-watermark.png}" class="ambient-watermark ambient-watermark-right" alt="" />
+        <img th:src="@{/images/logo-isotipo-watermark.png}" class="ambient-watermark ambient-watermark-bottom-left" alt="" />
 
-        <div style="display: flex; flex-direction: column; gap: 3rem;">
-            <!-- Iterar sobre cada línea de investigación -->
-            <div th:each="linea : ${lineas}" class="card" style="border-left: 6px solid var(--primary); padding: 2.5rem;">
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.25rem;">
-                    <div>
-                        <span class="badge badge-primary" style="margin-bottom: 0.5rem;" th:text="${'Línea ' + linea.orden}">Línea 1</span>
-                        <h2 style="font-size: 1.85rem; color: var(--primary);" th:text="${linea.nombre}">Nombre de la Línea</h2>
+        <div class="container" style="padding: 3rem 1.5rem;">
+            <div class="section-header">
+                <span class="section-tag">Campos del Conocimiento</span>
+                <h1 class="section-title">Líneas y Áreas de Investigación</h1>
+                <p>Estructura temática y científica oficial del Instituto adscrito a la FINESI - Universidad Nacional del Altiplano.</p>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 3rem;">
+                <!-- Iterar sobre cada línea de investigación -->
+                <div th:each="linea : ${lineas}" class="card" style="border-left: 6px solid var(--primary); padding: 2.5rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.25rem;">
+                        <div>
+                            <span class="badge badge-primary" style="margin-bottom: 0.5rem;" th:text="${'Línea ' + linea.orden}">Línea 1</span>
+                            <h2 style="font-size: 1.85rem; color: var(--primary);" th:text="${linea.nombre}">Nombre de la Línea</h2>
+                        </div>
+                        <a th:href="@{/catalogo(lineaId=${linea.id})}" class="btn btn-outline-primary">Ver Cursos Relacionados &rarr;</a>
                     </div>
-                    <a th:href="@{/catalogo(lineaId=${linea.id})}" class="btn btn-outline-primary">Ver Cursos Relacionados &rarr;</a>
-                </div>
 
-                <p style="font-size: 1.05rem; line-height: 1.7; margin-bottom: 2rem;" th:text="${linea.descripcion}">
-                    Descripción detallada del campo científico abordado en esta línea.
-                </p>
+                    <p style="font-size: 1.05rem; line-height: 1.7; margin-bottom: 2rem;" th:text="${linea.descripcion}">
+                        Descripción detallada del campo científico abordado en esta línea.
+                    </p>
 
-                <h4 style="margin-bottom: 1rem; color: var(--text);">Áreas de Especialización:</h4>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem;">
-                    <div th:each="area : ${areas}" th:if="${area.lineaInvestigacion.id == linea.id}"
-                         style="background: #F8FAFC; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1.25rem;">
-                        <h4 style="font-size: 1.05rem; margin-bottom: 0.4rem; color: var(--text);" th:text="${area.nombre}">Nombre del Área</h4>
-                        <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 0;" th:text="${area.descripcion}">Descripción de lo que cubre el área.</p>
+                    <h4 style="margin-bottom: 1rem; color: var(--text);">Áreas de Especialización:</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem;">
+                        <div th:each="area : ${areas}" th:if="${area.lineaInvestigacion.id == linea.id}"
+                             style="background: #F8FAFC; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1.25rem;">
+                            <h4 style="font-size: 1.05rem; margin-bottom: 0.4rem; color: var(--text);" th:text="${area.nombre}">Nombre del Área</h4>
+                            <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 0;" th:text="${area.descripcion}">Descripción de lo que cubre el área.</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 
     <div th:replace="~{fragments/footer :: footer}"></div>
 </body>

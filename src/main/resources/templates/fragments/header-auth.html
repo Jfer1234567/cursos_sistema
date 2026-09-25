@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!-- Header Dedicado y Limpio para Autenticación (Distraction-Free) -->
+<header th:fragment="headerAuth(currentAction)" class="site-header site-header-auth">
+    <div class="top-bar">
+        <div class="container">
+            <span>Universidad Nacional del Altiplano - Puno &nbsp;|&nbsp; FINESI</span>
+            <span>Instituto de Investigación IIICCD</span>
+        </div>
+    </div>
+
+    <div class="container nav-container" style="justify-content: space-between;">
+        <a th:href="@{/}" class="brand-link" title="Volver al Portal Principal">
+            <img th:src="@{/images/logo-iiiccd.jpeg}" alt="Logo IIICCD UNA Puno" class="brand-logo">
+            <div class="brand-info">
+                <span class="brand-acronym">IIICCD</span>
+                <span class="brand-sub">Inteligencia Computacional & Ciencia de Datos</span>
+            </div>
+        </a>
+
+        <!-- Navegación enfocada sin distractores -->
+        <div class="nav-auth-minimal">
+            <a th:href="@{/}" class="nav-back-portal">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                <span>Volver al Portal</span>
+            </a>
+
+            <div th:if="${currentAction == 'login'}">
+                <a th:href="@{/registro}" class="btn btn-sm btn-primary">Registrarse</a>
+            </div>
+
+            <div th:if="${currentAction == 'registro'}">
+                <a th:href="@{/login}" class="btn btn-sm btn-outline">Ingresar</a>
+            </div>
+        </div>
+    </div>
+</header>
+</html>

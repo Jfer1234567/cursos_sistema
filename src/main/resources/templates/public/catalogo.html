@@ -8,7 +8,13 @@
         <div th:replace="~{fragments/alerts :: alerts}"></div>
     </div>
 
-    <div class="container" style="padding: 2.5rem 1.5rem;">
+    <main class="public-page-wrapper">
+        <!-- Marcas de agua institucionales del Isotipo (sin plataforma) -->
+        <img th:src="@{/images/logo-isotipo-watermark.png}" class="ambient-watermark ambient-watermark-left" alt="" />
+        <img th:src="@{/images/logo-isotipo-watermark.png}" class="ambient-watermark ambient-watermark-right" alt="" />
+        <img th:src="@{/images/logo-isotipo-watermark.png}" class="ambient-watermark ambient-watermark-bottom-left" alt="" />
+
+        <div class="container" style="padding: 2.5rem 1.5rem;">
         <div class="section-header" style="margin-bottom: 2rem;">
             <span class="section-tag">Oferta Académica</span>
             <h1 class="section-title">Catálogo de Cursos</h1>
@@ -110,6 +116,7 @@
             </div>
         </div>
     </div>
+    </main>
 
     <script th:src="@{/js/catalogo.js}"></script>
     <div th:replace="~{fragments/footer :: footer}"></div>

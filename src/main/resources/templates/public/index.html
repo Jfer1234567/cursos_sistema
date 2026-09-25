@@ -10,6 +10,9 @@
 
     <!-- Hero Section -->
     <section class="hero">
+        <!-- Marca de Agua Institucional de Fondo (Isotipo Oficial sin plataforma) -->
+        <img th:src="@{/images/logo-isotipo-watermark.png}" class="hero-watermark-bg" alt="Isotipo IIICCD" />
+
         <div class="container">
             <div class="hero-grid">
                 <div>
@@ -53,7 +56,11 @@
     </section>
 
     <!-- Cursos Destacados -->
-    <section style="padding: 5rem 0;">
+    <section class="public-page-wrapper" style="padding: 5rem 0; min-height: auto;">
+        <!-- Marcas de Agua Institucionales del Isotipo (sin plataforma) -->
+        <img th:src="@{/images/logo-isotipo-watermark.png}" class="ambient-watermark ambient-watermark-left" style="top: 100px;" alt="" />
+        <img th:src="@{/images/logo-isotipo-watermark.png}" class="ambient-watermark ambient-watermark-right" style="top: 280px;" alt="" />
+
         <div class="container">
             <div class="section-header">
                 <span class="section-tag">Capacitación Especializada</span>

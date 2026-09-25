@@ -58,12 +58,9 @@
     - `🗑️ Eliminar Mensaje`: Permite limpiar consultas obsoletas o de prueba.
   - *Métricas y Accesos:* Nueva tarjeta `📨 Mensajes y Consultas` en el Dashboard (`/admin`) y enlace directo `Mensajes` en el header del Administrador.
 
-- **Rediseño Visual de Alta Gama para Autenticación (`/login` y `/registro`):**
-  - *Arquitectura Split-Screen / Dual-Card:* Reemplazo de la caja blanca plana y solitaria por una tarjeta dual (`max-width: 1020px`) con bordes suaves de 20px, elevación con sombra difusa y ambient glow radial institucional.
-  - *Columna de Prestigio Institucional:* Malla neuronal decorativa vectorial, badge dorado `FINESI • UNA PUNO`, isotipo oficial del IIICCD en placa blanca de cristal y 3 pilares académicos de acreditación (Certificados QR inmutables, Acceso 24/7 y Docentes e Investigadores calificados).
-  - *Formulario de Alta Conversión:* Inputs con íconos vectoriales SVG internos (📧 correo, 🔒 candado de seguridad, 👤 usuario, 🏢 institución), foco iluminado con halo granate y botón interactivo para mostrar/ocultar contraseña (👁️).
-  - *Botón de Acción Premium:* Gradiente granate UNA con microinteracción hover, elevación dinámica y flecha direccional SVG.
-  - *Diseño 100% Responsivo:* En pantallas móviles y tablets se compacta fluidamente en una sola columna sin perder la identidad institucional.
+- **Ambientación Visual con Isotipo Puro en Páginas Públicas:**
+  - *Extensión de Fondo Institucional (`public-page-wrapper` y `ambient-watermark`):* Se eliminó el fondo blanco plano en **Inicio (`/`)**, **Líneas de Investigación (`/lineas-investigacion`)**, **Catálogo de Cursos (`/catalogo`)**, **Detalle del Curso (`/cursos/{id}`)** y **Validación de Certificados (`/verificar`)**, incorporando degradados radiales tenues y marcas de agua amplias del isotipo institucional puro (`logo-isotipo-watermark.png` — sin pedestal ni plataforma ploma) con opacidad suave (4.5%).
+  - *Identidad Coherente:* Toda la experiencia de navegación del estudiante y visitante mantiene la misma atmósfera premium e inmersiva vista en el login y en el certificado de honor.
 
 - **Sincronización Oficial en GitHub:**
   - Repositorio oficial conectado: `https://github.com/Jfer1234567/cursos_sistema` (rama `main`, sincronizado).

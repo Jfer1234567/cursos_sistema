@@ -8,7 +8,12 @@
         <div th:replace="~{fragments/alerts :: alerts}"></div>
     </div>
 
-    <div class="container" style="padding: 3rem 1.5rem; max-width: 800px;">
+    <main class="public-page-wrapper">
+        <!-- Marcas de agua institucionales del Isotipo (sin plataforma) -->
+        <img th:src="@{/images/logo-isotipo-watermark.png}" class="ambient-watermark ambient-watermark-left" alt="" />
+        <img th:src="@{/images/logo-isotipo-watermark.png}" class="ambient-watermark ambient-watermark-right" alt="" />
+
+        <div class="container" style="padding: 3rem 1.5rem; max-width: 800px;">
         <div class="section-header">
             <span class="section-tag">Transparencia y Seguridad</span>
             <h1 class="section-title">Validación de Certificados</h1>
@@ -165,6 +170,7 @@
             </p>
         </div>
     </div>
+    </main>
 
     <script>
         function copiarEnlaceVerificacion() {

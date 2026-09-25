@@ -1,13 +1,20 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{layout/main :: head('Iniciar Sesión | IIICCD')}"></head>
+<head th:replace="~{layout/main :: head('Iniciar Sesión | IIICCD - FINESI')}"></head>
 <body>
-    <div th:replace="~{fragments/header :: header}"></div>
+    <div th:replace="~{fragments/header-auth :: headerAuth('login')}"></div>
 
     <main class="auth-page-container">
+        <!-- Marcas de agua decorativas en el fondo exterior (sin plataforma) -->
+        <img th:src="@{/images/logo-isotipo-watermark.png}" class="auth-bg-watermark auth-bg-watermark-left" alt="" />
+        <img th:src="@{/images/logo-isotipo-watermark.png}" class="auth-bg-watermark auth-bg-watermark-right" alt="" />
+
         <div class="auth-card-dual">
-            <!-- Columna Izquierda: Identidad Institucional & Prestigio -->
+            <!-- Columna Izquierda: Identidad Institucional Minimalista -->
             <div class="auth-brand-pane">
+                <!-- Marca de Agua con Isotipo Oficial sin plataforma -->
+                <img th:src="@{/images/logo-isotipo-watermark.png}" class="auth-brand-watermark" alt="Isotipo IIICCD" />
+
                 <div class="auth-brand-content">
                     <div class="auth-brand-badge">
                         <svg viewBox="0 0 24 24">
@@ -16,60 +23,44 @@
                         FINESI • UNA PUNO
                     </div>
 
-                    <div class="auth-brand-logo">
-                        <img th:src="@{/images/logo-iiiccd.jpeg}" alt="Logo IIICCD" />
+                    <!-- Logo institucional limpio con isotipo puro -->
+                    <div class="auth-brand-logo-clean">
+                        <img th:src="@{/images/logo-isotipo-watermark.png}" alt="Isotipo Oficial IIICCD" />
+                        <div class="auth-brand-logo-text">
+                            <span class="auth-brand-acronym">IIICCD</span>
+                            <span class="auth-brand-inst">FINESI • UNA PUNO</span>
+                        </div>
                     </div>
 
-                    <h1 class="auth-brand-title">
-                        Portal Académico de <br><span>Investigación & IA</span>
+                    <h1 class="auth-brand-fullname">
+                        Instituto de Investigación en Inteligencia Computacional y Ciencia de Datos
                     </h1>
 
-                    <p class="auth-brand-desc">
-                        Plataforma oficial del IIICCD para formación especializada, laboratorios computacionales y certificación universitaria con validación criptográfica.
+                    <div class="auth-brand-divider"></div>
+
+                    <p class="auth-brand-motto">
+                        Plataforma oficial para la gestión de cursos, desarrollo académico y emisión de certificaciones universitarias con respaldo institucional.
                     </p>
 
-                    <div class="auth-brand-features">
-                        <div class="auth-brand-feature-item">
-                            <div class="auth-brand-feature-icon">
-                                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                                </svg>
-                            </div>
-                            <div class="auth-brand-feature-text">
-                                <strong>Certificados Oficiales con QR</strong>
-                                Verificación inmutable y pública respaldada por la UNA Puno.
-                            </div>
-                        </div>
-
-                        <div class="auth-brand-feature-item">
-                            <div class="auth-brand-feature-icon">
-                                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                                </svg>
-                            </div>
-                            <div class="auth-brand-feature-text">
-                                <strong>Recursos y Materiales 24/7</strong>
-                                Acceso a grabaciones, datasets y repositorios de código.
-                            </div>
-                        </div>
-
-                        <div class="auth-brand-feature-item">
-                            <div class="auth-brand-feature-icon">
-                                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                                </svg>
-                            </div>
-                            <div class="auth-brand-feature-text">
-                                <strong>Docencia e Investigación</strong>
-                                Talleres guiados por docentes e investigadores de alto nivel.
-                            </div>
-                        </div>
+                    <div class="auth-brand-pills">
+                        <span class="auth-brand-pill">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                            </svg>
+                            Facultad de Ingeniería Estadística e Informática
+                        </span>
+                        <span class="auth-brand-pill">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                            </svg>
+                            Universidad Nacional del Altiplano de Puno
+                        </span>
                     </div>
                 </div>
 
                 <div class="auth-brand-footer">
-                    <span>Instituto de Investigación IIICCD</span>
-                    <span>UNA Puno • 2026</span>
+                    <span>Ciudad Universitaria • Puno, Perú</span>
+                    <span>&copy; <span th:text="${#dates.year(#dates.createNow())}">2026</span> IIICCD</span>
                 </div>
             </div>
 
@@ -80,12 +71,12 @@
                     <p class="auth-form-subtitle">Ingresa tus credenciales para acceder a tu panel académico y certificados.</p>
                 </div>
 
-                <!-- Alertas del Sistema (Errores de Login o Mensajes Flash) -->
+                <!-- Alertas del Sistema -->
                 <div th:replace="~{fragments/alerts :: alerts}"></div>
 
                 <form th:action="@{/login}" method="post">
                     <div class="auth-input-group">
-                        <label class="auth-input-label" for="correo">Correo Institucional / Personal</label>
+                        <label class="auth-input-label" for="correo">Correo Electrónico</label>
                         <div class="auth-input-wrapper">
                             <span class="auth-input-icon">
                                 <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -93,14 +84,12 @@
                                 </svg>
                             </span>
                             <input type="email" id="correo" name="correo" class="auth-input-control" 
-                                   required placeholder="ejemplo@unap.edu.pe" autofocus>
+                                   required placeholder="tu.correo@ejemplo.com" autofocus>
                         </div>
                     </div>
 
                     <div class="auth-input-group">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                            <label class="auth-input-label" for="password" style="margin-bottom: 0;">Contraseña de Acceso</label>
-                        </div>
+                        <label class="auth-input-label" for="password">Contraseña</label>
                         <div class="auth-input-wrapper">
                             <span class="auth-input-icon">
                                 <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -127,7 +116,7 @@
                 </form>
 
                 <div class="auth-footer-prompt">
-                    ¿Aún no tienes una cuenta registrada? 
+                    ¿Aún no tienes cuenta? 
                     <a th:href="@{/registro}">Regístrate aquí</a>
                 </div>
             </div>
