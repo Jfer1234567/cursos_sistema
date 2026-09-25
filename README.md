@@ -57,8 +57,8 @@ CREATE DATABASE cursos_2;
 Si tus credenciales locales difieren de `postgres/fer123`, configúralas en `src/main/resources/application.properties` o pásalas por variables de entorno:
 ```properties
 spring.datasource.url=jdbc:postgresql://localhost:5432/cursos_2
-spring.datasource.username=postgres
-spring.datasource.password=fer123
+spring.datasource.usernams
+spring.datasource.password
 ```
 
 ### 2. Ejecutar la aplicación
