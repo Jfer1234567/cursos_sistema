@@ -141,6 +141,10 @@
   - Incorporación del isotipo institucional puro del IIICCD (`logo-isotipo-watermark.png` — sin pedestal ni plataforma ploma) como marca de agua ambiental suave (4.5% opacidad) en **Inicio (`/`)**, **Líneas de Investigación (`/lineas-investigacion`)**, **Catálogo de Cursos (`/catalogo`)**, **Detalle del Curso (`/cursos/{id}`)** y **Validación de Certificados (`/verificar`)**.
   - Eliminación de la sensación de "fondo blanco plano", dotando a todo el portal de identidad visual y académica de alta gama.
   - Implementación de `.public-page-wrapper` y `.ambient-watermark` con adaptación responsiva.
+- [x] **Preparación para Despliegue en Servidores Cloud (Railway.app):**
+  - Implementación de `Dockerfile` multi-stage ligero con Eclipse Temurin 17 JRE y `.dockerignore`.
+  - Configuración de puerto dinámico `${PORT:8085}` y variables de entorno para PostgreSQL (`SPRING_DATASOURCE_URL`, `SPRING_DATASOURCE_USERNAME`, `SPRING_DATASOURCE_PASSWORD`).
+  - Sincronización completa con el repositorio oficial en GitHub.
 
 
 

@@ -62,6 +62,10 @@
   - *Extensión de Fondo Institucional (`public-page-wrapper` y `ambient-watermark`):* Se eliminó el fondo blanco plano en **Inicio (`/`)**, **Líneas de Investigación (`/lineas-investigacion`)**, **Catálogo de Cursos (`/catalogo`)**, **Detalle del Curso (`/cursos/{id}`)** y **Validación de Certificados (`/verificar`)**, incorporando degradados radiales tenues y marcas de agua amplias del isotipo institucional puro (`logo-isotipo-watermark.png` — sin pedestal ni plataforma ploma) con opacidad suave (4.5%).
   - *Identidad Coherente:* Toda la experiencia de navegación del estudiante y visitante mantiene la misma atmósfera premium e inmersiva vista en el login y en el certificado de honor.
 
+- **Preparación y Compatibilidad para Despliegue Cloud en Railway.app:**
+  - *Puerto Dinámico:* `server.port=${PORT:8085}` permitiendo que la plataforma en la nube inyecte el puerto asignado sin romper el puerto local 8085.
+  - *Datasource por Variables de Entorno:* URLs y credenciales de base de datos desacopladas (`SPRING_DATASOURCE_URL`, `SPRING_DATASOURCE_USERNAME`, `SPRING_DATASOURCE_PASSWORD`) con fallback a PostgreSQL local.
+  - *Dockerfile Multi-stage Optimizado:* Contenedor de compilación Gradle con JDK 17 y contenedor de ejecución ultraligero con Eclipse Temurin 17 JRE Alpine y `.dockerignore` para despliegues rápidos y seguros.
 - **Sincronización Oficial en GitHub:**
   - Repositorio oficial conectado: `https://github.com/Jfer1234567/cursos_sistema` (rama `main`, sincronizado).
 

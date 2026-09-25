@@ -1,0 +1,11 @@
+.gradle
+build
+.git
+.gitignore
+.agents
+.gemini
+memory-bank
+*.md
+*.log
+scratch
+uploads
