@@ -127,6 +127,14 @@
   - Retiradas las tarjetas inferiores redundantes de "Mensajes y Consultas" y "Usuarios Registrados" en [`admin/dashboard.html`](file:///d:/cursos_sistema/src/main/resources/templates/admin/dashboard.html).
   - Los botones de acción rápida superiores ahora integran los íconos vectoriales SVG y badges numéricos dinámicos de conteo (no leídos y total de alumnos).
   - La cuadrícula de métricas principales queda perfectamente balanceada en 4 columnas simétricas: Cursos Activos, Pagos por Verificar, Inscripciones Aprobadas y Certificados Emitidos.
+- [x] **Rediseño Visual de Alta Gama de Autenticación (`/login` y `/registro`):**
+  - Transformación integral de la experiencia visual de acceso pasando de una caja blanca básica a una arquitectura **Split-Screen / Dual-Card** inspirada en plataformas universitarias y de investigación de primer nivel.
+  - Columna izquierda con identidad institucional profunda: degradado azul noche/granate UNA, malla neuronal de fondo, badge dorado `FINESI • UNA PUNO`, isotipo oficial del IIICCD y pilares de acreditación académica (Certificados con QR inmutable, recursos 24/7 y docentes investigadores).
+  - Columna derecha con formulario refinado: inputs con íconos vectoriales SVG internos (correo, candado, DNI, teléfono, usuario, institución), iluminación de foco granate sutil y botón interactivo para mostrar/ocultar contraseña (👁️).
+  - Botón de submit principal con gradiente granate, elevación dinámica en hover y flecha indicadora SVG.
+  - Diseño 100% responsivo para pantallas móviles, tablets y desktops.
+  - Verificado con `./gradlew test` (100% de éxito, código de salida 0) y validación de endpoints HTTP 200 en `http://localhost:8085/login` y `/registro`.
+
 
 
 

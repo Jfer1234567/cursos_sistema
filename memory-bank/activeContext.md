@@ -58,10 +58,20 @@
     - `🗑️ Eliminar Mensaje`: Permite limpiar consultas obsoletas o de prueba.
   - *Métricas y Accesos:* Nueva tarjeta `📨 Mensajes y Consultas` en el Dashboard (`/admin`) y enlace directo `Mensajes` en el header del Administrador.
 
+- **Rediseño Visual de Alta Gama para Autenticación (`/login` y `/registro`):**
+  - *Arquitectura Split-Screen / Dual-Card:* Reemplazo de la caja blanca plana y solitaria por una tarjeta dual (`max-width: 1020px`) con bordes suaves de 20px, elevación con sombra difusa y ambient glow radial institucional.
+  - *Columna de Prestigio Institucional:* Malla neuronal decorativa vectorial, badge dorado `FINESI • UNA PUNO`, isotipo oficial del IIICCD en placa blanca de cristal y 3 pilares académicos de acreditación (Certificados QR inmutables, Acceso 24/7 y Docentes e Investigadores calificados).
+  - *Formulario de Alta Conversión:* Inputs con íconos vectoriales SVG internos (📧 correo, 🔒 candado de seguridad, 👤 usuario, 🏢 institución), foco iluminado con halo granate y botón interactivo para mostrar/ocultar contraseña (👁️).
+  - *Botón de Acción Premium:* Gradiente granate UNA con microinteracción hover, elevación dinámica y flecha direccional SVG.
+  - *Diseño 100% Responsivo:* En pantallas móviles y tablets se compacta fluidamente en una sola columna sin perder la identidad institucional.
+
+- **Sincronización Oficial en GitHub:**
+  - Repositorio oficial conectado: `https://github.com/Jfer1234567/cursos_sistema` (rama `main`, sincronizado).
+
 **Servidor Local Activo:**
 - Aplicación corriendo en segundo plano en `http://localhost:8085`.
 - Base de datos conectada: PostgreSQL `cursos_2`.
-- Integridad: 100% de tests unitarios y de integración aprobados (Gradle test suite exitoso con `MensajeContactoTest`).
+- Integridad: 100% de tests unitarios y de integración aprobados (Gradle test suite exitoso).
 
 
 
