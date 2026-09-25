@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/main :: head('Bandeja de Consultas')}"></head>
+<body>
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <div class="container" style="margin-top: 1.5rem;">
+        <div th:replace="~{fragments/alerts :: alerts}"></div>
+    </div>
+
+    <div class="container" style="padding: 2.5rem 1.5rem;">
+        <!-- Cabecera de Sección -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+            <div>
+                <span class="badge badge-primary">Atención al Usuario</span>
+                <h1 style="font-size: 2rem; margin-top: 0.25rem;">Bandeja de Consultas y Mensajes</h1>
+                <p style="color: var(--text-muted); margin-bottom: 0;">
+                    Preguntas y solicitudes enviadas por estudiantes y visitantes a través del portal institucional.
+                </p>
+            </div>
+            <div style="display: flex; gap: 0.75rem; align-items: center;">
+                <div style="background: rgba(220, 38, 38, 0.08); border: 1px solid rgba(220, 38, 38, 0.25); padding: 0.5rem 1.25rem; border-radius: 8px; text-align: right;">
+                    <span style="font-size: 0.75rem; color: #DC2626; font-weight: 700; text-transform: uppercase; display: block;">No Leídos / Nuevos:</span>
+                    <strong style="font-size: 1.35rem; color: #B91C1C;" th:text="${noLeidos}">0</strong>
+                </div>
+                <a th:href="@{/admin}" class="btn btn-outline">&larr; Volver al Panel</a>
+            </div>
+        </div>
+
+        <!-- Buscador -->
+        <div class="card card-body" style="padding: 1.25rem 1.5rem; margin-bottom: 2rem; background: #FFFFFF;">
+            <form th:action="@{/admin/mensajes}" method="get" style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;">
+                <div style="flex: 1; min-width: 280px;">
+                    <input type="text" name="filtro" class="form-control" 
+                           placeholder="Buscar por Remitente, Asunto o Correo..." 
+                           th:value="${filtro}">
+                </div>
+                <button type="submit" class="btn btn-primary">🔍 Buscar</button>
+                <a th:if="${filtro != null and !filtro.isEmpty()}" th:href="@{/admin/mensajes}" class="btn btn-secondary">
+                    ✕ Limpiar
+                </a>
+            </form>
+        </div>
+
+        <!-- Lista de Mensajes -->
+        <div class="card">
+            <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="font-size: 1.15rem; margin-bottom: 0;">
+                    Mensajes Recibidos 
+                    <span th:if="${filtro != null and !filtro.isEmpty()}" style="font-size: 0.85rem; color: var(--text-muted); font-weight: normal;">
+                        (Filtrado por: "<span th:text="${filtro}"></span>" - <span th:text="${mensajes.size()}"></span> encontrados)
+                    </span>
+                </h3>
+            </div>
+            <div class="card-body">
+                <div th:if="${mensajes.empty}" style="text-align: center; padding: 3.5rem 1.5rem; color: var(--text-muted);">
+                    <div style="font-size: 3rem; margin-bottom: 0.5rem;">📭</div>
+                    <div style="font-size: 1.15rem; font-weight: 600; color: #334155; margin-bottom: 0.25rem;">
+                        No hay mensajes en la bandeja
+                    </div>
+                    <p style="margin-bottom: 0;">
+                        <span th:if="${filtro != null and !filtro.isEmpty()}">No se encontraron mensajes que coincidan con la búsqueda.</span>
+                        <span th:unless="${filtro != null and !filtro.isEmpty()}">Cuando los participantes envíen consultas desde la página de Contacto, aparecerán aquí.</span>
+                    </p>
+                </div>
+
+                <div th:unless="${mensajes.empty}" class="table-responsive">
+                    <table class="table" style="vertical-align: middle;">
+                        <thead>
+                            <tr>
+                                <th>Estado</th>
+                                <th>Fecha</th>
+                                <th>Remitente</th>
+                                <th>Asunto</th>
+                                <th>Contacto</th>
+                                <th style="text-align: right;">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="m : ${mensajes}" th:style="${!m.leido ? 'background-color: rgba(254, 243, 199, 0.35); font-weight: 600;' : ''}">
+                                <td>
+                                    <span th:if="${!m.leido}" class="badge badge-warning" style="font-size: 0.75rem; background: #D97706;">
+                                        ● NUEVO
+                                    </span>
+                                    <span th:if="${m.leido and !m.respondido}" class="badge badge-secondary" style="font-size: 0.75rem;">
+                                        Leído
+                                    </span>
+                                    <span th:if="${m.respondido}" class="badge badge-success" style="font-size: 0.75rem; background: #059669;">
+                                        ✓ Atendido
+                                    </span>
+                                </td>
+                                <td>
+                                    <span style="font-size: 0.85rem; color: #475569;" th:text="${#temporals.format(m.fechaEnvio, 'dd/MM/yyyy')}">24/09/2026</span>
+                                    <small style="display: block; color: #94A3B8; font-size: 0.75rem;" th:text="${#temporals.format(m.fechaEnvio, 'HH:mm')}">15:30</small>
+                                </td>
+                                <td>
+                                    <div style="font-weight: 700; color: #0F172A;" th:text="${m.nombreCompleto}">Nombre</div>
+                                    <small style="color: #64748B;" th:text="${m.correo}">correo@ejemplo.com</small>
+                                </td>
+                                <td>
+                                    <div style="color: var(--primary); font-weight: 700; max-width: 320px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" th:text="${m.asunto}">
+                                        Asunto
+                                    </div>
+                                    <small style="color: #64748B; display: block; max-width: 320px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" th:text="${m.mensaje}">
+                                        Extracto del mensaje...
+                                    </small>
+                                </td>
+                                <td>
+                                    <div style="display: flex; gap: 0.4rem; align-items: center;">
+                                        <a th:href="@{'mailto:' + ${m.correo} + '?subject=Re: ' + ${m.asunto}}" 
+                                           class="btn btn-sm btn-outline-primary" style="display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.25rem 0.6rem; font-size: 0.78rem; font-weight: 600;"
+                                           title="Responder por correo electrónico">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                                <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                                            </svg>
+                                            <span>Correo</span>
+                                        </a>
+                                        <a th:if="${m.telefono != null and !m.telefono.isEmpty()}"
+                                           th:href="@{'https://wa.me/' + ${(m.telefono.startsWith('51') ? m.telefono : '51' + m.telefono)} + '?text=Hola ' + ${m.nombreCompleto} + ', le saludamos del IIICCD UNA Puno respecto a su consulta: ' + ${m.asunto}}"
+                                           target="_blank" rel="noopener noreferrer"
+                                           class="btn btn-sm btn-success" style="display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.25rem 0.6rem; font-size: 0.78rem; background: #25D366; border-color: #25D366; color: #FFFFFF; font-weight: 600;"
+                                           title="Responder por WhatsApp">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                                <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.592 2.654-.696c1.029.575 1.764.839 2.806.839 3.18 0 5.766-2.586 5.766-5.766-.001-3.18-2.586-5.767-5.766-5.767zm3.364 8.213c-.14.394-.714.729-1.026.777-.306.046-.693.076-2.275-.544-1.748-.686-2.883-2.457-2.97-2.574-.087-.117-.706-.939-.706-1.791 0-.852.447-1.272.607-1.446.16-.174.348-.217.464-.217.116 0 .232.001.333.006.107.005.25-.041.391.298.145.348.494 1.205.538 1.293.044.088.073.19.015.306-.058.116-.087.19-.174.291-.087.102-.183.228-.261.306-.088.087-.179.182-.077.357.102.175.454.748.973 1.211.669.596 1.233.78 1.408.868.175.088.277.073.38-.044.102-.116.436-.508.552-.683.116-.175.233-.146.393-.087.16.058 1.018.48 1.193.567.175.087.291.131.335.204.043.073.043.423-.097.817z"/>
+                                                <path d="M12.012 2.002c-5.508 0-9.986 4.478-9.986 9.984 0 1.84.5 3.565 1.373 5.052L2 22.002l5.12-1.343a9.92 9.92 0 004.892 1.327h.004c5.508 0 9.984-4.478 9.984-9.984 0-2.668-1.039-5.176-2.925-7.062a9.927 9.927 0 00-7.063-2.938zm0 18.238h-.003a8.217 8.217 0 01-4.184-1.15l-.3-.178-3.11.816.83-3.032-.196-.312a8.204 8.204 0 01-1.258-4.398c0-4.544 3.697-8.241 8.241-8.241 2.202 0 4.272.858 5.829 2.415a8.196 8.196 0 012.413 5.827c0 4.545-3.697 8.242-8.242 8.242z"/>
+                                            </svg>
+                                            <span>WhatsApp</span>
+                                        </a>
+                                    </div>
+                                </td>
+                                <td style="text-align: right;">
+                                    <a th:href="@{'/admin/mensajes/' + ${m.id}}" class="btn btn-sm btn-primary" style="padding: 0.35rem 0.75rem;">
+                                        Leer Completo &rarr;
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

@@ -20,11 +20,21 @@
                     <h1 style="font-size: 1.85rem; margin-top: 0.25rem;" th:text="${curso.nombre}">Curso</h1>
                     <p style="color: var(--text-muted); margin-bottom: 0;">
                         Docente: <strong th:text="${curso.docenteResponsable}">Docente</strong> &bull;
-                        Duración: <strong th:text="${curso.duracion}">40h</strong> &bull;
-                        Cupos: <strong th:text="${curso.cuposDisponibles + ' disponibles de ' + curso.cuposTotales}">10/20</strong>
+                        Duración: <strong th:text="${curso.duracion + (curso.creditos != null ? ' (' + curso.creditos + ' créditos)' : '')}">40h</strong> &bull;
+                        Cupos: <strong th:text="${curso.cuposDisponibles + ' disponibles de ' + curso.cuposTotales}">10/20</strong> &bull;
+                        General: <strong th:text="${'S/ ' + curso.precio}">S/ 120</strong>
+                        <span th:if="${curso.precioComunidad != null}">
+                            &bull; Comunidad UNA: <strong style="color: var(--primary);" th:text="${'S/ ' + curso.precioComunidad}">S/ 80</strong>
+                        </span>
                     </p>
                 </div>
-                <div>
+                <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+                    <a th:href="@{'/admin/flyer/curso/' + ${curso.id}}" class="btn btn-outline" style="border-color: #D4AF37; color: #9A7B1C; font-weight: 600;">
+                        🎨 Crear Flyer
+                    </a>
+                    <a th:href="@{'/admin/cursos/' + ${curso.id} + '/exportar-csv'}" class="btn btn-outline" style="border-color: #107C41; color: #107C41;">
+                        📊 Exportar Padrón Excel (CSV)
+                    </a>
                     <a th:href="@{'/admin/cursos/' + ${curso.id} + '/editar'}" class="btn btn-outline-primary">
                         Editar Curso
                     </a>

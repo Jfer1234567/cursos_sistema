@@ -69,14 +69,20 @@ public class CertificadoServiceTest {
         cert.setAreaInvestigacion(area.getNombre());
         cert.setDocente(curso.getDocenteResponsable());
         cert.setDuracion(curso.getDuracion());
+        cert.setCreditos(3);
 
         // Act: Generación de PDF con OpenPDF
         byte[] pdfBytes = CertificadoPdfGenerator.generarCertificadoPdf(cert);
 
         // Assert
         assertNotNull(pdfBytes);
-        assertTrue(pdfBytes.length > 1000, "El PDF generado debe contener los bytes de OpenPDF");
+        assertTrue(pdfBytes.length > 15000, "El PDF generado con marcas de agua y ornamentos debe tener un tamaño sustancial");
         assertEquals("IIICCD-TEST99", cert.getCodigoVerificacion());
         assertTrue(cert.getCodigoVerificacion().startsWith("IIICCD-"));
+        assertEquals(3, cert.getCreditos());
+        try {
+            java.nio.file.Files.createDirectories(java.nio.file.Path.of("build"));
+            java.nio.file.Files.write(java.nio.file.Path.of("build/sample_certificado_generado.pdf"), pdfBytes);
+        } catch (Exception ignored) {}
     }
 }

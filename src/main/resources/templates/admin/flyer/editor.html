@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/main :: head('Estudio de Diseño de Flyers — IIICCD')}"></head>
+<body>
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <div class="container" style="margin-top: 1.5rem;">
+        <div th:replace="~{fragments/alerts :: alerts}"></div>
+    </div>
+
+    <div class="container" style="padding: 1.5rem 1.5rem 3rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+            <div>
+                <a th:href="@{/admin/cursos}" class="btn btn-sm btn-outline">&larr; Volver a Cursos</a>
+            </div>
+            <div>
+                <span class="badge badge-accent" style="font-size: 0.85rem;">Estudio Oficial de Difusión y Redes</span>
+            </div>
+        </div>
+
+        <div class="card card-body" style="border-top: 4px solid var(--primary); padding: 1.5rem 2rem; margin-bottom: 2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                <div>
+                    <h1 style="font-size: 1.85rem; margin-bottom: 0.25rem;">🎨 Generador de Flyers Oficiales</h1>
+                    <p style="color: var(--text-muted); margin-bottom: 0; font-size: 0.95rem;">
+                        Personaliza afiches institucionales de tus cursos en tiempo real y descárgalos en alta resolución para WhatsApp, Facebook e Instagram.
+                    </p>
+                </div>
+                <div style="min-width: 280px;">
+                    <label class="form-label" for="selectCursoCargar" style="font-weight: 700; font-size: 0.85rem;">Cargar Datos de un Curso:</label>
+                    <select id="selectCursoCargar" class="form-select">
+                        <option th:each="c : ${cursos}"
+                                th:value="${c.id}"
+                                th:selected="${cursoSeleccionado != null and cursoSeleccionado.id == c.id}"
+                                th:text="${c.nombre}"
+                                th:data-nombre="${c.nombre}"
+                                th:data-subtitulo="${c.descripcionCorta != null ? c.descripcionCorta : 'Programa de Alta Especialización Académica'}"
+                                th:data-linea="${c.areaInvestigacion.lineaInvestigacion.nombre}"
+                                th:data-area="${c.areaInvestigacion.nombre}"
+                                th:data-docente="${c.docenteResponsable}"
+                                th:data-docentecargo="${c.docenteCargo != null ? c.docenteCargo : 'Investigador Principal IIICCD - UNA Puno'}"
+                                th:data-docentefoto="${c.docenteFotoUrl != null ? c.docenteFotoUrl : ''}"
+                                th:data-duracion="${c.duracion}"
+                                th:data-creditos="${c.creditos != null ? c.creditos : 2}"
+                                th:data-precio="${c.precio}"
+                                th:data-preciocomunidad="${c.precioComunidad != null ? c.precioComunidad : (c.precio * 0.7)}"
+                                th:data-fechainicio="${c.fechaInicio != null ? #temporals.format(c.fechaInicio, 'dd/MM/yyyy') : 'Próximo Inicio'}">
+                            Curso
+                        </option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Studio Layout: Panel de Controles + Preview del Flyer -->
+        <div class="flyer-studio-layout">
+            <!-- PANEL DE CONTROLES -->
+            <div class="flyer-controls-panel">
+                <!-- Estilo y Formato -->
+                <div class="flyer-section-title">🎨 Estilo Visual y Formato</div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="form-label" for="inputTheme">Tema de Color:</label>
+                        <select id="inputTheme" class="form-select">
+                            <option value="theme-granate">🔴 Granate UNA Puno (Oficial)</option>
+                            <option value="theme-blue">🔵 Deep Cyber IA (Azul Noche)</option>
+                            <option value="theme-emerald">🟢 Esmeralda Ciencia de Datos</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="form-label" for="inputFormat">Relación de Aspecto:</label>
+                        <select id="inputFormat" class="form-select">
+                            <option value="format-vertical">📱 Vertical 4:5 (WhatsApp / Post)</option>
+                            <option value="format-square">⏹️ Cuadrado 1:1 (Redes)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Textos del Curso -->
+                <div class="flyer-section-title">📝 Textos Principales</div>
+
+                <div class="form-group">
+                    <label class="form-label" for="inputTitulo">Título Oficial del Curso:</label>
+                    <textarea id="inputTitulo" class="form-control" rows="2"
+                              th:text="${cursoSeleccionado != null ? cursoSeleccionado.nombre : 'Inteligencia Artificial y Machine Learning'}"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="inputSubtitulo">Subtítulo / Mención Destacada:</label>
+                    <input type="text" id="inputSubtitulo" class="form-control"
+                           th:value="${cursoSeleccionado != null and cursoSeleccionado.descripcionCorta != null ? cursoSeleccionado.descripcionCorta : 'Programa Especializado de Alto Rendimiento Profesional'}">
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label class="form-label" for="inputLinea">Línea de Investigación:</label>
+                        <input type="text" id="inputLinea" class="form-control"
+                               th:value="${cursoSeleccionado != null ? cursoSeleccionado.areaInvestigacion.lineaInvestigacion.nombre : 'Ciencias de la Computación'}">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="inputModalidad">Modalidad:</label>
+                        <input type="text" id="inputModalidad" class="form-control" value="Virtual en Vivo (Meet/Zoom)">
+                    </div>
+                </div>
+
+                <!-- Docente / Ponente -->
+                <div class="flyer-section-title">👨‍🏫 Plana Docente / Ponente</div>
+
+                <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 1rem; margin-bottom: 0.75rem;">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="form-label" for="inputDocente">Docente Responsable:</label>
+                        <input type="text" id="inputDocente" class="form-control"
+                               th:value="${cursoSeleccionado != null ? cursoSeleccionado.docenteResponsable : 'Dr. Leonid Alemán Gonzales'}">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="form-label" for="inputDocenteCargo">Cargo / Credencial:</label>
+                        <input type="text" id="inputDocenteCargo" class="form-control"
+                               th:value="${cursoSeleccionado != null and cursoSeleccionado.docenteCargo != null ? cursoSeleccionado.docenteCargo : 'Investigador Principal IIICCD - FINESI'}">
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 1rem; background: #F8FAFC; border: 1px dashed #CBD5E1; padding: 0.85rem 1rem; border-radius: 8px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+                        <label class="form-label" for="inputFotoDocente" style="margin-bottom: 0; font-weight: 700; font-size: 0.84rem; display: flex; align-items: center; gap: 0.35rem;">
+                            📸 Fotografía del Ponente (en el afiche):
+                        </label>
+                        <button type="button" id="btnQuitarFotoDocente" class="btn btn-sm btn-outline" style="padding: 2px 8px; font-size: 0.72rem; line-height: 1.2; height: auto;">
+                            ✖ Quitar foto
+                        </button>
+                    </div>
+                    <input type="file" id="inputFotoDocente" accept="image/*" class="form-control" style="font-size: 0.82rem; padding: 0.35rem 0.5rem;">
+                    <span class="form-text" style="font-size: 0.76rem; margin-top: 0.35rem; display: block;">
+                        Sube una foto desde tu PC. Se ajustará y recortará automáticamente en círculo HD con marco institucional.
+                    </span>
+                </div>
+
+                <!-- Datos Académicos -->
+                <div class="flyer-section-title">⏱️ Duración y Fechas</div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1.2fr; gap: 0.75rem;">
+                    <div class="form-group">
+                        <label class="form-label" for="inputDuracion">Horas:</label>
+                        <input type="text" id="inputDuracion" class="form-control"
+                               th:value="${cursoSeleccionado != null ? cursoSeleccionado.duracion : '48 horas'}">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="inputCreditos">Créditos:</label>
+                        <input type="text" id="inputCreditos" class="form-control"
+                               th:value="${cursoSeleccionado != null and cursoSeleccionado.creditos != null ? cursoSeleccionado.creditos + ' créditos' : '2 créditos'}">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="inputInicio">Fecha de Inicio:</label>
+                        <input type="text" id="inputInicio" class="form-control"
+                               th:value="${cursoSeleccionado != null and cursoSeleccionado.fechaInicio != null ? #temporals.format(cursoSeleccionado.fechaInicio, 'dd/MM/yyyy') : '15 de Octubre'}">
+                    </div>
+                </div>
+
+                <!-- Inversión y Cobros -->
+                <div class="flyer-section-title">💰 Inversión y Datos Yape</div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="form-label" for="inputPrecioGeneral">Inversión General:</label>
+                        <input type="text" id="inputPrecioGeneral" class="form-control"
+                               th:value="${cursoSeleccionado != null ? 'S/ ' + cursoSeleccionado.precio : 'S/ 150.00'}">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="form-label" for="inputPrecioComunidad">Comunidad UNA Puno:</label>
+                        <input type="text" id="inputPrecioComunidad" class="form-control"
+                               th:value="${cursoSeleccionado != null and cursoSeleccionado.precioComunidad != null ? 'S/ ' + cursoSeleccionado.precioComunidad : 'S/ 100.00'}">
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="form-label" for="inputYapeNumero">Número de Yape:</label>
+                        <input type="text" id="inputYapeNumero" class="form-control"
+                               th:value="${configPago != null ? configPago.numeroYape : '951 234 567'}">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="form-label" for="inputYapeTitular">Titular de Cuenta:</label>
+                        <input type="text" id="inputYapeTitular" class="form-control"
+                               th:value="${configPago != null ? configPago.titularYape : 'Leonid Alemán Gonzales'}">
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.88rem; cursor: pointer;">
+                        <input type="checkbox" id="checkMostrarQr" checked>
+                        Mostrar Código QR oficial de Yape en el flyer
+                    </label>
+                </div>
+            </div>
+
+            <!-- PREVIEW STAGE (CANVAS) -->
+            <div class="flyer-preview-stage">
+                <!-- Barra de Exportación -->
+                <div class="flyer-toolbar">
+                    <button type="button" id="btnDescargarFlyer" class="btn btn-primary" style="flex: 1; padding: 0.75rem 1.25rem; font-weight: 700;">
+                        📥 Descargar Flyer en PNG (Alta Resolución)
+                    </button>
+                    <button type="button" id="btnCopiarFlyer" class="btn btn-outline" style="background: #FFFFFF; font-weight: 600;">
+                        📋 Copiar Imagen
+                    </button>
+                </div>
+
+                <!-- LIENZO INTERACTIVO DEL FLYER -->
+                <div id="flyerCanvas" class="flyer-canvas theme-granate">
+                    <!-- Cabecera Institucional -->
+                    <div class="flyer-header">
+                        <img th:src="@{/images/logo-iiiccd.jpeg}" alt="Logo IIICCD" class="flyer-logo">
+                        <div class="flyer-univ-info">
+                            <h5>Universidad Nacional del Altiplano - Puno</h5>
+                            <h4>Facultad de Ingeniería Estadística e Informática</h4>
+                            <h3>INSTITUTO DE INVESTIGACIÓN IIICCD</h3>
+                        </div>
+                    </div>
+
+                    <!-- Fila de Badges -->
+                    <div class="flyer-badge-row">
+                        <span id="flyerLineaBadge" class="flyer-badge-linea"
+                              th:text="${cursoSeleccionado != null ? cursoSeleccionado.areaInvestigacion.lineaInvestigacion.nombre : 'Ciencias de la Computación'}">
+                            Ciencias de la Computación
+                        </span>
+                        <span class="flyer-badge-live">
+                            🔴 EN VIVO
+                        </span>
+                    </div>
+
+                    <!-- Título y Subtítulo -->
+                    <div class="flyer-title-box">
+                        <h1 id="flyerTitulo"
+                            th:text="${cursoSeleccionado != null ? cursoSeleccionado.nombre : 'Inteligencia Artificial y Machine Learning'}">
+                            Fundamentos y Aplicaciones de Inteligencia Artificial
+                        </h1>
+                        <p id="flyerSubtitulo"
+                           th:text="${cursoSeleccionado != null and cursoSeleccionado.descripcionCorta != null ? cursoSeleccionado.descripcionCorta : 'Programa Especializado de Alto Rendimiento Profesional'}">
+                            Programa de especialización con valor curricular y certificación universitaria oficial.
+                        </p>
+                    </div>
+
+                    <!-- Bloque del Docente / Ponente -->
+                    <div class="flyer-docente-box">
+                        <div class="flyer-docente-avatar-wrap">
+                            <div id="flyerDocenteIcon" class="flyer-docente-icon"
+                                 th:style="${cursoSeleccionado != null and cursoSeleccionado.docenteFotoUrl != null and !cursoSeleccionado.docenteFotoUrl.isEmpty() ? 'display: none;' : 'display: flex;'}">👨‍🏫</div>
+                            <img id="flyerDocenteImg" class="flyer-docente-img"
+                                 th:src="${cursoSeleccionado != null and cursoSeleccionado.docenteFotoUrl != null ? cursoSeleccionado.docenteFotoUrl : ''}"
+                                 th:style="${cursoSeleccionado != null and cursoSeleccionado.docenteFotoUrl != null and !cursoSeleccionado.docenteFotoUrl.isEmpty() ? 'display: block;' : 'display: none;'}"
+                                 alt="Ponente">
+                        </div>
+                        <div style="flex: 1; min-width: 0;">
+                            <div id="flyerDocente" class="flyer-docente-name"
+                                 th:text="${cursoSeleccionado != null ? cursoSeleccionado.docenteResponsable : 'Dr. Leonid Alemán Gonzales'}">
+                                Dr. Leonid Alemán Gonzales
+                            </div>
+                            <div id="flyerDocenteCargo" class="flyer-docente-role"
+                                 th:text="${cursoSeleccionado != null and cursoSeleccionado.docenteCargo != null ? cursoSeleccionado.docenteCargo : 'Investigador Principal IIICCD - FINESI'}">
+                                Investigador Principal IIICCD - FINESI
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cuadrícula de Datos Clave -->
+                    <div class="flyer-features-grid">
+                        <div class="flyer-feature-item">
+                            <span class="flyer-feature-label">⏱️ Duración Académica</span>
+                            <div id="flyerDuracion" class="flyer-feature-value"
+                                 th:text="${cursoSeleccionado != null ? cursoSeleccionado.duracion : '48 horas académicas'}">
+                                48 horas académicas
+                            </div>
+                        </div>
+
+                        <div class="flyer-feature-item">
+                            <span class="flyer-feature-label">🎓 Valor Curricular</span>
+                            <div id="flyerCreditos" class="flyer-feature-value"
+                                 th:text="${cursoSeleccionado != null and cursoSeleccionado.creditos != null ? cursoSeleccionado.creditos + ' créditos universitarios' : '2 créditos universitarios'}">
+                                2 créditos universitarios
+                            </div>
+                        </div>
+
+                        <div class="flyer-feature-item">
+                            <span class="flyer-feature-label">📅 Fecha de Inicio</span>
+                            <div id="flyerInicio" class="flyer-feature-value"
+                                 th:text="${cursoSeleccionado != null and cursoSeleccionado.fechaInicio != null ? #temporals.format(cursoSeleccionado.fechaInicio, 'dd/MM/yyyy') : '15 de Octubre, 2026'}">
+                                15 de Octubre, 2026
+                            </div>
+                        </div>
+
+                        <div class="flyer-feature-item">
+                            <span class="flyer-feature-label">💻 Modalidad de Clases</span>
+                            <div id="flyerModalidad" class="flyer-feature-value">
+                                Virtual en Vivo (Meet/Zoom)
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Fila de Tarifas Dobladas -->
+                    <div class="flyer-pricing-row">
+                        <div class="flyer-price-card">
+                            <span class="flyer-price-tag">Público General</span>
+                            <div id="flyerPrecioGeneral" class="flyer-price-amount"
+                                 th:text="${cursoSeleccionado != null ? 'S/ ' + cursoSeleccionado.precio : 'S/ 150.00'}">
+                                S/ 150.00
+                            </div>
+                        </div>
+
+                        <div class="flyer-price-card comunidad-una">
+                            <span class="flyer-price-tag">Comunidad UNA Puno</span>
+                            <div id="flyerPrecioComunidad" class="flyer-price-amount"
+                                 th:text="${cursoSeleccionado != null and cursoSeleccionado.precioComunidad != null ? 'S/ ' + cursoSeleccionado.precioComunidad : 'S/ 100.00'}">
+                                S/ 100.00
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bloque Yape con QR -->
+                    <div id="flyerYapeContainer" class="flyer-yape-box">
+                        <div class="flyer-yape-info">
+                            <span class="flyer-yape-badge">Inscripción Directa</span>
+                            <div style="font-size: 0.8rem; font-weight: 700; color: #374151;">Paga al instante por Yape:</div>
+                            <div id="flyerYapeNumero" class="flyer-yape-number"
+                                 th:text="${configPago != null ? configPago.numeroYape : '951 234 567'}">
+                                951 234 567
+                            </div>
+                            <div id="flyerYapeTitular" class="flyer-yape-titular"
+                                 th:text="${configPago != null ? configPago.titularYape : 'Leonid Alemán Gonzales'}">
+                                Leonid Alemán Gonzales
+                            </div>
+                        </div>
+
+                        <div id="flyerQrWrapper">
+                            <img id="flyerQrImg"
+                                 th:src="${configPago != null and configPago.qrImagenUrl != null ? configPago.qrImagenUrl : '/images/yape-qr-default.png'}"
+                                 alt="QR Yape" class="flyer-yape-qr">
+                        </div>
+                    </div>
+
+                    <!-- Pie del Flyer -->
+                    <div class="flyer-footer">
+                        <span>🛡️ Certificado oficial emitido por FINESI - UNA Puno</span>
+                        <span>🌐 iiiccd.unap.edu.pe</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Librería html2canvas para renderizado en imagen PNG -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"
+            integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- Script del Generador de Flyers -->
+    <script th:src="@{/js/flyer-generator.js}"></script>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

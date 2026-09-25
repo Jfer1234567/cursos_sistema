@@ -12,12 +12,12 @@
         <div class="auth-wrapper" style="max-width: 600px;">
             <div class="card card-body" style="padding: 2.5rem; border-top: 4px solid var(--primary);">
                 <div class="auth-header">
-                    <img th:src="@{/images/logo-iiiccd.jpg}" alt="Logo IIICCD" style="height: 64px; margin-bottom: 1rem;">
+                    <img th:src="@{/images/logo-iiiccd.jpeg}" alt="Logo IIICCD" style="height: 64px; margin-bottom: 1rem;">
                     <h2 style="font-size: 1.6rem; color: var(--primary);">Registro de Participante</h2>
                     <p style="color: var(--text-muted); font-size: 0.9rem;">Crea tu cuenta institucional para inscribirte a los cursos del IIICCD.</p>
                 </div>
 
-                <form th:action="@{/registro}" th:object="${registroDTO}" method="post">
+                <form th:action="@{/registro}" th:object="${registroDTO}" method="post" autocomplete="off">
                     <div class="form-group">
                         <label class="form-label" for="nombreCompleto">Nombre Completo (para certificados) *</label>
                         <input type="text" id="nombreCompleto" th:field="*{nombreCompleto}" class="form-control" placeholder="Ej. Juan Pérez García">
@@ -36,7 +36,9 @@
 
                         <div class="form-group">
                             <label class="form-label" for="numeroDocumento">Número de Documento *</label>
-                            <input type="text" id="numeroDocumento" th:field="*{numeroDocumento}" class="form-control" placeholder="Ej. 74839201">
+                            <input type="text" id="numeroDocumento" th:field="*{numeroDocumento}" class="form-control" 
+                                   placeholder="8 dígitos numéricos" maxlength="8" inputmode="numeric" pattern="[0-9]{8}" required>
+                            <small id="docHelp" class="form-text" style="color: var(--text-muted); font-size: 0.78rem;">Exactamente 8 dígitos numéricos (DNI)</small>
                             <div th:if="${#fields.hasErrors('numeroDocumento')}" th:errors="*{numeroDocumento}" class="form-error"></div>
                         </div>
                     </div>
@@ -44,26 +46,30 @@
                     <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 1rem;">
                         <div class="form-group">
                             <label class="form-label" for="correo">Correo Electrónico *</label>
-                            <input type="email" id="correo" th:field="*{correo}" class="form-control" placeholder="juan.perez@ejemplo.com">
+                            <input type="email" id="correo" th:field="*{correo}" class="form-control" placeholder="juan.perez@ejemplo.com" required>
                             <div th:if="${#fields.hasErrors('correo')}" th:errors="*{correo}" class="form-error"></div>
                         </div>
 
                         <div class="form-group">
                             <label class="form-label" for="telefono">Teléfono / WhatsApp *</label>
-                            <input type="text" id="telefono" th:field="*{telefono}" class="form-control" placeholder="951234567">
+                            <input type="tel" id="telefono" th:field="*{telefono}" class="form-control" 
+                                   placeholder="9 dígitos (Ej. 951234567)" maxlength="9" inputmode="numeric" pattern="[0-9]{9}" required>
+                            <small class="form-text" style="color: var(--text-muted); font-size: 0.78rem;">Exactamente 9 dígitos (celular Perú)</small>
                             <div th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}" class="form-error"></div>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label" for="institucionProcedencia">Institución de Procedencia *</label>
-                        <input type="text" id="institucionProcedencia" th:field="*{institucionProcedencia}" class="form-control" placeholder="Ej. UNA Puno, UNI, Empresa XYZ">
+                        <input type="text" id="institucionProcedencia" th:field="*{institucionProcedencia}" class="form-control" 
+                               placeholder="Ej. UNA Puno, UNI, Empresa XYZ" autocomplete="off" required>
                         <div th:if="${#fields.hasErrors('institucionProcedencia')}" th:errors="*{institucionProcedencia}" class="form-error"></div>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label" for="password">Contraseña de Acceso *</label>
-                        <input type="password" id="password" th:field="*{password}" class="form-control" placeholder="Mínimo 6 caracteres">
+                        <input type="password" id="password" th:field="*{password}" class="form-control" 
+                               placeholder="Mínimo 6 caracteres" autocomplete="new-password" required>
                         <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="form-error"></div>
                     </div>
 
@@ -78,6 +84,51 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tipoDocSelect = document.getElementById('tipoDocumento');
+            const numDocInput = document.getElementById('numeroDocumento');
+            const docHelp = document.getElementById('docHelp');
+            const telInput = document.getElementById('telefono');
+
+            function actualizarRestriccionDoc() {
+                if (!tipoDocSelect || !numDocInput) return;
+                const tipo = tipoDocSelect.value;
+                if (tipo === 'DNI') {
+                    numDocInput.maxLength = 8;
+                    numDocInput.placeholder = "8 dígitos numéricos";
+                    numDocInput.pattern = "[0-9]{8}";
+                    if (docHelp) docHelp.textContent = "Exactamente 8 dígitos numéricos (DNI)";
+                    numDocInput.value = numDocInput.value.replace(/[^0-9]/g, '').slice(0, 8);
+                } else {
+                    numDocInput.maxLength = 12;
+                    numDocInput.placeholder = "Entre 6 y 12 caracteres";
+                    numDocInput.pattern = "[A-Za-z0-9]{6,12}";
+                    if (docHelp) docHelp.textContent = "Entre 6 y 12 caracteres alfanuméricos";
+                    numDocInput.value = numDocInput.value.replace(/[^a-zA-Z0-9]/g, '').slice(0, 12);
+                }
+            }
+
+            if (tipoDocSelect && numDocInput) {
+                tipoDocSelect.addEventListener('change', actualizarRestriccionDoc);
+                numDocInput.addEventListener('input', function() {
+                    if (tipoDocSelect.value === 'DNI') {
+                        this.value = this.value.replace(/[^0-9]/g, '').slice(0, 8);
+                    } else {
+                        this.value = this.value.replace(/[^a-zA-Z0-9]/g, '').slice(0, 12);
+                    }
+                });
+                actualizarRestriccionDoc();
+            }
+
+            if (telInput) {
+                telInput.addEventListener('input', function() {
+                    this.value = this.value.replace(/[^0-9]/g, '').slice(0, 9);
+                });
+            }
+        });
+    </script>
 
     <div th:replace="~{fragments/footer :: footer}"></div>
 </body>

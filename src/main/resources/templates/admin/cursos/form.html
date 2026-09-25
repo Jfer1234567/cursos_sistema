@@ -22,8 +22,9 @@
                 Ingresa los datos académicos y detalles de configuración del curso.
             </p>
 
-            <form th:action="@{/admin/cursos/guardar}" th:object="${cursoDTO}" method="post">
+            <form th:action="@{/admin/cursos/guardar}" th:object="${cursoDTO}" method="post" enctype="multipart/form-data">
                 <input type="hidden" th:field="*{id}">
+                <input type="hidden" th:field="*{docenteFotoUrl}">
 
                 <div class="form-group">
                     <label class="form-label" for="nombre">Nombre Oficial del Curso *</label>
@@ -52,6 +53,30 @@
                     </div>
                 </div>
 
+                <!-- Datos Complementarios del Docente / Ponente -->
+                <div style="background: #F8FAFC; border: 1px solid var(--border); border-left: 4px solid var(--accent); padding: 1.25rem; border-radius: var(--radius-sm); margin-bottom: 1.5rem;">
+                    <h4 style="font-size: 0.95rem; color: var(--text-dark); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+                        👨‍🏫 Perfil Académico del Ponente / Docente
+                    </h4>
+                    <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 1.25rem; align-items: center;">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label class="form-label" for="docenteCargo">Grado Académico / Especialidad</label>
+                            <input type="text" id="docenteCargo" th:field="*{docenteCargo}" class="form-control" placeholder="Ej. Doctor en Inteligencia Artificial — Investigador Renacyt">
+                            <span class="form-text">Aparece en el afiche oficial y en la ficha informativa del curso.</span>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label class="form-label" for="docenteFotoFile">Fotografía del Ponente (Opcional)</label>
+                            <div style="display: flex; gap: 0.75rem; align-items: center;">
+                                <div th:if="*{docenteFotoUrl != null and !docenteFotoUrl.isEmpty()}" style="width: 48px; height: 48px; border-radius: 50%; overflow: hidden; border: 2px solid var(--primary); flex-shrink: 0;">
+                                    <img th:src="*{docenteFotoUrl}" alt="Docente" style="width: 100%; height: 100%; object-fit: cover;">
+                                </div>
+                                <input type="file" id="docenteFotoFile" th:field="*{docenteFotoFile}" accept="image/*" class="form-control" style="font-size: 0.85rem;">
+                            </div>
+                            <span class="form-text">JPG, PNG o WEBP. Se mostrará en recorte circular en el afiche y web.</span>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <label class="form-label" for="descripcionCorta">Descripción Corta (para tarjetas del catálogo)</label>
                     <input type="text" id="descripcionCorta" th:field="*{descripcionCorta}" class="form-control" placeholder="Breve resumen de 1 a 2 líneas">
@@ -63,13 +88,23 @@
                     <div th:if="${#fields.hasErrors('descripcion')}" th:errors="*{descripcion}" class="form-error"></div>
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                     <div class="form-group">
-                        <label class="form-label" for="precio">Precio (S/ PEN) *</label>
+                        <label class="form-label" for="precio">Precio General (S/ PEN) *</label>
                         <input type="number" step="0.10" id="precio" th:field="*{precio}" class="form-control" placeholder="120.00">
                         <div th:if="${#fields.hasErrors('precio')}" th:errors="*{precio}" class="form-error"></div>
+                        <span class="form-text">Tarifa regular para público externo.</span>
                     </div>
 
+                    <div class="form-group">
+                        <label class="form-label" for="precioComunidad">Precio Comunidad UNA Puno (S/ PEN)</label>
+                        <input type="number" step="0.10" id="precioComunidad" th:field="*{precioComunidad}" class="form-control" placeholder="80.00">
+                        <div th:if="${#fields.hasErrors('precioComunidad')}" th:errors="*{precioComunidad}" class="form-error"></div>
+                        <span class="form-text">Tarifa preferencial con descuento para estudiantes/egresados/docentes UNA.</span>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
                     <div class="form-group">
                         <label class="form-label" for="cuposTotales">Cupos Totales *</label>
                         <input type="number" id="cuposTotales" th:field="*{cuposTotales}" class="form-control" placeholder="25">
@@ -77,9 +112,15 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label" for="duracion">Duración *</label>
+                        <label class="form-label" for="duracion">Horas Académicas *</label>
                         <input type="text" id="duracion" th:field="*{duracion}" class="form-control" placeholder="Ej. 40 horas académicas">
                         <div th:if="${#fields.hasErrors('duracion')}" th:errors="*{duracion}" class="form-error"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="creditos">Créditos Universitarios *</label>
+                        <input type="number" id="creditos" th:field="*{creditos}" class="form-control" placeholder="2" min="1">
+                        <div th:if="${#fields.hasErrors('creditos')}" th:errors="*{creditos}" class="form-error"></div>
                     </div>
                 </div>
 
@@ -102,15 +143,23 @@
                     </div>
                 </div>
 
-                <!-- Enlace Privado de Clases Virtuales -->
-                <div class="form-group" style="background: #F8FAFC; border: 1px solid var(--border); padding: 1.25rem; border-radius: var(--radius-sm);">
-                    <label class="form-label" for="enlaceClase" style="color: var(--primary);">
-                        🔒 Enlace de Sesión Virtual (Zoom / Google Meet)
-                    </label>
-                    <input type="url" id="enlaceClase" th:field="*{enlaceClase}" class="form-control" placeholder="https://meet.google.com/xxx-xxxx-xxx o link de Zoom">
-                    <span class="form-text">
-                        <strong>Seguridad:</strong> Este enlace solo será visible para aquellos participantes cuya inscripción haya sido APROBADA por la directiva.
-                    </span>
+                <!-- Enlaces Privados para Inscritos Aprobados -->
+                <div style="background: #F8FAFC; border: 1px solid var(--border); padding: 1.5rem; border-radius: var(--radius-sm); margin-bottom: 1.5rem;">
+                    <h4 style="font-size: 1rem; color: var(--primary); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                        🔒 Canales Privados (Visibles únicamente para participantes con pago aprobado)
+                    </h4>
+
+                    <div class="form-group" style="margin-bottom: 1.25rem;">
+                        <label class="form-label" for="enlaceClase">Enlace de Sesión Virtual (Google Meet / Zoom)</label>
+                        <input type="url" id="enlaceClase" th:field="*{enlaceClase}" class="form-control" placeholder="https://meet.google.com/xxx-xxxx-xxx o link de Zoom">
+                        <span class="form-text">Enlace para conectarse a las clases sincrónicas en vivo.</span>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="form-label" for="enlaceWhatsapp">Enlace a Grupo Oficial de WhatsApp</label>
+                        <input type="url" id="enlaceWhatsapp" th:field="*{enlaceWhatsapp}" class="form-control" placeholder="https://chat.whatsapp.com/xxxxxxxxxxxxxxxxxxxx">
+                        <span class="form-text">El enlace se comparte al participante en su panel y por correo al confirmarse su pago.</span>
+                    </div>
                 </div>
 
                 <div style="margin-top: 2rem; display: flex; gap: 1rem;">

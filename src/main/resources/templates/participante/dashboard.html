@@ -53,17 +53,30 @@
                             <strong>Motivo de observación:</strong> <span th:text="${ins.notasAdmin}">Motivo</span>
                         </div>
 
-                        <!-- Enlace de Clase Zoom/Meet si está APROBADA o COMPLETADA -->
+                        <!-- Enlaces de Clase Zoom/Meet y WhatsApp si está APROBADA o COMPLETADA -->
                         <div th:if="${ins.estado.name() == 'APROBADA' or ins.estado.name() == 'COMPLETADA'}"
-                             style="margin-top: 1rem; background: var(--success-light); padding: 0.85rem 1.25rem; border-radius: var(--radius-sm); border-left: 3px solid var(--success);">
-                            <strong style="color: var(--success);">Acceso a Sesiones Virtuales:</strong>
-                            <div th:if="${ins.curso.enlaceClase != null and !ins.curso.enlaceClase.empty}">
-                                <a th:href="${ins.curso.enlaceClase}" target="_blank" class="btn btn-sm btn-success" style="margin-top: 0.5rem;">
-                                    📹 Unirse a la Clase (Zoom / Meet) &rarr;
-                                </a>
+                             style="margin-top: 1rem; background: var(--success-light); padding: 1rem 1.25rem; border-radius: var(--radius-sm); border-left: 3px solid var(--success); display: flex; flex-direction: column; gap: 0.75rem;">
+                            <div>
+                                <strong style="color: var(--success);">Acceso a Sesiones Virtuales:</strong>
+                                <div th:if="${ins.curso.enlaceClase != null and !ins.curso.enlaceClase.empty}">
+                                    <a th:href="${ins.curso.enlaceClase}" target="_blank" class="btn btn-sm btn-success" style="margin-top: 0.4rem;">
+                                        📹 Unirse a la Clase (Zoom / Meet) &rarr;
+                                    </a>
+                                </div>
+                                <div th:unless="${ins.curso.enlaceClase != null and !ins.curso.enlaceClase.empty}" style="font-size: 0.88rem; color: var(--secondary); margin-top: 0.2rem;">
+                                    El enlace será habilitado por la coordinación antes de la primera sesión.
+                                </div>
                             </div>
-                            <div th:unless="${ins.curso.enlaceClase != null and !ins.curso.enlaceClase.empty}" style="font-size: 0.88rem; color: var(--secondary); margin-top: 0.2rem;">
-                                El enlace será habilitado por la coordinación antes de la primera sesión.
+
+                            <div th:if="${ins.curso.enlaceWhatsapp != null and !ins.curso.enlaceWhatsapp.empty}"
+                                 style="border-top: 1px dashed rgba(46,125,50,0.3); padding-top: 0.6rem;">
+                                <strong style="color: #128C7E;">Grupo Oficial de WhatsApp:</strong>
+                                <div>
+                                    <a th:href="${ins.curso.enlaceWhatsapp}" target="_blank" class="btn btn-sm"
+                                       style="margin-top: 0.4rem; background: #25D366; color: #FFFFFF; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem;">
+                                        💬 Unirse al Grupo de WhatsApp &rarr;
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -90,6 +103,13 @@
                            th:href="@{'/participante/certificado/' + ${ins.id} + '/pdf'}"
                            class="btn btn-sm btn-secondary">
                             📥 Descargar PDF
+                        </a>
+
+                        <a th:if="${ins.estado.name() == 'COMPLETADA' and ins.certificado != null}"
+                           th:href="'https://wa.me/51951234567?text=' + ${#uris.escapeQueryParam('¡Hola Instituto IIICCD - UNA Puno! Mi nombre es ' + ins.usuario.nombreCompleto + ' (DNI: ' + ins.usuario.numeroDocumento + '). Culminé con éxito el curso ''' + ins.curso.nombre + '''. Solicito el envío/registro de mi Certificado Oficial con Código Único: ' + ins.certificado.codigoVerificacion + '. Enlace de validación: http://localhost:8085/verificar?codigo=' + ins.certificado.codigoVerificacion + '. ¡Muchas gracias!')}"
+                           target="_blank"
+                           class="btn btn-sm btn-whatsapp">
+                            📲 Recibir por WhatsApp
                         </a>
                     </div>
                 </div>

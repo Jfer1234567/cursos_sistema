@@ -13,68 +13,143 @@
             <div>
                 <a th:href="@{/participante/dashboard}" class="btn btn-sm btn-outline">&larr; Volver a Mis Cursos</a>
             </div>
-            <div>
-                <a th:href="@{'/participante/certificado/' + ${inscripcion.id} + '/pdf'}" class="btn btn-lg btn-primary">
-                    📥 Descargar Certificado Oficial en PDF
+            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                <a th:href="@{'/participante/certificado/' + ${inscripcion.id} + '/pdf'}" class="btn btn-primary">
+                    📥 Descargar PDF Oficial
+                </a>
+                <a th:href="'https://wa.me/51951234567?text=' + ${#uris.escapeQueryParam('¡Hola Instituto IIICCD - UNA Puno! Mi nombre es ' + certificado.nombreParticipante + '. Culminé con éxito el curso ''' + certificado.nombreCurso + '''. Solicito el envío/registro de mi Certificado Oficial con Código Único: ' + certificado.codigoVerificacion + '. Enlace de validación: http://localhost:8085/verificar?codigo=' + certificado.codigoVerificacion + '. ¡Muchas gracias!')}"
+                   target="_blank"
+                   class="btn btn-whatsapp"
+                   style="display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 600;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.592 2.654-.696c1.029.575 1.764.839 2.806.839 3.18 0 5.766-2.586 5.766-5.766-.001-3.18-2.586-5.767-5.766-5.767zm3.364 8.213c-.14.394-.714.729-1.026.777-.306.046-.693.076-2.275-.544-1.748-.686-2.883-2.457-2.97-2.574-.087-.117-.706-.939-.706-1.791 0-.852.447-1.272.607-1.446.16-.174.348-.217.464-.217.116 0 .232.001.333.006.107.005.25-.041.391.298.145.348.494 1.205.538 1.293.044.088.073.19.015.306-.058.116-.087.19-.174.291-.087.102-.183.228-.261.306-.088.087-.179.182-.077.357.102.175.454.748.973 1.211.669.596 1.233.78 1.408.868.175.088.277.073.38-.044.102-.116.436-.508.552-.683.116-.175.233-.146.393-.087.16.058 1.018.48 1.193.567.175.087.291.131.335.204.043.073.043.423-.097.817z"/>
+                        <path d="M12.012 2.002c-5.508 0-9.986 4.478-9.986 9.984 0 1.84.5 3.565 1.373 5.052L2 22.002l5.12-1.343a9.92 9.92 0 004.892 1.327h.004c5.508 0 9.984-4.478 9.984-9.984 0-2.668-1.039-5.176-2.925-7.062a9.927 9.927 0 00-7.063-2.938zm0 18.238h-.003a8.217 8.217 0 01-4.184-1.15l-.3-.178-3.11.816.83-3.032-.196-.312a8.204 8.204 0 01-1.258-4.398c0-4.544 3.697-8.241 8.241-8.241 2.202 0 4.272.858 5.829 2.415a8.196 8.196 0 012.413 5.827c0 4.545-3.697 8.242-8.242 8.242z"/>
+                    </svg>
+                    <span>Recibir por WhatsApp</span>
                 </a>
             </div>
         </div>
 
-        <!-- Previsualización del Certificado Académico -->
+        <!-- Previsualización del Certificado Académico de Gala -->
         <div class="cert-preview-box">
-            <div style="text-align: center; margin-bottom: 1.5rem;">
-                <img th:src="@{/images/logo-iiiccd.jpg}" alt="Logo IIICCD" style="height: 72px; margin-bottom: 0.5rem;">
-                <h4 style="color: var(--secondary); font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.2rem;">
-                    Universidad Nacional del Altiplano - Puno
-                </h4>
-                <h4 style="color: var(--secondary); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem;">
-                    Facultad de Ingeniería Estadística e Informática
-                </h4>
-                <h2 style="color: var(--primary); font-size: 1.45rem; font-weight: 800; text-transform: uppercase;">
-                    Instituto de Investigación en Inteligencia Computacional y Ciencia de Datos
-                </h2>
-            </div>
+            <!-- Esquinas ornamentales doradas -->
+            <div class="cert-corner cert-corner-tl"></div>
+            <div class="cert-corner cert-corner-tr"></div>
+            <div class="cert-corner cert-corner-bl"></div>
+            <div class="cert-corner cert-corner-br"></div>
 
-            <div style="margin: 2rem 0;">
-                <p style="color: var(--accent); font-weight: 700; letter-spacing: 2px; text-transform: uppercase; font-size: 1.1rem; margin-bottom: 0.2rem;">
-                    OTORGA EL PRESENTE
-                </p>
-                <h1 style="color: var(--primary); font-size: 2.3rem; font-weight: 800; margin-bottom: 1rem; letter-spacing: 1px;">
-                    CERTIFICADO DE PARTICIPACIÓN
-                </h1>
-                <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 0.5rem;">A favor de:</p>
-                <h2 style="color: var(--text); font-size: 2rem; font-weight: 800; text-transform: uppercase; margin-bottom: 1.25rem;"
-                    th:text="${certificado.nombreParticipante}">
-                    JUAN PÉREZ GARCÍA
-                </h2>
-                <p style="max-width: 650px; margin: 0 auto 1.25rem; font-size: 1.05rem; line-height: 1.6; color: var(--secondary);">
-                    Por haber culminado y aprobado con éxito las exigencias académicas del curso de alta especialización en:
-                </p>
-                <h3 style="color: var(--primary); font-size: 1.55rem; font-weight: 700; margin-bottom: 1rem;"
-                    th:text="'&ldquo;' + ${certificado.nombreCurso} + '&rdquo;'">
-                    "Inteligencia Artificial Aplicada"
-                </h3>
-                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 2rem;">
-                    Línea: <strong th:text="${certificado.lineaInvestigacion}">Línea</strong> &bull;
-                    Área: <strong th:text="${certificado.areaInvestigacion}">Área</strong> &bull;
-                    Docente: <strong th:text="${certificado.docente}">Docente</strong> &bull;
-                    Duración: <strong th:text="${certificado.duracion}">40 horas</strong>
-                </p>
-            </div>
+            <!-- Marca de Agua Central (Solo Isotipo puro sin la base ploma) -->
+            <img th:src="@{/images/logo-isotipo-watermark.png}" class="cert-watermark-bg" alt="Marca de agua IIICCD">
 
-            <div style="border-top: 1px solid var(--border); padding-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; font-size: 0.85rem; color: var(--text-muted);">
-                <div>
-                    Puno, <span th:text="${#temporals.format(certificado.fechaEmision, 'dd ''de'' MMMM ''de'' yyyy')}">Fecha</span>
+            <div class="cert-content">
+                <!-- Cabecera Institucional Solemne -->
+                <div style="text-align: center; margin-bottom: 1.5rem;">
+                    <img th:src="@{/images/logo-isotipo-watermark.png}" alt="Isotipo Oficial IIICCD" style="height: 70px; margin-bottom: 0.65rem; filter: drop-shadow(0 4px 8px rgba(109,26,36,0.15));">
+                    <h4 style="color: #4A5568; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; margin-bottom: 0.25rem;">
+                        Universidad Nacional del Altiplano - Puno
+                    </h4>
+                    <h5 style="color: #718096; font-size: 0.88rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-bottom: 0.45rem;">
+                        Facultad de Ingeniería Estadística e Informática
+                    </h5>
+                    <h2 style="color: var(--primary); font-size: 1.4rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">
+                        Instituto de Investigación en Inteligencia Computacional y Ciencia de Datos
+                    </h2>
                 </div>
-                <div style="font-family: monospace; font-size: 0.95rem; font-weight: bold; color: var(--secondary); background: #F3F4F6; padding: 0.4rem 0.8rem; border-radius: var(--radius-sm);">
-                    Código: <span th:text="${certificado.codigoVerificacion}" style="color: var(--primary);">IIICCD-ABC123</span>
+
+                <!-- Cuerpo Central de Acreditación -->
+                <div style="margin: 2.25rem 0 1.5rem;">
+                    <p style="color: var(--accent); font-weight: 800; letter-spacing: 3px; text-transform: uppercase; font-size: 1.15rem; margin-bottom: 0.35rem;">
+                        OTORGA EL PRESENTE
+                    </p>
+                    <h1 style="color: var(--primary); font-size: 2.5rem; font-weight: 900; margin-bottom: 1.25rem; letter-spacing: 1.5px; text-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+                        CERTIFICADO DE PARTICIPACIÓN
+                    </h1>
+                    
+                    <p style="color: #64748B; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-bottom: 0.5rem;">
+                        A favor de:
+                    </p>
+                    <h2 style="color: #0F172A; font-size: 2.2rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem;"
+                        th:text="${certificado.nombreParticipante}">
+                        NOMBRE DEL PARTICIPANTE
+                    </h2>
+                    <div style="width: 120px; height: 3px; background: linear-gradient(90deg, transparent, var(--accent), transparent); margin: 0 auto 1.5rem;"></div>
+
+                    <p style="max-width: 680px; margin: 0 auto 1.25rem; font-size: 1.08rem; line-height: 1.65; color: #334155;">
+                        Por haber culminado y aprobado satisfactoriamente todas las exigencias académicas del curso de alta especialización profesional en:
+                    </p>
+                    <h3 style="color: var(--primary); font-size: 1.65rem; font-weight: 800; margin-bottom: 1.25rem;"
+                        th:text="'&ldquo;' + ${certificado.nombreCurso} + '&rdquo;'">
+                        "Nombre del Curso Especializado"
+                    </h3>
+
+                    <!-- Ficha Resumen Curricular -->
+                    <div class="cert-curriculum-badge">
+                        <div>
+                            Línea: <strong th:text="${certificado.lineaInvestigacion}">Línea</strong> &bull;
+                            Área: <strong th:text="${certificado.areaInvestigacion}">Área</strong>
+                        </div>
+                        <div style="margin-top: 0.25rem;">
+                            Docente Responsable: <strong th:text="${certificado.docente}">Docente</strong> &bull;
+                            Duración: <strong th:text="${certificado.duracion + (certificado.creditos != null ? ' (' + certificado.creditos + ' créditos universitarios)' : '')}">40 horas</strong>
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    <a th:href="@{/verificar(codigo=${certificado.codigoVerificacion})}" target="_blank" style="color: var(--primary); font-weight: 600;">
-                        🔗 Validar Autenticidad en Línea
-                    </a>
+
+                <!-- Firmas Oficiales de Autoridades -->
+                <div class="cert-signatures-grid">
+                    <div class="cert-signature-item">
+                        <div class="cert-signature-seal">
+                            <svg viewBox="0 0 100 100" width="100%" height="100%">
+                                <circle cx="50" cy="50" r="45" fill="none" stroke="#6D1A24" stroke-width="2" stroke-dasharray="3,2"/>
+                                <circle cx="50" cy="50" r="38" fill="none" stroke="#C99738" stroke-width="1"/>
+                                <text x="50" y="46" font-size="8" text-anchor="middle" fill="#6D1A24" font-weight="bold">DIRECCIÓN</text>
+                                <text x="50" y="58" font-size="8" text-anchor="middle" fill="#6D1A24" font-weight="bold">IIICCD</text>
+                            </svg>
+                        </div>
+                        <div class="cert-signature-line"></div>
+                        <div class="cert-signature-name">Dr. Leonid Alemán Gonzales</div>
+                        <div class="cert-signature-title">Director del Instituto de Investigación IIICCD<br>Facultad de Ingeniería Estadística e Informática</div>
+                    </div>
+
+                    <div class="cert-signature-item">
+                        <div class="cert-signature-seal">
+                            <svg viewBox="0 0 100 100" width="100%" height="100%">
+                                <circle cx="50" cy="50" r="45" fill="none" stroke="#6D1A24" stroke-width="2" stroke-dasharray="3,2"/>
+                                <circle cx="50" cy="50" r="38" fill="none" stroke="#C99738" stroke-width="1"/>
+                                <text x="50" y="46" font-size="8" text-anchor="middle" fill="#6D1A24" font-weight="bold">DECANATURA</text>
+                                <text x="50" y="58" font-size="8" text-anchor="middle" fill="#6D1A24" font-weight="bold">FINESI - UNA</text>
+                            </svg>
+                        </div>
+                        <div class="cert-signature-line"></div>
+                        <div class="cert-signature-name">Decanatura / Secretaría Académica</div>
+                        <div class="cert-signature-title">Facultad de Ingeniería Estadística e Informática<br>Universidad Nacional del Altiplano - Puno</div>
+                    </div>
+                </div>
+
+                <!-- Pie de Verificación y Código QR -->
+                <div style="border-top: 1px solid var(--border); margin-top: 2rem; padding-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; font-size: 0.88rem; color: #64748B;">
+                    <div style="text-align: left;">
+                        <div>Puno, <span th:text="${#temporals.format(certificado.fechaEmision, 'dd ''de'' MMMM ''de'' yyyy')}">Fecha</span></div>
+                        <div style="margin-top: 0.35rem; font-family: monospace; font-size: 0.95rem; font-weight: bold; color: var(--primary); background: #F8FAFC; padding: 0.3rem 0.6rem; border-radius: 4px; display: inline-block; border: 1px solid var(--border);">
+                            Código: <span th:text="${certificado.codigoVerificacion}">IIICCD-ABC123</span>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <!-- QR de Validación Vectorial -->
+                        <img th:src="'https://api.qrserver.com/v1/create-qr-code/?size=70x70&data=' + ${#uris.escapeQueryParam('http://localhost:8085/verificar?codigo=' + certificado.codigoVerificacion)}"
+                             alt="QR de Validación"
+                             style="width: 64px; height: 64px; border: 1px solid var(--border); border-radius: 4px; padding: 2px; background: #FFFFFF;">
+                        <div style="text-align: left;">
+                            <a th:href="@{/verificar(codigo=${certificado.codigoVerificacion})}" target="_blank" style="color: var(--primary); font-weight: 700; text-decoration: none; display: block;">
+                                🔗 Validar Autenticidad en Línea
+                            </a>
+                            <span style="font-size: 0.78rem; color: #94A3B8;">Escanea con tu celular para validar</span>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </div>
         </div>
     </div>
 

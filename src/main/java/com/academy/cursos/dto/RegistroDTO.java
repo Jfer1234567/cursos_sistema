@@ -4,6 +4,7 @@ import com.academy.cursos.model.enums.TipoDocumento;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public class RegistroDTO {
@@ -15,6 +16,7 @@ public class RegistroDTO {
     private TipoDocumento tipoDocumento;
 
     @NotBlank(message = "El número de documento es obligatorio")
+    @Size(min = 6, max = 12, message = "El número de documento debe tener entre 6 y 12 caracteres")
     private String numeroDocumento;
 
     @NotBlank(message = "El correo electrónico es obligatorio")
@@ -22,6 +24,7 @@ public class RegistroDTO {
     private String correo;
 
     @NotBlank(message = "El teléfono es obligatorio")
+    @Pattern(regexp = "^[0-9]{9}$", message = "El teléfono debe contener exactamente 9 dígitos numéricos")
     private String telefono;
 
     @NotBlank(message = "La institución de procedencia es obligatoria")

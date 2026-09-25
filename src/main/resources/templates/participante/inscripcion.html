@@ -14,17 +14,27 @@
         </div>
 
         <div class="card card-body" style="border-top: 5px solid var(--primary); padding: 2.5rem;">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
                 <div>
                     <span class="badge badge-primary" style="margin-bottom: 0.5rem;">Paso de Pago</span>
                     <h1 style="font-size: 1.85rem;" th:text="${inscripcion.curso.nombre}">Curso</h1>
                     <p style="color: var(--text-muted); margin-bottom: 0;">
-                        Inversión total a cancelar: <strong style="color: var(--primary); font-size: 1.25rem;" th:text="${'S/ ' + inscripcion.curso.precio}">S/ 150.00</strong>
+                        Inversión General: <strong style="color: var(--primary); font-size: 1.25rem;" th:text="${'S/ ' + inscripcion.curso.precio}">S/ 150.00</strong>
+                        <span th:if="${inscripcion.curso.precioComunidad != null}">
+                            &bull; Comunidad UNA Puno: <strong style="color: #047857; font-size: 1.25rem;" th:text="${'S/ ' + inscripcion.curso.precioComunidad}">S/ 100.00</strong>
+                        </span>
                     </p>
                 </div>
                 <div th:if="${inscripcion.estado.name() == 'RECHAZADA'}" class="badge badge-danger">
                     Pago Rechazado - Vuelva a enviar
                 </div>
+            </div>
+
+            <div th:if="${inscripcion.curso.precioComunidad != null}"
+                 style="background: #ECFDF5; border: 1px solid #A7F3D0; border-radius: var(--radius-sm); padding: 0.85rem 1.25rem; margin-bottom: 1.5rem; font-size: 0.9rem; color: #065F46;">
+                🎓 <strong>¿Perteneces a la comunidad UNA Puno?</strong> Cancela la tarifa preferencial de 
+                <strong th:text="${'S/ ' + inscripcion.curso.precioComunidad}">S/ 100.00</strong> (Estudiante, egresado o docente). De lo contrario, cancela la tarifa general de 
+                <strong th:text="${'S/ ' + inscripcion.curso.precio}">S/ 150.00</strong>.
             </div>
 
             <!-- Observación previa si fue rechazado -->

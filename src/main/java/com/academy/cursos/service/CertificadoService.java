@@ -48,6 +48,7 @@ public class CertificadoService {
         cert.setAreaInvestigacion(inscripcion.getCurso().getAreaInvestigacion().getNombre());
         cert.setDocente(inscripcion.getCurso().getDocenteResponsable());
         cert.setDuracion(inscripcion.getCurso().getDuracion());
+        cert.setCreditos(inscripcion.getCurso().getCreditos() != null ? inscripcion.getCurso().getCreditos() : 2);
 
         Certificado guardado = certificadoRepository.save(cert);
 

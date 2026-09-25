@@ -35,3 +35,8 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Uploads y Archivos Temporales de Runtime ###
+uploads/*
+!uploads/.gitkeep
+

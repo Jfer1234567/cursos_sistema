@@ -55,9 +55,24 @@
                                 </td>
                                 <td th:text="${#temporals.format(ins.fechaInscripcion, 'dd/MM/yyyy HH:mm')}">Fecha</td>
                                 <td>
-                                    <a th:href="@{'/admin/inscripciones/' + ${ins.id}}" class="btn btn-sm btn-primary">
-                                        🔍 Revisar y Validar
-                                    </a>
+                                    <div style="display: flex; gap: 0.4rem; align-items: center;">
+                                        <a th:href="@{'/admin/inscripciones/' + ${ins.id}}" class="btn btn-sm btn-primary">
+                                            🔍 Revisar
+                                        </a>
+                                        <a th:if="${ins.usuario.telefono != null and !ins.usuario.telefono.empty}"
+                                           th:with="telLimpio=${#strings.replace(#strings.replace(#strings.replace(ins.usuario.telefono, ' ', ''), '-', ''), '+', '')},
+                                                    telFinal=${#strings.startsWith(telLimpio, '51') ? telLimpio : ('51' + telLimpio)}"
+                                           th:href="'https://wa.me/' + ${telFinal} + '?text=' + ${#uris.escapeQueryParam('Estimado(a) ' + ins.usuario.nombreCompleto + ', le saludamos del Instituto IIICCD - UNA Puno en relación a su inscripción en el curso ''' + ins.curso.nombre + '''.')}"
+                                           target="_blank"
+                                           class="btn btn-sm btn-whatsapp"
+                                           title="Contactar por WhatsApp"
+                                           style="padding: 0.35rem 0.55rem; display: inline-flex; align-items: center; justify-content: center;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                                <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.592 2.654-.696c1.029.575 1.764.839 2.806.839 3.18 0 5.766-2.586 5.766-5.766-.001-3.18-2.586-5.767-5.766-5.767zm3.364 8.213c-.14.394-.714.729-1.026.777-.306.046-.693.076-2.275-.544-1.748-.686-2.883-2.457-2.97-2.574-.087-.117-.706-.939-.706-1.791 0-.852.447-1.272.607-1.446.16-.174.348-.217.464-.217.116 0 .232.001.333.006.107.005.25-.041.391.298.145.348.494 1.205.538 1.293.044.088.073.19.015.306-.058.116-.087.19-.174.291-.087.102-.183.228-.261.306-.088.087-.179.182-.077.357.102.175.454.748.973 1.211.669.596 1.233.78 1.408.868.175.088.277.073.38-.044.102-.116.436-.508.552-.683.116-.175.233-.146.393-.087.16.058 1.018.48 1.193.567.175.087.291.131.335.204.043.073.043.423-.097.817z"/>
+                                                <path d="M12.012 2.002c-5.508 0-9.986 4.478-9.986 9.984 0 1.84.5 3.565 1.373 5.052L2 22.002l5.12-1.343a9.92 9.92 0 004.892 1.327h.004c5.508 0 9.984-4.478 9.984-9.984 0-2.668-1.039-5.176-2.925-7.062a9.927 9.927 0 00-7.063-2.938zm0 18.238h-.003a8.217 8.217 0 01-4.184-1.15l-.3-.178-3.11.816.83-3.032-.196-.312a8.204 8.204 0 01-1.258-4.398c0-4.544 3.697-8.241 8.241-8.241 2.202 0 4.272.858 5.829 2.415a8.196 8.196 0 012.413 5.827c0 4.545-3.697 8.242-8.242 8.242z"/>
+                                            </svg>
+                                        </a>
+                                    </div>
                                 </td>
                             </tr>
                         </tbody>

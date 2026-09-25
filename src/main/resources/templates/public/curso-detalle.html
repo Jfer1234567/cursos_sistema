@@ -35,13 +35,22 @@
                 <div class="card card-body">
                     <h3 style="margin-bottom: 1.25rem;">Información Académica</h3>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
-                        <div>
-                            <strong>Docente Responsable:</strong>
-                            <p style="margin-top: 0.2rem;" th:text="${curso.docenteResponsable}">Docente</p>
+                        <!-- Perfil del Docente con Fotografía -->
+                        <div style="grid-column: span 2; display: flex; align-items: center; gap: 1.15rem; background: #F8FAFC; padding: 1.15rem; border-radius: var(--radius-sm); border: 1px solid var(--border);">
+                            <div style="width: 58px; height: 58px; border-radius: 50%; overflow: hidden; border: 2.5px solid var(--primary); flex-shrink: 0; background: #E2E8F0; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm);">
+                                <img th:if="${curso.docenteFotoUrl != null and !curso.docenteFotoUrl.isEmpty()}" th:src="${curso.docenteFotoUrl}" alt="Docente" style="width: 100%; height: 100%; object-fit: cover;">
+                                <span th:unless="${curso.docenteFotoUrl != null and !curso.docenteFotoUrl.isEmpty()}" style="font-size: 1.85rem;">👨‍🏫</span>
+                            </div>
+                            <div>
+                                <span style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700; color: var(--primary); letter-spacing: 0.5px; display: block;">Docente / Investigador Responsable</span>
+                                <strong style="font-size: 1.1rem; color: var(--text-dark); display: block;" th:text="${curso.docenteResponsable}">Dr. Leonid Alemán Gonzales</strong>
+                                <span style="margin: 0.2rem 0 0 0; font-size: 0.85rem; color: var(--text-muted); display: block;" th:text="${curso.docenteCargo != null ? curso.docenteCargo : 'Investigador Principal IIICCD — UNA Puno'}">Investigador IIICCD</span>
+                            </div>
                         </div>
+
                         <div>
-                            <strong>Duración Académica:</strong>
-                            <p style="margin-top: 0.2rem;" th:text="${curso.duracion}">40 horas</p>
+                            <strong>Horas y Créditos:</strong>
+                            <p style="margin-top: 0.2rem;" th:text="${curso.duracion + ' (' + (curso.creditos != null ? curso.creditos : 2) + ' créditos universitarios)'}">40 horas (2 créditos)</p>
                         </div>
                         <div th:if="${curso.fechaInicio != null}">
                             <strong>Fecha de Inicio:</strong>
@@ -59,10 +68,21 @@
             <div class="curso-sidebar-card">
                 <div class="card" style="box-shadow: var(--shadow-lg); border-top: 5px solid var(--primary);">
                     <div class="card-body" style="text-align: center; padding: 2rem;">
-                        <span style="font-size: 0.9rem; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Inversión</span>
-                        <div style="font-size: 2.8rem; font-weight: 800; color: var(--primary); margin: 0.5rem 0 1rem;"
+                        <span style="font-size: 0.85rem; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Inversión General</span>
+                        <div style="font-size: 2.6rem; font-weight: 800; color: var(--primary); margin: 0.3rem 0 0.5rem;"
                              th:text="${'S/ ' + curso.precio}">
                             S/ 150.00
+                        </div>
+
+                        <!-- Tarifa Diferenciada Comunidad UNA -->
+                        <div th:if="${curso.precioComunidad != null}"
+                             style="background: #ECFDF5; border: 1px solid #A7F3D0; border-radius: var(--radius-sm); padding: 0.75rem 1rem; margin-bottom: 1.25rem;">
+                            <span style="font-size: 0.8rem; text-transform: uppercase; color: #065F46; font-weight: 700; display: block;">Tarifa Comunidad UNA Puno</span>
+                            <div style="font-size: 1.8rem; font-weight: 800; color: #047857; margin: 0.2rem 0;"
+                                 th:text="${'S/ ' + curso.precioComunidad}">
+                                S/ 100.00
+                            </div>
+                            <span style="font-size: 0.75rem; color: #065F46;">(Estudiantes, docentes y egresados UNA Puno)</span>
                         </div>
 
                         <div style="background: #F8FAFC; border-radius: var(--radius-sm); padding: 1rem; margin-bottom: 1.5rem; text-align: left;">

@@ -3,10 +3,13 @@ package com.academy.cursos.controller.admin;
 import com.academy.cursos.dto.CursoDTO;
 import com.academy.cursos.model.Curso;
 import com.academy.cursos.model.Inscripcion;
+import com.academy.cursos.model.Pago;
+import com.academy.cursos.model.Usuario;
 import com.academy.cursos.model.enums.EstadoCurso;
 import com.academy.cursos.repository.AreaInvestigacionRepository;
 import com.academy.cursos.service.CursoService;
 import com.academy.cursos.service.InscripcionService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +17,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Controller
@@ -92,6 +100,11 @@ public class AdminCursoController {
         dto.setFechaFin(curso.getFechaFin());
         dto.setImagenUrl(curso.getImagenUrl());
         dto.setEnlaceClase(curso.getEnlaceClase());
+        dto.setEnlaceWhatsapp(curso.getEnlaceWhatsapp());
+        dto.setPrecioComunidad(curso.getPrecioComunidad());
+        dto.setCreditos(curso.getCreditos());
+        dto.setDocenteCargo(curso.getDocenteCargo());
+        dto.setDocenteFotoUrl(curso.getDocenteFotoUrl());
 
         model.addAttribute("cursoDTO", dto);
         model.addAttribute("areas", areaRepo.findAll());
@@ -122,6 +135,57 @@ public class AdminCursoController {
         model.addAttribute("curso", curso);
         model.addAttribute("inscripciones", inscripciones);
         return "admin/cursos/detalle";
+    }
+
+    @GetMapping("/{id}/exportar-csv")
+    public void exportarPadronCsv(@PathVariable Long id, HttpServletResponse response) throws IOException {
+        Curso curso = cursoService.obtenerPorId(id)
+                .orElseThrow(() -> new IllegalArgumentException("Curso no encontrado"));
+        List<Inscripcion> inscripciones = inscripcionService.listarPorCurso(id);
+
+        String safeNombre = curso.getNombre().replaceAll("[^a-zA-Z0-9_-]", "_");
+        String filename = "padron_" + safeNombre + ".csv";
+        response.setContentType("text/csv; charset=UTF-8");
+        response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
+
+        // Write UTF-8 BOM so Microsoft Excel recognizes UTF-8 directly
+        OutputStream os = response.getOutputStream();
+        os.write(0xEF);
+        os.write(0xBB);
+        os.write(0xBF);
+
+        PrintWriter writer = new PrintWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
+        writer.println("N°;Apellidos y Nombres;Correo;Teléfono;Tipo Doc;N° Documento;Institución;Estado Inscripción;Monto Pagado;Código Operación;Fecha Inscripción");
+
+        int num = 1;
+        for (Inscripcion ins : inscripciones) {
+            Usuario u = ins.getUsuario();
+            Pago p = ins.getPago();
+            String monto = (p != null && p.getMonto() != null) ? p.getMonto().toString() : "0.00";
+            String nroOp = (p != null && p.getReferenciaExterna() != null) ? p.getReferenciaExterna() : "-";
+            String tel = (u.getTelefono() != null) ? u.getTelefono() : "-";
+            String tipoDoc = (u.getTipoDocumento() != null) ? u.getTipoDocumento().name() : "-";
+            String dni = (u.getNumeroDocumento() != null) ? u.getNumeroDocumento() : "-";
+            String inst = (u.getInstitucionProcedencia() != null) ? u.getInstitucionProcedencia().replace(";", ",") : "-";
+            String nom = (u.getNombreCompleto() != null) ? u.getNombreCompleto().replace(";", ",") : "-";
+            String estadoIns = (ins.getEstado() != null) ? ins.getEstado().getEtiqueta() : "-";
+            String fecha = (ins.getFechaInscripcion() != null) ? ins.getFechaInscripcion().toString() : "-";
+
+            writer.println(String.format("%d;\"%s\";\"%s\";\"%s\";\"%s\";\"%s\";\"%s\";\"%s\";\"%s\";\"%s\";\"%s\"",
+                    num++,
+                    nom,
+                    u.getCorreo(),
+                    tel,
+                    tipoDoc,
+                    dni,
+                    inst,
+                    estadoIns,
+                    monto,
+                    nroOp,
+                    fecha
+            ));
+        }
+        writer.flush();
     }
 
     @PostMapping("/inscripciones/{inscripcionId}/completar")

@@ -51,6 +51,21 @@ public class CursoDTO {
 
     private String enlaceClase;
 
+    private String enlaceWhatsapp;
+
+    @DecimalMin(value = "0.0", inclusive = true, message = "El precio de comunidad no puede ser negativo")
+    private BigDecimal precioComunidad;
+
+    @NotNull(message = "El número de créditos es obligatorio")
+    @Min(value = 1, message = "Debe otorgar al menos 1 crédito")
+    private Integer creditos = 2;
+
+    private String docenteFotoUrl;
+
+    private String docenteCargo;
+
+    private org.springframework.web.multipart.MultipartFile docenteFotoFile;
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getNombre() { return nombre; }
@@ -79,4 +94,16 @@ public class CursoDTO {
     public void setImagenUrl(String imagenUrl) { this.imagenUrl = imagenUrl; }
     public String getEnlaceClase() { return enlaceClase; }
     public void setEnlaceClase(String enlaceClase) { this.enlaceClase = enlaceClase; }
+    public String getEnlaceWhatsapp() { return enlaceWhatsapp; }
+    public void setEnlaceWhatsapp(String enlaceWhatsapp) { this.enlaceWhatsapp = enlaceWhatsapp; }
+    public BigDecimal getPrecioComunidad() { return precioComunidad; }
+    public void setPrecioComunidad(BigDecimal precioComunidad) { this.precioComunidad = precioComunidad; }
+    public Integer getCreditos() { return creditos; }
+    public void setCreditos(Integer creditos) { this.creditos = creditos; }
+    public String getDocenteFotoUrl() { return docenteFotoUrl; }
+    public void setDocenteFotoUrl(String docenteFotoUrl) { this.docenteFotoUrl = docenteFotoUrl; }
+    public String getDocenteCargo() { return docenteCargo; }
+    public void setDocenteCargo(String docenteCargo) { this.docenteCargo = docenteCargo; }
+    public org.springframework.web.multipart.MultipartFile getDocenteFotoFile() { return docenteFotoFile; }
+    public void setDocenteFotoFile(org.springframework.web.multipart.MultipartFile docenteFotoFile) { this.docenteFotoFile = docenteFotoFile; }
 }

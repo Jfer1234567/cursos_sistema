@@ -30,71 +30,129 @@
             </form>
         </div>
 
-        <!-- Resultado: Certificado Encontrado -->
-        <div th:if="${encontrado == true}" class="card card-body"
-             style="border: 2px solid var(--success); border-radius: var(--radius-md); padding: 2.5rem; background: #FAFCFA;">
-            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
-                <div style="width: 54px; height: 54px; border-radius: 50%; background: var(--success-light); color: var(--success); font-size: 1.8rem; display: flex; align-items: center; justify-content: center;">
-                    ✓
-                </div>
-                <div>
-                    <span class="badge badge-success" style="font-size: 0.85rem;">Documento Oficial Auténtico</span>
-                    <h2 style="font-size: 1.45rem; color: var(--success); margin-top: 0.2rem;">Certificado Válido y Registrado</h2>
-                </div>
-            </div>
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; border-top: 1px solid var(--border); padding-top: 1.5rem;">
-                <div>
-                    <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Participante:</span>
-                    <div style="font-size: 1.15rem; font-weight: 800; color: var(--text);" th:text="${certificado.nombreParticipante}">
-                        Nombre
+        <!-- Resultado: Certificado Encontrado (Diploma Digital Interactivo) -->
+        <div th:if="${encontrado == true}" class="diploma-card">
+            <div class="diploma-header">
+                <div class="diploma-seal-box">
+                    <!-- Medallón Oficial Dorado SVG en Relieve -->
+                    <div class="gold-seal">
+                        <svg viewBox="0 0 100 100" width="100%" height="100%">
+                            <defs>
+                                <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#FFE082" />
+                                    <stop offset="35%" stop-color="#C99738" />
+                                    <stop offset="70%" stop-color="#9A7020" />
+                                    <stop offset="100%" stop-color="#F5D061" />
+                                </linearGradient>
+                                <linearGradient id="goldInner" x1="0%" y1="100%" x2="100%" y2="0%">
+                                    <stop offset="0%" stop-color="#B8860B" />
+                                    <stop offset="50%" stop-color="#E6C229" />
+                                    <stop offset="100%" stop-color="#8B6508" />
+                                </linearGradient>
+                            </defs>
+                            <!-- Borde de Lacre / Medalla con Relieve Oficial -->
+                            <circle cx="50" cy="50" r="48" fill="url(#goldGrad)" />
+                            <circle cx="50" cy="50" r="42" fill="none" stroke="#FFFFFF" stroke-width="1.5" stroke-dasharray="3,2" />
+                            <circle cx="50" cy="50" r="38" fill="url(#goldInner)" />
+                            <circle cx="50" cy="50" r="33" fill="#6D1A24" />
+                            <!-- Ícono Central: Check de Verificación Oficial -->
+                            <path d="M42 52 L47 57 L59 43" fill="none" stroke="#F5D061" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" />
+                            <!-- Estrella Superior de Acreditación -->
+                            <polygon points="50,20 52,24 57,24 53,27 55,31 50,29 45,31 47,27 43,24 48,24" fill="#F5D061" />
+                        </svg>
+                    </div>
+                    <div>
+                        <span class="badge badge-success" style="font-size: 0.8rem; background: #059669; padding: 0.35rem 0.75rem;">
+                            ✓ Acreditado Oficialmente
+                        </span>
+                        <h2 style="font-size: 1.45rem; color: #1E293B; margin-top: 0.35rem; font-weight: 800;">
+                            Certificado Registrado y Verificado
+                        </h2>
+                        <div style="font-size: 0.85rem; color: #64748B;">
+                            Instituto de Investigación IIICCD &bull; FINESI &bull; Universidad Nacional del Altiplano
+                        </div>
                     </div>
                 </div>
 
-                <div>
-                    <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Código de Verificación:</span>
-                    <div style="font-family: monospace; font-size: 1.15rem; font-weight: 800; color: var(--primary);" th:text="${certificado.codigoVerificacion}">
+                <div style="text-align: right;">
+                    <span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; display: block;">Código Único:</span>
+                    <div style="font-family: monospace; font-size: 1.25rem; font-weight: 900; color: var(--primary); background: rgba(109, 26, 36, 0.08); padding: 0.3rem 0.75rem; border-radius: 6px; display: inline-block;"
+                         th:text="${certificado.codigoVerificacion}" id="certCodigo">
                         IIICCD-XXXXXX
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grilla de Atributos Académicos -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.75rem;">
+                <div style="grid-column: 1 / -1; background: #F8FAFC; padding: 1.25rem 1.5rem; border-radius: 8px; border-left: 4px solid var(--accent);">
+                    <span style="font-size: 0.78rem; color: #64748B; text-transform: uppercase; font-weight: 700;">Participante Titular:</span>
+                    <div style="font-size: 1.35rem; font-weight: 800; color: #0F172A;" th:text="${certificado.nombreParticipante}" id="certParticipante">
+                        Nombres y Apellidos
                     </div>
                 </div>
 
                 <div style="grid-column: 1 / -1;">
-                    <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Curso Especializado:</span>
-                    <div style="font-size: 1.25rem; font-weight: 700; color: var(--primary);" th:text="${certificado.nombreCurso}">
-                        Curso
+                    <span style="font-size: 0.78rem; color: #64748B; text-transform: uppercase; font-weight: 700;">Curso de Especialización:</span>
+                    <div style="font-size: 1.2rem; font-weight: 800; color: var(--primary);" th:text="${certificado.nombreCurso}" id="certCurso">
+                        Nombre del Curso
                     </div>
                 </div>
 
                 <div>
-                    <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Línea de Investigación:</span>
-                    <div style="font-weight: 600;" th:text="${certificado.lineaInvestigacion}">Línea</div>
+                    <span style="font-size: 0.78rem; color: #64748B; text-transform: uppercase; font-weight: 700;">Línea de Investigación:</span>
+                    <div style="font-weight: 700; color: #1E293B;" th:text="${certificado.lineaInvestigacion}">Línea</div>
                 </div>
 
                 <div>
-                    <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Área:</span>
-                    <div style="font-weight: 600;" th:text="${certificado.areaInvestigacion}">Área</div>
+                    <span style="font-size: 0.78rem; color: #64748B; text-transform: uppercase; font-weight: 700;">Área Académica:</span>
+                    <div style="font-weight: 700; color: #1E293B;" th:text="${certificado.areaInvestigacion}">Área</div>
                 </div>
 
                 <div>
-                    <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Docente Responsable:</span>
-                    <div th:text="${certificado.docente}">Docente</div>
+                    <span style="font-size: 0.78rem; color: #64748B; text-transform: uppercase; font-weight: 700;">Docente Responsable:</span>
+                    <div style="color: #334155; font-weight: 600;" th:text="${certificado.docente}">Docente</div>
                 </div>
 
                 <div>
-                    <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Duración:</span>
-                    <div th:text="${certificado.duracion}">40 horas</div>
+                    <span style="font-size: 0.78rem; color: #64748B; text-transform: uppercase; font-weight: 700;">Duración y Créditos:</span>
+                    <div style="color: #334155; font-weight: 600;" th:text="${certificado.duracion + (certificado.creditos != null ? ' (' + certificado.creditos + ' créditos universitarios)' : '')}">
+                        40 horas (2 créditos)
+                    </div>
                 </div>
 
                 <div>
-                    <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Fecha de Emisión:</span>
-                    <div th:text="${#temporals.format(certificado.fechaEmision, 'dd/MM/yyyy')}">Fecha</div>
+                    <span style="font-size: 0.78rem; color: #64748B; text-transform: uppercase; font-weight: 700;">Fecha de Emisión:</span>
+                    <div style="color: #334155; font-weight: 600;" th:text="${#temporals.format(certificado.fechaEmision, 'dd/MM/yyyy')}" id="certFecha">
+                        Fecha
+                    </div>
                 </div>
 
                 <div>
-                    <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Institución Emisora:</span>
-                    <div>IIICCD - FINESI / UNA Puno</div>
+                    <span style="font-size: 0.78rem; color: #64748B; text-transform: uppercase; font-weight: 700;">Institución Emisora:</span>
+                    <div style="color: #334155; font-weight: 600;">IIICCD - FINESI / UNA Puno</div>
                 </div>
             </div>
+
+            <!-- Botones de Acción Oficial: Copiar Enlace, Compartir en LinkedIn y Descargar PDF -->
+            <div class="diploma-actions">
+                <button type="button" class="btn-copy-link" id="btnCopiarEnlace" onclick="copiarEnlaceVerificacion()">
+                    🔗 Copiar Enlace de Autenticidad
+                </button>
+                <a th:href="@{'/verificar/certificado/' + ${certificado.codigoVerificacion} + '/pdf'}" class="btn btn-outline-primary" style="display: inline-flex; align-items: center; gap: 0.5rem;">
+                    📄 Descargar PDF Oficial
+                </a>
+                <button type="button" class="btn-linkedin" id="btnCompartirLinkedin" onclick="compartirEnLinkedIn()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 8.76a1.5 1.5 0 0 0 1.5-1.5 1.5 1.5 0 0 0-1.5-1.5 1.5 1.5 0 0 0-1.5 1.5 1.5 1.5 0 0 0 1.5 1.5m1.39 9.74v-8.37H5.07v8.37h2.78z"/>
+                    </svg>
+                    Añadir a mi Perfil de LinkedIn
+                </button>
+            </div>
+        </div>
+
+        <div id="toastNotice" class="toast-notice">
+            ✓ ¡Enlace de verificación copiado al portapapeles!
         </div>
 
         <!-- Resultado: No Encontrado -->
@@ -108,6 +166,58 @@
         </div>
     </div>
 
+    <script>
+        function copiarEnlaceVerificacion() {
+            const url = window.location.href;
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(url).then(mostrarToast).catch(() => promptFallback(url));
+            } else {
+                promptFallback(url);
+            }
+        }
+
+        function promptFallback(url) {
+            prompt('Copia el siguiente enlace oficial de validación:', url);
+        }
+
+        function mostrarToast() {
+            const toast = document.getElementById('toastNotice');
+            if (toast) {
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 3500);
+            }
+        }
+
+        function compartirEnLinkedIn() {
+            const cursoElem = document.getElementById('certCurso');
+            const codigoElem = document.getElementById('certCodigo');
+            const fechaElem = document.getElementById('certFecha');
+            
+            const curso = cursoElem ? encodeURIComponent(cursoElem.innerText.trim()) : 'Especialización IIICCD';
+            const codigo = codigoElem ? encodeURIComponent(codigoElem.innerText.trim()) : '';
+            const url = encodeURIComponent(window.location.href);
+            
+            let issueYear = new Date().getFullYear();
+            let issueMonth = new Date().getMonth() + 1;
+            if (fechaElem && fechaElem.innerText.includes('/')) {
+                const parts = fechaElem.innerText.split('/');
+                if (parts.length === 3) {
+                    issueMonth = parseInt(parts[1], 10);
+                    issueYear = parseInt(parts[2], 10);
+                }
+            }
+            
+            const org = encodeURIComponent('Instituto de Investigación IIICCD - UNA Puno');
+            const linkedInUrl = 'https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME&name=' + curso +
+                '&organizationName=' + org +
+                '&issueYear=' + issueYear +
+                '&issueMonth=' + issueMonth +
+                '&certUrl=' + url +
+                '&certId=' + codigo;
+            
+            window.open(linkedInUrl, '_blank', 'width=720,height=620,scrollbars=yes');
+        }
+    </script>
     <div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>

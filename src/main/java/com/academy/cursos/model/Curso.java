@@ -57,6 +57,21 @@ public class Curso {
     @Column(name = "enlace_clase")
     private String enlaceClase;
 
+    @Column(name = "enlace_whatsapp")
+    private String enlaceWhatsapp;
+
+    @Column(name = "precio_comunidad", precision = 10, scale = 2)
+    private BigDecimal precioComunidad;
+
+    @Column(name = "docente_foto_url")
+    private String docenteFotoUrl;
+
+    @Column(name = "docente_cargo")
+    private String docenteCargo;
+
+    @Column(name = "creditos")
+    private Integer creditos = 2;
+
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
@@ -108,6 +123,16 @@ public class Curso {
     public void setImagenUrl(String imagenUrl) { this.imagenUrl = imagenUrl; }
     public String getEnlaceClase() { return enlaceClase; }
     public void setEnlaceClase(String enlaceClase) { this.enlaceClase = enlaceClase; }
+    public String getEnlaceWhatsapp() { return enlaceWhatsapp; }
+    public void setEnlaceWhatsapp(String enlaceWhatsapp) { this.enlaceWhatsapp = enlaceWhatsapp; }
+    public BigDecimal getPrecioComunidad() { return precioComunidad; }
+    public void setPrecioComunidad(BigDecimal precioComunidad) { this.precioComunidad = precioComunidad; }
+    public String getDocenteFotoUrl() { return docenteFotoUrl; }
+    public void setDocenteFotoUrl(String docenteFotoUrl) { this.docenteFotoUrl = docenteFotoUrl; }
+    public String getDocenteCargo() { return docenteCargo; }
+    public void setDocenteCargo(String docenteCargo) { this.docenteCargo = docenteCargo; }
+    public Integer getCreditos() { return creditos; }
+    public void setCreditos(Integer creditos) { this.creditos = creditos; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }

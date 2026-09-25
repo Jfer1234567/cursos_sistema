@@ -3,25 +3,54 @@
    Estilos específicos de páginas: Hero, Catálogo, Detalle, Auth, Dashboard, etc.
    ========================================================================== */
 
-/* Hero Institucional */
+/* Hero Institucional con Trama Tecnológica y Ambient Glow */
 .hero {
-    background: linear-align, #1A1A2E;
-    background: linear-gradient(135deg, #1A1A2E 0%, #2A1111 50%, #11141E 100%);
+    background-color: #0B0E14;
+    background-image: 
+        radial-gradient(circle at 18% 28%, rgba(109, 26, 36, 0.5) 0%, transparent 45%),
+        radial-gradient(circle at 82% 65%, rgba(14, 52, 115, 0.4) 0%, transparent 50%),
+        radial-gradient(circle at 50% 12%, rgba(200, 169, 81, 0.12) 0%, transparent 35%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='%23ffffff' fill-opacity='0.035'%3E%3Ccircle cx='40' cy='40' r='2'/%3E%3Ccircle cx='10' cy='10' r='1.5'/%3E%3Ccircle cx='70' cy='70' r='1.5'/%3E%3Ccircle cx='70' cy='10' r='1'/%3E%3Ccircle cx='10' cy='70' r='1'/%3E%3Cpath d='M10 10 L40 40 M40 40 L70 70 M70 10 L40 40 M10 70 L40 40' stroke='%23ffffff' stroke-width='0.4' stroke-opacity='0.05' fill='none'/%3E%3C/g%3E%3C/svg%3E");
     color: #FFFFFF;
-    padding: 5rem 0;
+    padding: 5.5rem 0 6rem;
     position: relative;
     overflow: hidden;
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: -20%;
+    left: 20%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(142, 33, 47, 0.35) 0%, transparent 70%);
+    filter: blur(40px);
+    pointer-events: none;
+    animation: heroGlow 8s ease-in-out infinite alternate;
 }
 
 .hero::after {
     content: '';
     position: absolute;
-    top: -50%;
-    right: -10%;
-    width: 600px;
-    height: 600px;
-    background: radial-gradient(circle, rgba(139, 26, 26, 0.25) 0%, transparent 70%);
+    bottom: -20%;
+    right: 5%;
+    width: 650px;
+    height: 650px;
+    background: radial-gradient(circle, rgba(20, 45, 95, 0.35) 0%, transparent 70%);
+    filter: blur(50px);
     pointer-events: none;
+    animation: heroGlow2 10s ease-in-out infinite alternate;
+}
+
+@keyframes heroGlow {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(30px, 20px) scale(1.1); }
+}
+
+@keyframes heroGlow2 {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(-30px, -20px) scale(1.08); }
 }
 
 .hero-grid {
@@ -29,6 +58,8 @@
     grid-template-columns: 1.2fr 0.8fr;
     gap: 3.5rem;
     align-items: center;
+    position: relative;
+    z-index: 2;
 }
 
 .hero-badge {
@@ -45,25 +76,35 @@
     margin-bottom: 1.25rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    box-shadow: 0 0 20px rgba(200, 169, 81, 0.15);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hero-badge:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 0 25px rgba(200, 169, 81, 0.3);
 }
 
 .hero-title {
-    font-size: 2.85rem;
+    font-size: 2.9rem;
     font-weight: 800;
     line-height: 1.15;
     margin-bottom: 1.25rem;
     color: #FFFFFF;
+    letter-spacing: -0.5px;
 }
 
 .hero-title span {
     color: var(--accent);
+    text-shadow: 0 0 25px rgba(200, 169, 81, 0.35);
 }
 
 .hero-desc {
-    color: #D1D5DB;
+    color: #E2E8F0;
     font-size: 1.15rem;
     margin-bottom: 2rem;
     line-height: 1.7;
+    max-width: 600px;
 }
 
 .hero-actions {
@@ -73,36 +114,48 @@
 }
 
 .hero-card {
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(17, 24, 39, 0.65);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: var(--radius-lg);
-    padding: 2rem;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    padding: 2.25rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    position: relative;
+    z-index: 2;
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hero-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(200, 169, 81, 0.4);
+    box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.6), 0 0 25px rgba(200, 169, 81, 0.12);
 }
 
 .hero-stat-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
+    gap: 1.75rem;
 }
 
 .hero-stat {
-    border-left: 3px solid var(--primary-light);
-    padding-left: 1rem;
+    border-left: 3px solid var(--accent);
+    padding-left: 1.15rem;
 }
 
 .hero-stat-num {
-    font-size: 2.2rem;
+    font-size: 2.3rem;
     font-weight: 800;
     color: #FFFFFF;
     line-height: 1;
-    margin-bottom: 0.3rem;
+    margin-bottom: 0.35rem;
+    letter-spacing: -0.5px;
 }
 
 .hero-stat-label {
     font-size: 0.85rem;
-    color: #9CA3AF;
+    color: #94A3B8;
+    font-weight: 500;
 }
 
 /* Sección Líneas de Investigación */
@@ -211,37 +264,178 @@
     gap: 2rem;
 }
 
+/* Portadas y Tarjetas de Cursos Premium */
 .curso-card {
     display: flex;
     flex-direction: column;
     height: 100%;
+    background: #FFFFFF;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s ease;
 }
 
-.curso-card-header {
-    background: #1A1A2E;
-    color: #FFFFFF;
-    padding: 1.5rem;
+.curso-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 30px -8px rgba(0, 0, 0, 0.12), 0 8px 12px -4px rgba(109, 26, 36, 0.06);
+    border-color: rgba(109, 26, 36, 0.25);
+}
+
+.curso-card-cover {
+    height: 175px;
+    width: 100%;
     position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+    padding: 1.25rem;
 }
 
-.curso-meta {
+.curso-card-cover .curso-cover-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.curso-card:hover .curso-cover-img,
+.curso-card:hover .curso-cover-pattern {
+    transform: scale(1.06);
+}
+
+.curso-cover-pattern {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.5s ease;
+}
+
+/* Patrones temáticos según línea */
+.cover-linea-1 {
+    background: linear-gradient(135deg, #0F172A 0%, #1E3A8A 50%, #2563EB 100%);
+    background-image: 
+        radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.4) 0%, transparent 60%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cpath d='M0 20 L20 0 L40 20 L20 40 Z' fill='%23ffffff' fill-opacity='0.04'/%3E%3C/svg%3E");
+}
+
+.cover-linea-2 {
+    background: linear-gradient(135deg, #064E3B 0%, #047857 50%, #0D9488 100%);
+    background-image: 
+        radial-gradient(circle at 80% 20%, rgba(16, 185, 129, 0.4) 0%, transparent 60%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='8' fill='%23ffffff' fill-opacity='0.04'/%3E%3C/svg%3E");
+}
+
+.cover-linea-3 {
+    background: linear-gradient(135deg, #3B0713 0%, #6D1A24 50%, #8B1E2B 100%);
+    background-image: 
+        radial-gradient(circle at 80% 20%, rgba(200, 169, 81, 0.3) 0%, transparent 60%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cpolygon points='20,2 38,36 2,36' fill='%23ffffff' fill-opacity='0.04'/%3E%3C/svg%3E");
+}
+
+.curso-cover-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.4) 50%, rgba(0, 0, 0, 0.2) 100%);
+    pointer-events: none;
+}
+
+.curso-cover-top-badges {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    right: 1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 0.75rem;
+    z-index: 2;
 }
 
-.curso-linea-tag {
-    font-size: 0.75rem;
+.badge-pill {
+    font-size: 0.73rem;
     font-weight: 700;
-    color: var(--accent-light);
-    text-transform: uppercase;
+    padding: 0.3rem 0.65rem;
+    border-radius: 9999px;
+    letter-spacing: 0.3px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
 }
 
-.curso-precio {
-    font-size: 1.4rem;
+.badge-live {
+    background: rgba(16, 185, 129, 0.92);
+    color: #FFFFFF;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
+}
+
+.badge-urgent {
+    background: rgba(220, 38, 38, 0.95);
+    color: #FFFFFF;
+    box-shadow: 0 2px 8px rgba(220, 38, 38, 0.4);
+    animation: urgentPulse 2s infinite ease-in-out;
+}
+
+@keyframes urgentPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.04); }
+}
+
+.badge-soldout {
+    background: rgba(100, 116, 139, 0.9);
+    color: #FFFFFF;
+}
+
+.badge-glass {
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: #FFFFFF;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.curso-cover-bottom {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    width: 100%;
+}
+
+.curso-cover-linea {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.curso-cover-price-box {
+    text-align: right;
+}
+
+.curso-cover-price {
+    font-size: 1.35rem;
     font-weight: 800;
     color: #FFFFFF;
+    line-height: 1;
+}
+
+.curso-cover-subprice {
+    font-size: 0.72rem;
+    color: #FCD34D;
+    font-weight: 600;
+    margin-top: 0.2rem;
 }
 
 .curso-card-body {
@@ -291,28 +485,114 @@
     margin-bottom: 2rem;
 }
 
-/* Vista Certificado */
+/* Vista Certificado de Honor Universitario */
 .cert-preview-box {
     background: #FFFFFF;
-    border: 8px double var(--primary);
-    padding: 3rem 2rem;
+    border: 4px solid var(--primary);
+    padding: 3.5rem 2.75rem;
     text-align: center;
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-lg);
+    border-radius: 4px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2), inset 0 0 0 8px #FFFFFF, inset 0 0 0 10px var(--accent), inset 0 0 0 14px #FFFFFF;
     margin: 2rem auto;
-    max-width: 850px;
+    max-width: 920px;
     position: relative;
+    overflow: hidden;
 }
 
-.cert-preview-box::after {
-    content: '';
+/* Esquinas ornamentales doradas */
+.cert-corner {
     position: absolute;
-    top: 10px;
-    bottom: 10px;
-    left: 10px;
-    right: 10px;
-    border: 1px solid var(--accent);
+    width: 22px;
+    height: 22px;
+    border: 2px solid var(--accent);
     pointer-events: none;
+    z-index: 3;
+}
+.cert-corner-tl { top: 18px; left: 18px; border-right: none; border-bottom: none; }
+.cert-corner-tr { top: 18px; right: 18px; border-left: none; border-bottom: none; }
+.cert-corner-bl { bottom: 18px; left: 18px; border-right: none; border-top: none; }
+.cert-corner-br { bottom: 18px; right: 18px; border-left: none; border-top: none; }
+
+/* Marca de Agua Central sin base ploma */
+.cert-watermark-bg {
+    position: absolute;
+    top: 52%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 520px;
+    max-width: 80%;
+    height: auto;
+    opacity: 0.085;
+    pointer-events: none;
+    z-index: 1;
+    user-select: none;
+    filter: grayscale(10%) contrast(120%);
+}
+
+.cert-content {
+    position: relative;
+    z-index: 2;
+}
+
+/* Ficha curricular y de créditos */
+.cert-curriculum-badge {
+    background: rgba(200, 169, 81, 0.08);
+    border: 1px solid rgba(200, 169, 81, 0.4);
+    border-radius: var(--radius-sm);
+    padding: 0.85rem 1.5rem;
+    margin: 1.25rem auto 1.75rem;
+    display: inline-block;
+    color: var(--secondary);
+    font-size: 0.92rem;
+    line-height: 1.6;
+}
+
+.cert-curriculum-badge strong {
+    color: #1F2937;
+}
+
+/* Firmas Oficiales de la Directiva */
+.cert-signatures-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3.5rem;
+    margin-top: 2.75rem;
+    padding-top: 1.25rem;
+}
+
+.cert-signature-item {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.cert-signature-seal {
+    width: 64px;
+    height: 64px;
+    margin-bottom: -18px;
+    opacity: 0.85;
+}
+
+.cert-signature-line {
+    width: 220px;
+    border-top: 1.5px dashed #64748B;
+    margin-bottom: 0.45rem;
+}
+
+.cert-signature-name {
+    font-weight: 800;
+    color: #0F172A;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.cert-signature-title {
+    font-size: 0.78rem;
+    color: #64748B;
+    line-height: 1.35;
+    max-width: 270px;
 }
 
 /* Responsiveness */
@@ -327,3 +607,548 @@
         font-size: 2.2rem;
     }
 }
+
+/* ==========================================================================
+   Estudio de Diseño de Flyers Institucionales (Flyer Studio)
+   ========================================================================== */
+.flyer-studio-layout {
+    display: grid;
+    grid-template-columns: 460px 1fr;
+    gap: 2rem;
+    align-items: start;
+    margin-top: 1.5rem;
+}
+
+@media (max-width: 1080px) {
+    .flyer-studio-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+.flyer-controls-panel {
+    background: #FFFFFF;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.75rem;
+    box-shadow: var(--shadow-sm);
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+}
+
+.flyer-section-title {
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+    color: var(--primary);
+    margin: 1.25rem 0 0.75rem;
+    padding-bottom: 0.35rem;
+    border-bottom: 2px solid var(--border-subtle);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.flyer-preview-stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: sticky;
+    top: 1.5rem;
+}
+
+.flyer-toolbar {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 1.25rem;
+    width: 100%;
+    max-width: 580px;
+}
+
+/* Lienzo del Flyer */
+.flyer-canvas {
+    width: 540px;
+    min-height: 720px;
+    border-radius: 12px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+    padding: 2.25rem 2rem;
+    color: #FFFFFF;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.flyer-canvas.format-square {
+    min-height: 540px;
+    padding: 2rem 1.75rem;
+}
+
+/* Temas del Flyer */
+.flyer-canvas.theme-granate {
+    background: radial-gradient(circle at 85% 15%, #6B1111 0%, #360707 55%, #180303 100%);
+    border: 3px solid #D4AF37;
+}
+
+.flyer-canvas.theme-blue {
+    background: radial-gradient(circle at 85% 15%, #1E3A8A 0%, #0F172A 60%, #020617 100%);
+    border: 3px solid #38BDF8;
+}
+
+.flyer-canvas.theme-emerald {
+    background: radial-gradient(circle at 85% 15%, #065F46 0%, #022C22 60%, #01140E 100%);
+    border: 3px solid #34D399;
+}
+
+/* Decoraciones geométricas internas */
+.flyer-canvas::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, #D4AF37, #FFFFFF, #D4AF37);
+}
+
+.flyer-canvas.theme-blue::before {
+    background: linear-gradient(90deg, #38BDF8, #FFFFFF, #38BDF8);
+}
+
+.flyer-canvas.theme-emerald::before {
+    background: linear-gradient(90deg, #34D399, #FFFFFF, #34D399);
+}
+
+/* Elementos del flyer */
+.flyer-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.flyer-logo {
+    width: 62px;
+    height: 62px;
+    border-radius: 50%;
+    background: #FFFFFF;
+    padding: 2px;
+    object-fit: cover;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.flyer-univ-info h5 {
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0 0 2px 0;
+    font-weight: 700;
+}
+
+.flyer-univ-info h4 {
+    font-size: 0.72rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0 0 3px 0;
+}
+
+.flyer-univ-info h3 {
+    font-size: 0.88rem;
+    font-weight: 800;
+    color: #F8FAFC;
+    letter-spacing: 0.5px;
+    margin: 0;
+}
+
+.flyer-badge-row {
+    display: flex;
+    gap: 0.5rem;
+    margin: 1.25rem 0 0.75rem;
+    flex-wrap: wrap;
+}
+
+.flyer-badge-linea {
+    background: rgba(212, 175, 55, 0.2);
+    border: 1px solid #D4AF37;
+    color: #FDE047;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 0.25rem 0.65rem;
+    border-radius: 999px;
+    letter-spacing: 0.5px;
+}
+
+.flyer-canvas.theme-blue .flyer-badge-linea {
+    background: rgba(56, 189, 248, 0.2);
+    border-color: #38BDF8;
+    color: #7DD3FC;
+}
+
+.flyer-canvas.theme-emerald .flyer-badge-linea {
+    background: rgba(52, 211, 153, 0.2);
+    border-color: #34D399;
+    color: #6EE7B7;
+}
+
+.flyer-badge-live {
+    background: rgba(239, 68, 68, 0.2);
+    border: 1px solid #EF4444;
+    color: #FCA5A5;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.25rem 0.65rem;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.flyer-title-box h1 {
+    font-size: 1.85rem;
+    font-weight: 900;
+    line-height: 1.2;
+    margin: 0.5rem 0 0.5rem;
+    color: #FFFFFF;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.flyer-title-box p {
+    font-size: 0.92rem;
+    color: rgba(255, 255, 255, 0.85);
+    margin: 0 0 1rem;
+    line-height: 1.4;
+}
+
+/* Docente */
+.flyer-docente-box {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.flyer-docente-avatar-wrap {
+    width: 60px;
+    height: 60px;
+    min-width: 60px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2.5px solid #F59E0B;
+    background: rgba(255, 255, 255, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+    position: relative;
+}
+
+.flyer-canvas.theme-blue .flyer-docente-avatar-wrap {
+    border-color: #38BDF8;
+}
+
+.flyer-canvas.theme-emerald .flyer-docente-avatar-wrap {
+    border-color: #34D399;
+}
+
+.flyer-docente-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.flyer-docente-icon {
+    font-size: 2rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.flyer-docente-name {
+    font-weight: 800;
+    font-size: 1.05rem;
+    color: #FFFFFF;
+    line-height: 1.2;
+}
+
+.flyer-docente-role {
+    font-size: 0.76rem;
+    color: rgba(255, 255, 255, 0.78);
+    margin-top: 3px;
+    line-height: 1.3;
+}
+
+/* Grilla de atributos académicos */
+.flyer-features-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.65rem;
+    margin-bottom: 1.15rem;
+}
+
+.flyer-feature-item {
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    padding: 0.6rem 0.75rem;
+}
+
+.flyer-feature-label {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.6);
+    display: block;
+    font-weight: 600;
+}
+
+.flyer-feature-value {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #FFFFFF;
+    margin-top: 2px;
+}
+
+/* Precios e Inversión */
+.flyer-pricing-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-bottom: 1.15rem;
+}
+
+.flyer-price-card {
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    padding: 0.65rem 0.85rem;
+    text-align: center;
+}
+
+.flyer-price-card.comunidad-una {
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid #10B981;
+}
+
+.flyer-price-tag {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.flyer-price-card.comunidad-una .flyer-price-tag {
+    color: #34D399;
+}
+
+.flyer-price-amount {
+    font-size: 1.45rem;
+    font-weight: 900;
+    color: #FFFFFF;
+    margin-top: 2px;
+}
+
+/* Recuadro Yape de pago */
+.flyer-yape-box {
+    background: #FFFFFF;
+    color: #111827;
+    border-radius: 8px;
+    padding: 0.85rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+    margin-bottom: 1rem;
+}
+
+.flyer-yape-qr {
+    width: 65px;
+    height: 65px;
+    object-fit: contain;
+    border-radius: 4px;
+    border: 1px solid #E5E7EB;
+}
+
+.flyer-yape-info {
+    flex: 1;
+}
+
+.flyer-yape-badge {
+    display: inline-block;
+    background: #7209B7;
+    color: #FFFFFF;
+    font-size: 0.68rem;
+    font-weight: 800;
+    padding: 2px 6px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+}
+
+.flyer-yape-number {
+    font-size: 1.35rem;
+    font-weight: 900;
+    color: #7209B7;
+    letter-spacing: 1px;
+    line-height: 1.1;
+}
+
+.flyer-yape-titular {
+    font-size: 0.75rem;
+    color: #4B5563;
+    font-weight: 600;
+}
+
+/* Pie del Flyer */
+.flyer-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    padding-top: 0.75rem;
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* ==========================================================================
+   Ficha de Validación con Sello Dorado Oficial (Diploma Digital)
+   ========================================================================== */
+.diploma-card {
+    background: #FFFFFF;
+    background-image: 
+        radial-gradient(circle at 50% 0%, rgba(200, 169, 81, 0.08) 0%, transparent 60%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cpath d='M30 0 L60 30 L30 60 L0 30 Z' fill='%23c8a951' fill-opacity='0.02'/%3E%3C/svg%3E");
+    border: 3px double #C99738;
+    border-radius: var(--radius-lg);
+    padding: 3rem 2.5rem;
+    position: relative;
+    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1), 0 0 0 6px rgba(201, 151, 56, 0.08);
+}
+
+.diploma-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid rgba(201, 151, 56, 0.25);
+    padding-bottom: 2rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+.diploma-seal-box {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+}
+
+/* Sello Dorado Animado */
+.gold-seal {
+    width: 84px;
+    height: 84px;
+    position: relative;
+    animation: sealEntrance 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+    filter: drop-shadow(0 8px 18px rgba(201, 151, 56, 0.45));
+    flex-shrink: 0;
+}
+
+@keyframes sealEntrance {
+    0% { transform: scale(0.6) rotate(-15deg); opacity: 0; }
+    100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+.diploma-actions {
+    display: flex;
+    gap: 0.85rem;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+    padding-top: 1.75rem;
+    border-top: 1px dashed rgba(201, 151, 56, 0.35);
+}
+
+.btn-linkedin {
+    background: #0A66C2;
+    color: #FFFFFF !important;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    padding: 0.65rem 1.25rem;
+    transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+    text-decoration: none;
+}
+
+.btn-linkedin:hover {
+    background: #084d93;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(10, 102, 194, 0.35);
+}
+
+.btn-copy-link {
+    background: #F8FAFC;
+    color: var(--secondary) !important;
+    border: 1px solid var(--border);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    padding: 0.65rem 1.25rem;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.15s ease, border-color 0.2s ease;
+}
+
+.btn-copy-link:hover {
+    background: #EDF2F7;
+    border-color: var(--secondary);
+    transform: translateY(-2px);
+}
+
+/* Toast flotante de copiado */
+.toast-notice {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: #10B981;
+    color: #FFFFFF;
+    padding: 0.85rem 1.5rem;
+    border-radius: var(--radius-md);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    font-weight: 600;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    z-index: 9999;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+}
+
+.toast-notice.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+

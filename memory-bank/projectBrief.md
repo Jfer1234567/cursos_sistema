@@ -19,7 +19,6 @@ Proveer una plataforma académica moderna para la publicación de cursos de espe
   - Director: Leonid Alemán Gonzales
   - Secretario: Ángel Javier Quispe Carita
   - Tesorero: Renzo Apaza Cutipa
-  - Director de Actividades: Roberto Elvis Roque Claros
 - **Líneas y Áreas de Investigación:**
   1. *Ciencias de la Computación:* Inteligencia Artificial, Computación de Alto Desempeño, Desarrollo de Algoritmos Complejos, Procesamiento de Imágenes.
   2. *Ciencia de Datos:* Aprendizaje Automático, Ingeniería y Analítica de Datos, Modelos Estocásticos Avanzados, Estadística Bayesiana.

@@ -52,14 +52,40 @@
         </div>
 
         <div th:unless="${cursos.empty}" class="cursos-grid">
-            <div th:each="c : ${cursos}" class="card curso-card">
-                <div class="curso-card-header">
-                    <div class="curso-meta">
-                        <span class="curso-linea-tag" th:text="${c.areaInvestigacion.lineaInvestigacion.nombre}">Línea</span>
-                        <span th:if="${c.cuposDisponibles > 0}" class="badge badge-success" th:text="${c.cuposDisponibles + ' cupos'}">10 cupos</span>
-                        <span th:unless="${c.cuposDisponibles > 0}" class="badge badge-danger">Agotado</span>
+            <div th:each="c : ${cursos}" class="curso-card">
+                <!-- Portada Visual o Banner Temático -->
+                <div class="curso-card-cover">
+                    <img th:if="${c.imagenUrl != null and !c.imagenUrl.isEmpty()}" th:src="@{${c.imagenUrl}}" alt="Portada de curso" class="curso-cover-img">
+                    <div th:unless="${c.imagenUrl != null and !c.imagenUrl.isEmpty()}" 
+                         th:class="${'curso-cover-pattern cover-linea-' + (c.areaInvestigacion.lineaInvestigacion.id != null ? c.areaInvestigacion.lineaInvestigacion.id : 1)}"></div>
+                    <div class="curso-cover-overlay"></div>
+
+                    <!-- Badges Flotantes -->
+                    <div class="curso-cover-top-badges">
+                        <div>
+                            <span th:if="${c.cuposDisponibles > 5}" class="badge-pill badge-live">
+                                ● <span th:text="${c.cuposDisponibles + ' vacantes'}">10 vacantes</span>
+                            </span>
+                            <span th:if="${c.cuposDisponibles <= 5 and c.cuposDisponibles > 0}" class="badge-pill badge-urgent">
+                                🔥 ¡Últimos cupos! (<span th:text="${c.cuposDisponibles}">2</span>)
+                            </span>
+                            <span th:if="${c.cuposDisponibles == 0}" class="badge-pill badge-soldout">
+                                Agotado
+                            </span>
+                        </div>
+                        <span class="badge-pill badge-glass">100% Virtual</span>
                     </div>
-                    <div class="curso-precio" th:text="${'S/ ' + c.precio}">S/ 150.00</div>
+
+                    <!-- Franja Inferior de Portada -->
+                    <div class="curso-cover-bottom">
+                        <span class="curso-cover-linea" th:text="${c.areaInvestigacion.lineaInvestigacion.nombre}">Línea</span>
+                        <div class="curso-cover-price-box">
+                            <div class="curso-cover-price" th:text="${'S/ ' + c.precio}">S/ 150.00</div>
+                            <div th:if="${c.precioComunidad != null}" class="curso-cover-subprice">
+                                UNA: S/ <span th:text="${c.precioComunidad}">100.00</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="curso-card-body">
@@ -69,7 +95,7 @@
                     <div class="curso-details">
                         <div><strong>Área:</strong> <span th:text="${c.areaInvestigacion.nombre}">Área</span></div>
                         <div><strong>Docente:</strong> <span th:text="${c.docenteResponsable}">Docente</span></div>
-                        <div><strong>Duración:</strong> <span th:text="${c.duracion}">Duración</span></div>
+                        <div><strong>Certificación:</strong> <span th:text="${c.duracion + (c.creditos != null ? ' (' + c.creditos + ' créditos)' : '')}">40h (2 créditos)</span></div>
                         <div th:if="${c.fechaInicio != null}">
                             <strong>Inicio:</strong> <span th:text="${#temporals.format(c.fechaInicio, 'dd/MM/yyyy')}">Fecha</span>
                         </div>

@@ -19,7 +19,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.sql.DataSource;
 import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -32,6 +35,7 @@ public class DataInitializer implements CommandLineRunner {
     private final ConfigPagoRepository configPagoRepo;
     private final CursoRepository cursoRepo;
     private final PasswordEncoder passwordEncoder;
+    private final DataSource dataSource;
 
     @Value("${app.admin.initial.email:admin@iiiccd.edu.pe}")
     private String adminEmail;
@@ -48,23 +52,44 @@ public class DataInitializer implements CommandLineRunner {
             UsuarioRepository usuarioRepo,
             ConfigPagoRepository configPagoRepo,
             CursoRepository cursoRepo,
-            PasswordEncoder passwordEncoder) {
+            PasswordEncoder passwordEncoder,
+            DataSource dataSource) {
         this.lineaRepo = lineaRepo;
         this.areaRepo = areaRepo;
         this.usuarioRepo = usuarioRepo;
         this.configPagoRepo = configPagoRepo;
         this.cursoRepo = cursoRepo;
         this.passwordEncoder = passwordEncoder;
+        this.dataSource = dataSource;
     }
 
     @Override
     @Transactional
     public void run(String... args) {
+        asegurarColumnasNuevas();
         initLineasYAreas();
         initAdmin();
         initParticipanteDemo();
         initConfigPago();
         initCursosDemo();
+    }
+
+    private void asegurarColumnasNuevas() {
+        try (Connection conn = dataSource.getConnection(); Statement stmt = conn.createStatement()) {
+            stmt.execute("ALTER TABLE cursos ADD COLUMN IF NOT EXISTS enlace_whatsapp VARCHAR(255)");
+            stmt.execute("ALTER TABLE cursos ADD COLUMN IF NOT EXISTS precio_comunidad NUMERIC(10,2)");
+            stmt.execute("ALTER TABLE cursos ADD COLUMN IF NOT EXISTS creditos INTEGER DEFAULT 2");
+            stmt.execute("ALTER TABLE cursos ADD COLUMN IF NOT EXISTS docente_foto_url VARCHAR(255)");
+            stmt.execute("ALTER TABLE cursos ADD COLUMN IF NOT EXISTS docente_cargo VARCHAR(255)");
+            stmt.execute("ALTER TABLE certificados ADD COLUMN IF NOT EXISTS creditos INTEGER DEFAULT 2");
+            stmt.execute("UPDATE cursos SET creditos = 2 WHERE creditos IS NULL");
+            stmt.execute("UPDATE certificados SET creditos = 2 WHERE creditos IS NULL");
+            stmt.execute("UPDATE cursos SET docente_cargo = 'Docente Investigador — Especialista del IIICCD' WHERE docente_cargo IS NULL");
+            stmt.execute("DELETE FROM inscripciones WHERE curso_id IN (SELECT id FROM cursos WHERE docente_responsable LIKE '%Roque%')");
+            stmt.execute("DELETE FROM cursos WHERE docente_responsable LIKE '%Roque%'");
+        } catch (Exception e) {
+            // Silencioso si no es soportado por el dialecto (ej. pruebas en H2 que no usan IF NOT EXISTS idéntico)
+        }
     }
 
     private void initLineasYAreas() {
@@ -176,10 +201,6 @@ public class DataInitializer implements CommandLineRunner {
                     .filter(a -> a.getNombre().equalsIgnoreCase("Estadística Aplicada a la Investigación"))
                     .findFirst();
 
-            Optional<AreaInvestigacion> areaImagenes = areaRepo.findAll().stream()
-                    .filter(a -> a.getNombre().equalsIgnoreCase("Procesamiento de Imágenes"))
-                    .findFirst();
-
             if (areaIA.isPresent()) {
                 Curso c1 = new Curso();
                 c1.setNombre("Fundamentos y Aplicaciones de Inteligencia Artificial");
@@ -192,14 +213,18 @@ public class DataInitializer implements CommandLineRunner {
                         "- Introducción al procesamiento de lenguaje natural y visión computacional.");
                 c1.setAreaInvestigacion(areaIA.get());
                 c1.setDocenteResponsable("Dr. Leonid Alemán Gonzales");
+                c1.setDocenteCargo("Doctor en Ciencias de la Computación — Especialista en IA");
                 c1.setDuracion("48 horas académicas");
+                c1.setCreditos(2);
                 c1.setPrecio(BigDecimal.valueOf(150.00));
+                c1.setPrecioComunidad(BigDecimal.valueOf(100.00));
                 c1.setCuposTotales(30);
                 c1.setCuposDisponibles(30);
                 c1.setEstado(EstadoCurso.PUBLICADO);
                 c1.setFechaInicio(LocalDate.now().plusDays(10));
                 c1.setFechaFin(LocalDate.now().plusDays(40));
                 c1.setEnlaceClase("https://meet.google.com/iiiccd-ia-2026");
+                c1.setEnlaceWhatsapp("https://chat.whatsapp.com/iiiccd-ia-2026-oficial");
                 cursoRepo.save(c1);
             }
 
@@ -215,14 +240,18 @@ public class DataInitializer implements CommandLineRunner {
                         "- Despliegue de modelos como microservicios.");
                 c2.setAreaInvestigacion(areaML.get());
                 c2.setDocenteResponsable("Mg. Ángel Javier Quispe Carita");
+                c2.setDocenteCargo("Magíster en Informática — Investigador Renacyt");
                 c2.setDuracion("60 horas académicas");
+                c2.setCreditos(3);
                 c2.setPrecio(BigDecimal.valueOf(180.00));
+                c2.setPrecioComunidad(BigDecimal.valueOf(120.00));
                 c2.setCuposTotales(25);
                 c2.setCuposDisponibles(25);
                 c2.setEstado(EstadoCurso.PUBLICADO);
                 c2.setFechaInicio(LocalDate.now().plusDays(15));
                 c2.setFechaFin(LocalDate.now().plusDays(55));
                 c2.setEnlaceClase("https://meet.google.com/iiiccd-ml-2026");
+                c2.setEnlaceWhatsapp("https://chat.whatsapp.com/iiiccd-ml-2026-oficial");
                 cursoRepo.save(c2);
             }
 
@@ -238,38 +267,19 @@ public class DataInitializer implements CommandLineRunner {
                         "- Interpretación de resultados para artículos Scopus/WoS.");
                 c3.setAreaInvestigacion(areaEst.get());
                 c3.setDocenteResponsable("Mg. Renzo Apaza Cutipa");
+                c3.setDocenteCargo("Magíster en Estadística Matemática — Tesorero IIICCD");
                 c3.setDuracion("40 horas académicas");
+                c3.setCreditos(2);
                 c3.setPrecio(BigDecimal.valueOf(120.00));
+                c3.setPrecioComunidad(BigDecimal.valueOf(80.00));
                 c3.setCuposTotales(35);
                 c3.setCuposDisponibles(35);
                 c3.setEstado(EstadoCurso.PUBLICADO);
                 c3.setFechaInicio(LocalDate.now().plusDays(12));
                 c3.setFechaFin(LocalDate.now().plusDays(42));
                 c3.setEnlaceClase("https://meet.google.com/iiiccd-est-2026");
+                c3.setEnlaceWhatsapp("https://chat.whatsapp.com/iiiccd-est-2026-oficial");
                 cursoRepo.save(c3);
-            }
-
-            if (areaImagenes.isPresent()) {
-                Curso c4 = new Curso();
-                c4.setNombre("Visión Artificial y Procesamiento Digital de Imágenes");
-                c4.setDescripcionCorta("Técnicas avanzadas para detección de objetos, segmentación y reconocimiento facial.");
-                c4.setDescripcion("Capacitación especializada en algoritmos de visión computacional y análisis morfológico de imágenes satelitales y médicas.\n\n" +
-                        "Temario:\n" +
-                        "- Filtrado espacial y transformadas en el dominio frecuencial.\n" +
-                        "- Detección de bordes y descriptores locales (SIFT, ORB).\n" +
-                        "- Detección de objetos con arquitecturas YOLO.\n" +
-                        "- Segmentación semántica e instancias.");
-                c4.setAreaInvestigacion(areaImagenes.get());
-                c4.setDocenteResponsable("Ing. Roberto Elvis Roque Claros");
-                c4.setDuracion("45 horas académicas");
-                c4.setPrecio(BigDecimal.valueOf(160.00));
-                c4.setCuposTotales(20);
-                c4.setCuposDisponibles(20);
-                c4.setEstado(EstadoCurso.PUBLICADO);
-                c4.setFechaInicio(LocalDate.now().plusDays(20));
-                c4.setFechaFin(LocalDate.now().plusDays(60));
-                c4.setEnlaceClase("https://meet.google.com/iiiccd-vision-2026");
-                cursoRepo.save(c4);
             }
         }
     }

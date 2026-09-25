@@ -24,7 +24,7 @@
                     </p>
                     <div class="hero-actions">
                         <a th:href="@{/catalogo}" class="btn btn-lg btn-primary">Explorar Cursos</a>
-                        <a th:href="@{/verificar}" class="btn btn-lg btn-outline" style="color: #FFFFFF; border-color: rgba(255,255,255,0.4);">Validar Certificado</a>
+                        <a sec:authorize="isAuthenticated()" th:href="@{/verificar}" class="btn btn-lg btn-outline" style="color: #FFFFFF; border-color: rgba(255,255,255,0.4);">Validar Certificado</a>
                     </div>
                 </div>
 
@@ -52,28 +52,6 @@
         </div>
     </section>
 
-    <!-- Líneas de Investigación Destacadas -->
-    <section style="padding: 5rem 0; background: var(--surface);">
-        <div class="container">
-            <div class="section-header">
-                <span class="section-tag">Ejes Temáticos</span>
-                <h2 class="section-title">Líneas de Investigación</h2>
-                <p>Nuestros cursos y programas de especialización están rigurosamente organizados según las líneas oficiales del instituto.</p>
-            </div>
-
-            <div class="lineas-grid">
-                <div th:each="linea : ${lineas}" class="linea-card">
-                    <div class="linea-icon">🔬</div>
-                    <h3 th:text="${linea.nombre}">Nombre de Línea</h3>
-                    <p th:text="${linea.descripcion}">Descripción general de la línea de investigación científica.</p>
-                    <a th:href="@{/catalogo(lineaId=${linea.id})}" class="btn btn-sm btn-outline-primary" style="margin-top: auto;">
-                        Ver Cursos de esta Línea &rarr;
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- Cursos Destacados -->
     <section style="padding: 5rem 0;">
         <div class="container">
@@ -93,13 +71,40 @@
             </div>
 
             <div th:unless="${cursosDestacados.empty}" class="cursos-grid">
-                <div th:each="c : ${cursosDestacados}" class="card curso-card">
-                    <div class="curso-card-header">
-                        <div class="curso-meta">
-                            <span class="curso-linea-tag" th:text="${c.areaInvestigacion.lineaInvestigacion.nombre}">Línea</span>
-                            <span class="badge badge-success" th:text="${c.cuposDisponibles + ' vacantes'}">15 vacantes</span>
+                <div th:each="c : ${cursosDestacados}" class="curso-card">
+                    <!-- Portada Visual o Banner Temático -->
+                    <div class="curso-card-cover">
+                        <img th:if="${c.imagenUrl != null and !c.imagenUrl.isEmpty()}" th:src="@{${c.imagenUrl}}" alt="Portada de curso" class="curso-cover-img">
+                        <div th:unless="${c.imagenUrl != null and !c.imagenUrl.isEmpty()}" 
+                             th:class="${'curso-cover-pattern cover-linea-' + (c.areaInvestigacion.lineaInvestigacion.id != null ? c.areaInvestigacion.lineaInvestigacion.id : 1)}"></div>
+                        <div class="curso-cover-overlay"></div>
+
+                        <!-- Badges Flotantes -->
+                        <div class="curso-cover-top-badges">
+                            <div>
+                                <span th:if="${c.cuposDisponibles > 5}" class="badge-pill badge-live">
+                                    ● <span th:text="${c.cuposDisponibles + ' vacantes'}">15 vacantes</span>
+                                </span>
+                                <span th:if="${c.cuposDisponibles <= 5 and c.cuposDisponibles > 0}" class="badge-pill badge-urgent">
+                                    🔥 ¡Últimos cupos! (<span th:text="${c.cuposDisponibles}">2</span>)
+                                </span>
+                                <span th:if="${c.cuposDisponibles == 0}" class="badge-pill badge-soldout">
+                                    Agotado
+                                </span>
+                            </div>
+                            <span class="badge-pill badge-glass">100% Virtual</span>
                         </div>
-                        <div class="curso-precio" th:text="${'S/ ' + c.precio}">S/ 120.00</div>
+
+                        <!-- Franja Inferior de Portada -->
+                        <div class="curso-cover-bottom">
+                            <span class="curso-cover-linea" th:text="${c.areaInvestigacion.lineaInvestigacion.nombre}">Línea</span>
+                            <div class="curso-cover-price-box">
+                                <div class="curso-cover-price" th:text="${'S/ ' + c.precio}">S/ 120.00</div>
+                                <div th:if="${c.precioComunidad != null}" class="curso-cover-subprice">
+                                    UNA: S/ <span th:text="${c.precioComunidad}">80.00</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="curso-card-body">
                         <h3 th:text="${c.nombre}">Nombre del Curso</h3>

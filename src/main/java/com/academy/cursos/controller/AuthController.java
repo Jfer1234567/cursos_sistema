@@ -58,7 +58,14 @@ public class AuthController {
             redirectAttributes.addFlashAttribute("successMsg", "¡Registro exitoso! Ya puedes iniciar sesión con tu cuenta.");
             return "redirect:/login";
         } catch (IllegalArgumentException e) {
-            bindingResult.rejectValue("correo", "error.registroDTO", e.getMessage());
+            String msg = e.getMessage();
+            if (msg.contains("documento") || msg.contains("DNI")) {
+                bindingResult.rejectValue("numeroDocumento", "error.registroDTO", msg);
+            } else if (msg.contains("teléfono") || msg.contains("WhatsApp")) {
+                bindingResult.rejectValue("telefono", "error.registroDTO", msg);
+            } else {
+                bindingResult.rejectValue("correo", "error.registroDTO", msg);
+            }
             return "auth/registro";
         }
     }

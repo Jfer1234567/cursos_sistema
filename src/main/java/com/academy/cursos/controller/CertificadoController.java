@@ -109,4 +109,18 @@ public class CertificadoController {
 
         return "verificar/certificado";
     }
+
+    @GetMapping("/verificar/certificado/{codigo}/pdf")
+    public ResponseEntity<byte[]> descargarCertificadoPublicoPdf(@PathVariable String codigo) throws DocumentException {
+        Certificado certificado = certificadoService.obtenerPorCodigo(codigo)
+                .orElseThrow(() -> new IllegalArgumentException("Certificado no encontrado"));
+
+        byte[] pdfBytes = certificadoService.descargarPdf(certificado.getId());
+        String filename = "Certificado-" + certificado.getCodigoVerificacion() + ".pdf";
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(pdfBytes);
+    }
 }

@@ -1,12 +1,12 @@
 package com.academy.cursos.service;
 
 import com.academy.cursos.model.Curso;
+import com.academy.cursos.model.MensajeContacto;
 import com.academy.cursos.model.Usuario;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -60,9 +60,14 @@ public class CorreoService {
                 ? c.getEnlaceClase()
                 : "Se publicará en tu panel de participante antes de iniciar las clases.";
 
+        String enlaceWsp = (c.getEnlaceWhatsapp() != null && !c.getEnlaceWhatsapp().isBlank())
+                ? "\nGrupo Oficial de WhatsApp (comunicados y material de clase):\n" + c.getEnlaceWhatsapp() + "\n"
+                : "";
+
         String contenido = "Estimado(a) " + u.getNombreCompleto() + ",\n\n" +
                 "Tu pago para el curso \"" + c.getNombre() + "\" ha sido VERIFICADO Y APROBADO satisfactoriamente.\n\n" +
-                "Enlace de acceso a las sesiones virtuales (Zoom/Meet):\n" + enlace + "\n\n" +
+                "Enlace de acceso a las sesiones virtuales (Zoom/Meet):\n" + enlace + "\n" +
+                enlaceWsp + "\n" +
                 "Puedes revisar todos los detalles ingresando a tu panel de participante.\n\n" +
                 "¡Muchos éxitos en tu capacitación!\n" +
                 "Atentamente,\nDirectiva IIICCD";
@@ -88,5 +93,18 @@ public class CorreoService {
                 "Cualquier entidad puede validar su autenticidad ingresando dicho código en la sección de validación pública de nuestra plataforma.\n\n" +
                 "Atentamente,\nDirectiva IIICCD";
         enviarCorreoSeguro(u.getCorreo(), asunto, contenido);
+    }
+
+    public void enviarNotificacionContacto(MensajeContacto m) {
+        String asunto = "[Nueva Consulta IIICCD] " + m.getAsunto();
+        String contenido = "Has recibido una nueva consulta a través del portal web del IIICCD:\n\n" +
+                "• Remitente: " + m.getNombreCompleto() + "\n" +
+                "• Correo: " + m.getCorreo() + "\n" +
+                "• Teléfono: " + (m.getTelefono() != null ? m.getTelefono() : "No especificado") + "\n" +
+                "• Asunto: " + m.getAsunto() + "\n" +
+                "• Fecha: " + m.getFechaEnvio() + "\n\n" +
+                "Mensaje:\n" + m.getMensaje() + "\n\n" +
+                "---\nPuedes responder directamente a este remitente o gestionarlo desde la Bandeja del Panel de Administración.";
+        enviarCorreoSeguro("iiiccd.finesi@gmail.com", asunto, contenido);
     }
 }

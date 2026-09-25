@@ -7,7 +7,7 @@ Plataforma web institucional del **Instituto de Investigación en Inteligencia C
 ## 🏛️ Características Principales
 
 1. **Portal Institucional Académico:**
-   - Presentación de misión, visión y directiva oficial (*Director: Leonid Alemán Gonzales, Secretario: Ángel Javier Quispe Carita, Tesorero: Renzo Apaza Cutipa, Director de Actividades: Roberto Elvis Roque Claros*).
+   - Presentación de misión, visión y directiva oficial (*Director: Leonid Alemán Gonzales, Secretario: Ángel Javier Quispe Carita, Tesorero: Renzo Apaza Cutipa*).
    - Estructuración de las **3 Líneas de Investigación** y sus **11 Áreas de Especialización**.
    - Catálogo de cursos con buscador reactivo y filtros por línea temática.
 

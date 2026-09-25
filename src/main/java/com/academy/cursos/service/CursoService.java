@@ -17,10 +17,15 @@ public class CursoService {
 
     private final CursoRepository cursoRepository;
     private final AreaInvestigacionRepository areaRepository;
+    private final ArchivoService archivoService;
 
-    public CursoService(CursoRepository cursoRepository, AreaInvestigacionRepository areaRepository) {
+    public CursoService(
+            CursoRepository cursoRepository,
+            AreaInvestigacionRepository areaRepository,
+            ArchivoService archivoService) {
         this.cursoRepository = cursoRepository;
         this.areaRepository = areaRepository;
+        this.archivoService = archivoService;
     }
 
     public List<Curso> listarPublicados(Long lineaId) {
@@ -69,6 +74,22 @@ public class CursoService {
         curso.setFechaFin(dto.getFechaFin());
         curso.setImagenUrl(dto.getImagenUrl());
         curso.setEnlaceClase(dto.getEnlaceClase());
+        curso.setEnlaceWhatsapp(dto.getEnlaceWhatsapp());
+        curso.setPrecioComunidad(dto.getPrecioComunidad());
+        curso.setCreditos(dto.getCreditos() != null ? dto.getCreditos() : 2);
+        curso.setDocenteCargo(dto.getDocenteCargo());
+
+        // Manejo de la foto del docente
+        if (dto.getDocenteFotoFile() != null && !dto.getDocenteFotoFile().isEmpty()) {
+            try {
+                String rutaRelativa = archivoService.guardarArchivo(dto.getDocenteFotoFile(), "docentes");
+                curso.setDocenteFotoUrl("/uploads/" + rutaRelativa);
+            } catch (Exception e) {
+                throw new RuntimeException("Error al procesar la fotografía del docente: " + e.getMessage(), e);
+            }
+        } else if (dto.getDocenteFotoUrl() != null && !dto.getDocenteFotoUrl().trim().isEmpty()) {
+            curso.setDocenteFotoUrl(dto.getDocenteFotoUrl().trim());
+        }
 
         return cursoRepository.save(curso);
     }

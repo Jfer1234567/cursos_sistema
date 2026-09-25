@@ -39,6 +39,9 @@ public class Certificado {
     @Column(nullable = false)
     private String duracion;
 
+    @Column(name = "creditos")
+    private Integer creditos = 2;
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public Inscripcion getInscripcion() { return inscripcion; }
@@ -59,4 +62,6 @@ public class Certificado {
     public void setDocente(String docente) { this.docente = docente; }
     public String getDuracion() { return duracion; }
     public void setDuracion(String duracion) { this.duracion = duracion; }
+    public Integer getCreditos() { return creditos; }
+    public void setCreditos(Integer creditos) { this.creditos = creditos; }
 }
