@@ -184,7 +184,7 @@ document.addEventListener('DOMContentLoaded', function () {
     btnDescargarFlyer.addEventListener('click', function () {
         const originalText = btnDescargarFlyer.innerHTML;
         btnDescargarFlyer.disabled = true;
-        btnDescargarFlyer.innerHTML = '⏳ Generando imagen en alta resolución...';
+        btnDescargarFlyer.innerHTML = 'Generando imagen en alta resolución...';
 
         if (typeof html2canvas === 'undefined') {
             alert('Cargando librería de renderizado. Por favor intenta en 3 segundos.');
@@ -212,7 +212,7 @@ document.addEventListener('DOMContentLoaded', function () {
             document.body.removeChild(link);
 
             btnDescargarFlyer.disabled = false;
-            btnDescargarFlyer.innerHTML = '✓ ¡Flyer Descargado con Éxito!';
+            btnDescargarFlyer.innerHTML = '¡Flyer Descargado con Éxito!';
             setTimeout(() => {
                 btnDescargarFlyer.innerHTML = originalText;
             }, 3000);
@@ -228,7 +228,7 @@ document.addEventListener('DOMContentLoaded', function () {
     btnCopiarFlyer.addEventListener('click', function () {
         const originalText = btnCopiarFlyer.innerHTML;
         btnCopiarFlyer.disabled = true;
-        btnCopiarFlyer.innerHTML = '⏳ Copiando...';
+        btnCopiarFlyer.innerHTML = 'Copiando...';
 
         if (typeof html2canvas === 'undefined') {
             btnCopiarFlyer.disabled = false;
@@ -245,7 +245,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (navigator.clipboard && navigator.clipboard.write) {
                     const item = new ClipboardItem({ 'image/png': blob });
                     navigator.clipboard.write([item]).then(function () {
-                        btnCopiarFlyer.innerHTML = '✓ ¡Copiado al portapapeles!';
+                        btnCopiarFlyer.innerHTML = '¡Copiado al portapapeles!';
                         setTimeout(() => {
                             btnCopiarFlyer.disabled = false;
                             btnCopiarFlyer.innerHTML = originalText;

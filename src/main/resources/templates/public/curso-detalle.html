@@ -44,7 +44,10 @@
                         <div style="grid-column: span 2; display: flex; align-items: center; gap: 1.15rem; background: #F8FAFC; padding: 1.15rem; border-radius: var(--radius-sm); border: 1px solid var(--border);">
                             <div style="width: 58px; height: 58px; border-radius: 50%; overflow: hidden; border: 2.5px solid var(--primary); flex-shrink: 0; background: #E2E8F0; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm);">
                                 <img th:if="${curso.docenteFotoUrl != null and !curso.docenteFotoUrl.isEmpty()}" th:src="${curso.docenteFotoUrl}" alt="Docente" style="width: 100%; height: 100%; object-fit: cover;">
-                                <span th:unless="${curso.docenteFotoUrl != null and !curso.docenteFotoUrl.isEmpty()}" style="font-size: 1.85rem;">👨‍🏫</span>
+                                <svg th:unless="${curso.docenteFotoUrl != null and !curso.docenteFotoUrl.isEmpty()}" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
                             </div>
                             <div>
                                 <span style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700; color: var(--primary); letter-spacing: 0.5px; display: block;">Docente / Investigador Responsable</span>
@@ -101,8 +104,96 @@
                             </div>
                         </div>
 
-                        <!-- Si está autenticado -->
-                        <div sec:authorize="isAuthenticated()">
+                        <!-- Bloque si el usuario YA TIENE una inscripción -->
+                        <div sec:authorize="isAuthenticated()" th:if="${miInscripcion != null}">
+                            <!-- Caso 1: Aprobado (Sesiones Activas) -->
+                            <div th:if="${miInscripcion.estado.name() == 'APROBADA'}"
+                                 style="background: rgba(16, 185, 129, 0.08); border: 1.5px solid rgba(16, 185, 129, 0.35); border-radius: var(--radius-sm); padding: 1.25rem; text-align: center;">
+                                <span class="badge-status badge-status-atendido" style="margin-bottom: 0.5rem;">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                    Inscripción Aprobada
+                                </span>
+                                <h4 style="font-size: 1.05rem; color: #065F46; margin: 0.35rem 0 0.85rem 0;">¡Ya tienes acceso oficial a este curso!</h4>
+
+                                <div th:if="${curso.enlaceClase != null and !curso.enlaceClase.empty}" style="margin-bottom: 0.65rem;">
+                                    <a th:href="${curso.enlaceClase}" target="_blank" class="btn btn-primary btn-block" style="background: #059669; border-color: #059669; font-weight: 700; padding: 0.75rem 1rem;">
+                                        Unirse a la Clase en Vivo (Zoom / Meet) &rarr;
+                                    </a>
+                                </div>
+                                <div th:unless="${curso.enlaceClase != null and !curso.enlaceClase.empty}" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.65rem;">
+                                    El enlace de la sesión será activado por la coordinación antes del inicio de clases.
+                                </div>
+
+                                <div th:if="${curso.enlaceWhatsapp != null and !curso.enlaceWhatsapp.empty}" style="margin-bottom: 0.75rem;">
+                                    <a th:href="${curso.enlaceWhatsapp}" target="_blank" class="btn btn-whatsapp btn-block" style="font-size: 0.88rem;">
+                                        Grupo Oficial de WhatsApp &rarr;
+                                    </a>
+                                </div>
+
+                                <a th:href="@{/participante/dashboard}" class="btn btn-outline btn-block btn-sm" style="margin-top: 0.4rem;">
+                                    Ir a Mi Panel ("Mis Cursos")
+                                </a>
+                            </div>
+
+                            <!-- Caso 1.5: Completado (Clases concluidas) -->
+                            <div th:if="${miInscripcion.estado.name() == 'COMPLETADA'}"
+                                 style="background: rgba(16, 185, 129, 0.08); border: 1.5px solid rgba(16, 185, 129, 0.35); border-radius: var(--radius-sm); padding: 1.25rem; text-align: center;">
+                                <span class="badge-status badge-status-atendido" style="margin-bottom: 0.5rem;">
+                                    Curso Culminado
+                                </span>
+                                <h4 style="font-size: 1.05rem; color: #065F46; margin: 0.35rem 0 0.5rem 0;">¡Curso Completado con Éxito!</h4>
+                                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+                                    Las clases en vivo han finalizado formalmente para este curso.
+                                </p>
+                                <a th:href="@{/participante/dashboard}" class="btn btn-outline btn-block btn-sm">
+                                    Ir a Mi Panel ("Mis Cursos")
+                                </a>
+                            </div>
+
+                            <!-- Caso 2: Pendiente de Verificación -->
+                            <div th:if="${miInscripcion.estado.name() == 'PENDIENTE_VERIFICACION'}"
+                                 style="background: rgba(245, 158, 11, 0.08); border: 1.5px solid rgba(245, 158, 11, 0.35); border-radius: var(--radius-sm); padding: 1.25rem; text-align: center;">
+                                <span class="badge-status badge-status-nuevo" style="margin-bottom: 0.5rem;">
+                                    <span class="badge-dot badge-dot-nuevo"></span>
+                                    En Verificación
+                                </span>
+                                <h4 style="font-size: 1rem; color: #B45309; margin: 0.35rem 0 0.5rem 0;">Comprobante en Revisión</h4>
+                                <p style="font-size: 0.85rem; color: #78350F; margin-bottom: 1rem;">
+                                    Tu comprobante ya fue recibido. En cuanto la directiva valide tu operación, se activará aquí y en tu panel tu enlace de Zoom/Meet.
+                                </p>
+                                <a th:href="@{/participante/dashboard}" class="btn btn-outline btn-block btn-sm">
+                                    Ver estado en Mis Cursos
+                                </a>
+                            </div>
+
+                            <!-- Caso 3: Rechazado / Pago Pendiente de Subir -->
+                            <div th:if="${miInscripcion.estado.name() == 'RECHAZADA' or miInscripcion.estado.name() == 'PENDIENTE_PAGO'}"
+                                 style="background: rgba(239, 68, 68, 0.08); border: 1.5px solid rgba(239, 68, 68, 0.30); border-radius: var(--radius-sm); padding: 1.25rem; text-align: center;">
+                                <span class="badge-status badge-status-rechazado" style="margin-bottom: 0.5rem;">
+                                    <span th:if="${miInscripcion.estado.name() == 'RECHAZADA'}">Comprobante Observado</span>
+                                    <span th:unless="${miInscripcion.estado.name() == 'RECHAZADA'}">Pago Pendiente</span>
+                                </span>
+                                <p th:if="${miInscripcion.notasAdmin != null}" style="font-size: 0.85rem; color: #B91C1C; margin: 0.35rem 0 0.75rem 0;">
+                                    <strong>Observación:</strong> <span th:text="${miInscripcion.notasAdmin}">Motivo</span>
+                                </p>
+                                <a th:href="@{'/inscripcion/' + ${miInscripcion.id}}" class="btn btn-primary btn-block">
+                                    Subir Comprobante Yape
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Bloque si el usuario es ADMINISTRADOR: no mostrar botón de compra -->
+                        <div sec:authorize="hasRole('ADMIN')">
+                            <div style="background: #F1F5F9; border: 1px solid #CBD5E1; border-radius: var(--radius-sm); padding: 1rem 1.25rem; color: #475569; font-size: 0.88rem; text-align: center;">
+                                <strong style="color: #1E293B; display: block; margin-bottom: 0.25rem;">Vista de Administrador</strong>
+                                <span style="font-size: 0.8rem; color: #64748B;">Estás previsualizando la ficha del curso. Las opciones de matrícula están activas para participantes.</span>
+                            </div>
+                        </div>
+
+                        <!-- Bloque si el usuario es PARTICIPANTE y NO ESTÁ INSCRITO AÚN -->
+                        <div sec:authorize="hasRole('PARTICIPANTE')" th:if="${miInscripcion == null}">
                             <form th:action="@{'/inscripcion/curso/' + ${curso.id}}" method="post">
                                 <button type="submit"
                                         class="btn btn-lg btn-primary btn-block"
@@ -123,10 +214,10 @@
                             </p>
                         </div>
 
-                        <div style="margin-top: 1.5rem; font-size: 0.85rem; color: var(--text-muted); text-align: left; border-top: 1px solid var(--border-subtle); padding-top: 1rem;">
-                            ✓ Certificado oficial emitido por IIICCD - FINESI<br>
-                            ✓ Verificación digital mediante código único QR/web<br>
-                            ✓ Clases sincrónicas y materiales de apoyo
+                        <div style="margin-top: 1.5rem; font-size: 0.85rem; color: var(--text-muted); text-align: left; border-top: 1px solid var(--border-subtle); padding-top: 1rem; line-height: 1.6;">
+                            <div>&bull; Certificado oficial emitido por IIICCD - FINESI</div>
+                            <div>&bull; Verificación digital mediante código único QR/web</div>
+                            <div>&bull; Clases sincrónicas y materiales de apoyo</div>
                         </div>
                     </div>
                 </div>

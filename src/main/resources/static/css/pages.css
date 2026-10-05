@@ -1740,4 +1740,475 @@
     transform: translateY(0);
 }
 
+/* ==========================================================================
+   Flyer Oficial Destacado en Portada (Convocatoria Abierta) - Diseño Premium
+   ========================================================================== */
+.seccion-flyer-destacado {
+    position: relative;
+    padding: 3.5rem 0;
+    margin-top: 2.5rem;
+    margin-bottom: 2.25rem;
+    background-color: #070B14;
+    background-image: 
+        radial-gradient(circle at 12% 25%, rgba(142, 33, 47, 0.45) 0%, transparent 45%),
+        radial-gradient(circle at 88% 75%, rgba(217, 119, 6, 0.25) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(14, 52, 115, 0.25) 0%, transparent 60%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='%23ffffff' fill-opacity='0.035'%3E%3Ccircle cx='40' cy='40' r='2'/%3E%3Ccircle cx='10' cy='10' r='1.5'/%3E%3Ccircle cx='70' cy='70' r='1.5'/%3E%3Ccircle cx='70' cy='10' r='1'/%3E%3Ccircle cx='10' cy='70' r='1'/%3E%3Cpath d='M10 10 L40 40 M40 40 L70 70 M70 10 L40 40 M10 70 L40 40' stroke='%23ffffff' stroke-width='0.4' stroke-opacity='0.05' fill='none'/%3E%3C/g%3E%3C/svg%3E");
+    color: #FFFFFF;
+    border-top: 1px solid rgba(212, 175, 55, 0.35);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.35);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+}
+
+.seccion-flyer-destacado .container {
+    max-width: 1320px;
+}
+
+.flyer-destacado-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3.5rem;
+    align-items: center;
+}
+
+/* Badge con micro-indicador de pulso animado */
+.flyer-badge-pulse-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    background: rgba(239, 68, 68, 0.12);
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    color: #FCA5A5;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    padding: 0.45rem 1rem;
+    border-radius: 9999px;
+    margin-bottom: 1.25rem;
+    text-transform: uppercase;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 2px 10px rgba(239, 68, 68, 0.15);
+}
+
+.flyer-pulse-dot {
+    width: 8px;
+    height: 8px;
+    background-color: #EF4444;
+    border-radius: 50%;
+    position: relative;
+    box-shadow: 0 0 10px #EF4444;
+    flex-shrink: 0;
+}
+
+.flyer-pulse-dot::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    background-color: rgba(239, 68, 68, 0.6);
+    animation: pulseRing 1.8s cubic-bezier(0.24, 0, 0.38, 1) infinite;
+}
+
+@keyframes pulseRing {
+    0% { transform: scale(0.6); opacity: 1; }
+    100% { transform: scale(2.4); opacity: 0; }
+}
+
+.flyer-destacado-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #FFFFFF;
+    line-height: 1.15;
+    margin-bottom: 1rem;
+    letter-spacing: -0.02em;
+}
+
+.flyer-destacado-title span {
+    background: linear-gradient(135deg, #FFFFFF 0%, #FBBF24 50%, #F59E0B 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+}
+
+.flyer-destacado-desc {
+    color: #CBD5E1;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    margin-bottom: 1.75rem;
+    max-width: 600px;
+}
+
+/* Ficha técnica glassmorphism con iconos */
+.flyer-destacado-meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 0.85rem;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 14px;
+    padding: 1.1rem 1.25rem;
+    margin-bottom: 2rem;
+    backdrop-filter: blur(12px);
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.08);
+}
+
+.flyer-meta-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.65rem;
+}
+
+.flyer-meta-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: rgba(245, 158, 11, 0.12);
+    border: 1px solid rgba(245, 158, 11, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #FBBF24;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.flyer-meta-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.flyer-meta-item-label {
+    font-size: 0.72rem;
+    color: #94A3B8;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    margin-bottom: 0.15rem;
+}
+
+.flyer-meta-item-val {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #F8FAFC;
+    line-height: 1.25;
+}
+
+/* Pastillas de Precios Diferenciados */
+.flyer-destacado-precios {
+    display: flex;
+    gap: 1.25rem;
+    align-items: stretch;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.flyer-precio-pill {
+    background: rgba(16, 185, 129, 0.08);
+    border: 1px solid rgba(16, 185, 129, 0.35);
+    padding: 0.75rem 1.25rem;
+    border-radius: 12px;
+    backdrop-filter: blur(8px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    transition: border-color 0.2s, transform 0.2s;
+}
+
+.flyer-precio-pill:hover {
+    border-color: rgba(16, 185, 129, 0.7);
+    transform: translateY(-2px);
+}
+
+.flyer-precio-pill .label {
+    font-size: 0.72rem;
+    color: #6EE7B7;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 0.2rem;
+}
+
+.flyer-precio-pill .amount {
+    font-size: 1.45rem;
+    font-weight: 800;
+    color: #10B981;
+    line-height: 1;
+}
+
+.flyer-precio-pill-una {
+    background: linear-gradient(135deg, rgba(217, 119, 6, 0.15) 0%, rgba(142, 33, 47, 0.15) 100%);
+    border: 1px solid rgba(245, 158, 11, 0.45);
+    position: relative;
+    padding: 0.75rem 1.25rem;
+    border-radius: 12px;
+    backdrop-filter: blur(8px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.1);
+    transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+
+.flyer-precio-pill-una:hover {
+    border-color: rgba(245, 158, 11, 0.8);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(245, 158, 11, 0.2);
+}
+
+.flyer-precio-pill-una .tag-beneficio {
+    position: absolute;
+    top: -9px;
+    right: 10px;
+    background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+    color: #0F172A;
+    font-size: 0.62rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 0.15rem 0.5rem;
+    border-radius: 9999px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.flyer-precio-pill-una .label {
+    font-size: 0.72rem;
+    color: #FCD34D;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 0.2rem;
+}
+
+.flyer-precio-pill-una .amount {
+    font-size: 1.45rem;
+    font-weight: 800;
+    color: #F59E0B;
+    line-height: 1;
+}
+
+/* Botones CTA */
+.flyer-btn-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    background: linear-gradient(135deg, #B91C1C 0%, #881337 100%);
+    color: #FFFFFF;
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 0.85rem 1.75rem;
+    border-radius: 10px;
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    box-shadow: 0 8px 24px -4px rgba(185, 28, 28, 0.55), 0 0 15px rgba(239, 68, 68, 0.25);
+    transition: all 0.25s ease;
+    text-decoration: none;
+}
+
+.flyer-btn-cta:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%);
+    box-shadow: 0 12px 30px -4px rgba(220, 38, 38, 0.7), 0 0 25px rgba(239, 68, 68, 0.4);
+    color: #FFFFFF;
+}
+
+.flyer-btn-cta svg {
+    transition: transform 0.2s ease;
+}
+
+.flyer-btn-cta:hover svg {
+    transform: translateX(4px);
+}
+
+.flyer-btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.06);
+    color: #FFFFFF;
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 0.85rem 1.4rem;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(8px);
+    transition: all 0.25s ease;
+    text-decoration: none;
+}
+
+.flyer-btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.45);
+    transform: translateY(-2px);
+    color: #FFFFFF;
+}
+
+/* Presentación Vitrina del Flyer */
+.flyer-destacado-showcase {
+    position: relative;
+    perspective: 1200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.flyer-showcase-badge {
+    position: absolute;
+    top: -12px;
+    z-index: 3;
+    background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
+    border: 1px solid rgba(245, 158, 11, 0.5);
+    color: #FBBF24;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 0.35rem 0.9rem;
+    border-radius: 9999px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), 0 0 10px rgba(245, 158, 11, 0.25);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.flyer-destacado-frame {
+    position: relative;
+    border-radius: 16px;
+    padding: 6px;
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.4) 0%, rgba(255, 255, 255, 0.1) 50%, rgba(185, 28, 28, 0.3) 100%);
+    box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.8), 0 0 45px rgba(245, 158, 11, 0.2);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    justify-content: center;
+}
+
+.flyer-destacado-frame a {
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+
+.flyer-destacado-frame:hover {
+    transform: translateY(-6px) scale(1.015);
+    box-shadow: 0 35px 75px -10px rgba(0, 0, 0, 0.9), 0 0 60px rgba(245, 158, 11, 0.35);
+}
+
+.flyer-destacado-img {
+    display: block;
+    width: 100%;
+    max-height: 700px;
+    object-fit: contain;
+    border-radius: 12px;
+    background: #020617;
+    margin: 0 auto;
+}
+
+@media (max-width: 900px) {
+    .seccion-flyer-destacado {
+        padding: 3rem 0;
+        margin-top: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    .flyer-destacado-grid {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+    }
+    .flyer-destacado-title {
+        font-size: 1.85rem;
+    }
+    .flyer-destacado-meta {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* ==========================================================================
+   Pestañas de Navegación por Cursos (Admin Usuarios Directory)
+   ========================================================================== */
+.tabs-scroll-wrapper {
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+    -webkit-overflow-scrolling: touch;
+}
+
+.tabs-container {
+    display: inline-flex;
+    gap: 0.5rem;
+    background: #F1F5F9;
+    padding: 0.35rem;
+    border-radius: 12px;
+    border: 1px solid #E2E8F0;
+    align-items: center;
+}
+
+.tab-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.15rem;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #475569;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    border: 1px solid transparent;
+}
+
+.tab-pill:hover {
+    color: #1E293B;
+    background: rgba(255, 255, 255, 0.6);
+    border-color: #CBD5E1;
+}
+
+.tab-pill.active {
+    background: #FFFFFF;
+    color: #1E3A8A;
+    font-weight: 700;
+    border-color: #CBD5E1;
+    box-shadow: 0 2px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+}
+
+.tab-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.15rem 0.55rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    background: #E2E8F0;
+    color: #475569;
+    min-width: 22px;
+    line-height: 1.2;
+}
+
+.tab-pill.active .tab-count {
+    background: #1E3A8A;
+    color: #FFFFFF;
+}
+
+.tab-pill-warning {
+    color: #92400E;
+}
+
+.tab-pill-warning.active {
+    color: #B45309;
+}
+
+.tab-pill-warning .tab-count {
+    background: #FEF3C7;
+    color: #92400E;
+}
+
+.tab-pill-warning.active .tab-count {
+    background: #D97706;
+    color: #FFFFFF;
+}
+
+
+
 

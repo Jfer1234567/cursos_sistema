@@ -49,9 +49,7 @@ public class ComprobanteController {
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
 
         String rutaRelativa = "comprobantes/" + archivo;
-        Optional<Pago> pagoOpt = pagoRepository.findAll().stream()
-                .filter(p -> rutaRelativa.equals(p.getComprobanteUrl()))
-                .findFirst();
+        Optional<Pago> pagoOpt = pagoRepository.findByComprobanteUrl(rutaRelativa);
 
         if (pagoOpt.isPresent()) {
             Pago pago = pagoOpt.get();

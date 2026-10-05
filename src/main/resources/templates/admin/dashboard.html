@@ -33,7 +33,7 @@
                     <span th:if="${totalUsuarios > 0}" style="margin-left: 0.25rem; font-size: 0.75rem; padding: 0.15rem 0.5rem; background: #2563EB; color: #FFFFFF; border-radius: 999px; font-weight: 700;" th:text="${totalUsuarios}">5</span>
                 </a>
                 <a th:href="@{/admin/cursos/nuevo}" class="btn btn-primary">+ Nuevo Curso</a>
-                <a th:href="@{/admin/config/pago}" class="btn btn-outline">⚙ Configurar Yape</a>
+                <a th:href="@{/admin/config/pago}" class="btn btn-outline">Configurar Yape</a>
             </div>
         </div>
 
@@ -73,7 +73,7 @@
             </div>
             <div class="card-body">
                 <div th:if="${ultimosPagosPendientes.empty}" style="text-align: center; padding: 2rem; color: var(--text-muted);">
-                    🎉 No hay pagos pendientes por revisar en este momento.
+                     No hay pagos pendientes por revisar en este momento.
                 </div>
 
                 <div th:unless="${ultimosPagosPendientes.empty}" class="table-responsive">

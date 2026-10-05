@@ -11,10 +11,16 @@ import com.academy.cursos.service.CursoService;
 import com.academy.cursos.service.InscripcionService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
@@ -42,8 +48,16 @@ public class AdminCursoController {
     }
 
     @GetMapping
-    public String listarCursos(Model model) {
-        model.addAttribute("cursos", cursoService.listarTodos());
+    public String listarCursos(
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            Model model) {
+        int pageSize = 4;
+        Page<Curso> cursosPage = cursoService.listarPaginado(page, pageSize);
+        model.addAttribute("cursosPage", cursosPage);
+        model.addAttribute("cursos", cursosPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", cursosPage.getTotalPages());
+        model.addAttribute("totalElements", cursosPage.getTotalElements());
         return "admin/cursos/lista";
     }
 
@@ -85,28 +99,7 @@ public class AdminCursoController {
         Curso curso = cursoService.obtenerPorId(id)
                 .orElseThrow(() -> new IllegalArgumentException("Curso no encontrado"));
 
-        CursoDTO dto = new CursoDTO();
-        dto.setId(curso.getId());
-        dto.setNombre(curso.getNombre());
-        dto.setDescripcionCorta(curso.getDescripcionCorta());
-        dto.setDescripcion(curso.getDescripcion());
-        dto.setAreaInvestigacionId(curso.getAreaInvestigacion().getId());
-        dto.setDuracion(curso.getDuracion());
-        dto.setDocenteResponsable(curso.getDocenteResponsable());
-        dto.setPrecio(curso.getPrecio());
-        dto.setCuposTotales(curso.getCuposTotales());
-        dto.setEstado(curso.getEstado());
-        dto.setFechaInicio(curso.getFechaInicio());
-        dto.setFechaFin(curso.getFechaFin());
-        dto.setImagenUrl(curso.getImagenUrl());
-        dto.setEnlaceClase(curso.getEnlaceClase());
-        dto.setEnlaceWhatsapp(curso.getEnlaceWhatsapp());
-        dto.setPrecioComunidad(curso.getPrecioComunidad());
-        dto.setCreditos(curso.getCreditos());
-        dto.setDocenteCargo(curso.getDocenteCargo());
-        dto.setDocenteFotoUrl(curso.getDocenteFotoUrl());
-
-        model.addAttribute("cursoDTO", dto);
+        model.addAttribute("cursoDTO", CursoDTO.fromEntity(curso));
         model.addAttribute("areas", areaRepo.findAll());
         model.addAttribute("estados", EstadoCurso.values());
         return "admin/cursos/form";
@@ -122,6 +115,22 @@ public class AdminCursoController {
             redirectAttributes.addFlashAttribute("successMsg", "Estado del curso actualizado.");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMsg", "Error al actualizar estado: " + e.getMessage());
+        }
+        return "redirect:/admin/cursos";
+    }
+
+    @PostMapping("/{id}/flyer/toggle")
+    public String alternarPublicacionFlyer(
+            @PathVariable Long id,
+            @RequestParam boolean publicado,
+            RedirectAttributes redirectAttributes) {
+        try {
+            cursoService.alternarPublicacionFlyer(id, publicado);
+            redirectAttributes.addFlashAttribute("successMsg", publicado
+                    ? "Flyer publicado en la portada de Inicio con éxito."
+                    : "Flyer retirado de la portada de Inicio.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMsg", "Error al actualizar estado del flyer: " + e.getMessage());
         }
         return "redirect:/admin/cursos";
     }

@@ -32,7 +32,7 @@
 
             <div th:if="${inscripcion.curso.precioComunidad != null}"
                  style="background: #ECFDF5; border: 1px solid #A7F3D0; border-radius: var(--radius-sm); padding: 0.85rem 1.25rem; margin-bottom: 1.5rem; font-size: 0.9rem; color: #065F46;">
-                🎓 <strong>¿Perteneces a la comunidad UNA Puno?</strong> Cancela la tarifa preferencial de 
+                <strong>¿Perteneces a la comunidad UNA Puno?</strong> Cancela la tarifa preferencial de 
                 <strong th:text="${'S/ ' + inscripcion.curso.precioComunidad}">S/ 100.00</strong> (Estudiante, egresado o docente). De lo contrario, cancela la tarifa general de 
                 <strong th:text="${'S/ ' + inscripcion.curso.precio}">S/ 150.00</strong>.
             </div>
@@ -48,7 +48,7 @@
             <!-- Datos de Yape -->
             <div style="background: #F8FAFC; border: 1px solid var(--border); border-radius: var(--radius-md); padding: 2rem; margin-bottom: 2.5rem;">
                 <h3 style="color: var(--primary); margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
-                    📱 Datos Oficiales para Pago por Yape
+                    Datos Oficiales para Pago por Yape
                 </h3>
 
                 <div style="display: grid; grid-template-columns: 1fr 180px; gap: 2rem; align-items: center;">

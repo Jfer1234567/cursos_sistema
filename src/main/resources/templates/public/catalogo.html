@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="~{layout/main :: head('Catálogo de Cursos')}"></head>
 <body>
     <div th:replace="~{fragments/header :: header}"></div>
@@ -42,14 +42,13 @@
 
                 <!-- Buscador Rápido -->
                 <div style="min-width: 260px;">
-                    <input type="text" id="searchCurso" class="form-control" placeholder="🔍 Buscar curso por nombre...">
+                    <input type="text" id="searchCurso" class="form-control" placeholder="Buscar curso por nombre...">
                 </div>
             </div>
         </div>
 
         <!-- Listado de Cursos -->
         <div th:if="${cursos.empty}" class="card" style="text-align: center; padding: 4rem 2rem;">
-            <div style="font-size: 3rem; margin-bottom: 1rem;">📚</div>
             <h3 style="margin-bottom: 0.5rem;">No se encontraron cursos disponibles</h3>
             <p style="color: var(--text-muted);">No hay convocatorias activas para el filtro seleccionado en este momento.</p>
             <div style="margin-top: 1rem;">
@@ -70,10 +69,10 @@
                     <div class="curso-cover-top-badges">
                         <div>
                             <span th:if="${c.cuposDisponibles > 5}" class="badge-pill badge-live">
-                                ● <span th:text="${c.cuposDisponibles + ' vacantes'}">10 vacantes</span>
+                                <span th:text="${c.cuposDisponibles + ' vacantes'}">10 vacantes</span>
                             </span>
                             <span th:if="${c.cuposDisponibles <= 5 and c.cuposDisponibles > 0}" class="badge-pill badge-urgent">
-                                🔥 ¡Últimos cupos! (<span th:text="${c.cuposDisponibles}">2</span>)
+                                ¡Últimos cupos! (<span th:text="${c.cuposDisponibles}">2</span>)
                             </span>
                             <span th:if="${c.cuposDisponibles == 0}" class="badge-pill badge-soldout">
                                 Agotado
@@ -108,9 +107,54 @@
                     </div>
 
                     <div style="margin-top: 1.5rem;">
-                        <a th:href="@{'/cursos/' + ${c.id}}" class="btn btn-primary btn-block">
-                            Ver Detalles e Inscribirme
-                        </a>
+                        <!-- Si el usuario está inscrito y APROBADO (sesiones activas) -->
+                        <div th:if="${misInscripcionesMap != null and misInscripcionesMap.containsKey(c.id) and misInscripcionesMap.get(c.id).estado.name() == 'APROBADA'}">
+                            <span class="badge-status badge-status-atendido" style="width: 100%; justify-content: center; margin-bottom: 0.5rem; padding: 0.4rem 0.6rem;">
+                                Inscrito • Acceso Aprobado
+                            </span>
+                            <div style="display: flex; gap: 0.4rem; flex-direction: column;">
+                                <a th:if="${c.enlaceClase != null and !c.enlaceClase.empty}" th:href="${c.enlaceClase}" target="_blank" class="btn btn-sm btn-success" style="font-weight: 700; width: 100%;">
+                                    Sala Virtual (Meet / Zoom) &rarr;
+                                </a>
+                                <a th:href="@{'/cursos/' + ${c.id}}" class="btn btn-sm btn-outline" style="width: 100%;">
+                                    Ver Ficha del Curso
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Si el usuario completó el curso -->
+                        <div th:if="${misInscripcionesMap != null and misInscripcionesMap.containsKey(c.id) and misInscripcionesMap.get(c.id).estado.name() == 'COMPLETADA'}">
+                            <span class="badge-status badge-status-atendido" style="width: 100%; justify-content: center; margin-bottom: 0.5rem; padding: 0.4rem 0.6rem;">
+                                Curso Culminado
+                            </span>
+                            <a th:href="@{'/cursos/' + ${c.id}}" class="btn btn-sm btn-outline btn-block">
+                                Ver Ficha del Curso
+                            </a>
+                        </div>
+
+                        <!-- Si está en verificación -->
+                        <div th:if="${misInscripcionesMap != null and misInscripcionesMap.containsKey(c.id) and misInscripcionesMap.get(c.id).estado.name() == 'PENDIENTE_VERIFICACION'}">
+                            <span class="badge-status badge-status-nuevo" style="width: 100%; justify-content: center; margin-bottom: 0.5rem; padding: 0.4rem 0.6rem;">
+                                Comprobante en Revisión
+                            </span>
+                            <a th:href="@{/participante/dashboard}" class="btn btn-sm btn-outline btn-block">
+                                Ver Estado en Mis Cursos
+                            </a>
+                        </div>
+
+                        <!-- Si es Administrador: solo Ver Detalles -->
+                        <div sec:authorize="hasRole('ADMIN')">
+                            <a th:href="@{'/cursos/' + ${c.id}}" class="btn btn-primary btn-block">
+                                Ver Detalles
+                            </a>
+                        </div>
+
+                        <!-- Si NO es Admin y no está inscrito o es visitante -->
+                        <div sec:authorize="!hasRole('ADMIN')" th:unless="${misInscripcionesMap != null and misInscripcionesMap.containsKey(c.id) and (misInscripcionesMap.get(c.id).estado.name() == 'APROBADA' or misInscripcionesMap.get(c.id).estado.name() == 'COMPLETADA' or misInscripcionesMap.get(c.id).estado.name() == 'PENDIENTE_VERIFICACION')}">
+                            <a th:href="@{'/cursos/' + ${c.id}}" class="btn btn-primary btn-block">
+                                Ver Detalles e Inscribirme
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -9,8 +9,12 @@
     </div>
 
     <div class="container" style="padding: 2.5rem 1.5rem; max-width: 900px;">
-        <div style="margin-bottom: 1.5rem;">
+        <div style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
             <a th:href="@{/admin/cursos}" class="btn btn-sm btn-outline">&larr; Volver al Listado</a>
+            <button type="button" id="btnPublicarFlyer" class="btn btn-sm btn-accent" onclick="scrollAFlyer()"
+                    style="display: inline-flex; align-items: center; gap: 0.45rem; font-weight: 700; box-shadow: 0 2px 4px rgba(0,0,0,0.08);">
+                Publicar Flyer
+            </button>
         </div>
 
         <div class="card card-body" style="padding: 2.5rem; border-top: 4px solid var(--primary);">
@@ -25,6 +29,7 @@
             <form th:action="@{/admin/cursos/guardar}" th:object="${cursoDTO}" method="post" enctype="multipart/form-data">
                 <input type="hidden" th:field="*{id}">
                 <input type="hidden" th:field="*{docenteFotoUrl}">
+                <input type="hidden" th:field="*{flyerUrl}">
 
                 <div class="form-group">
                     <label class="form-label" for="nombre">Nombre Oficial del Curso *</label>
@@ -56,7 +61,7 @@
                 <!-- Datos Complementarios del Docente / Ponente -->
                 <div style="background: #F8FAFC; border: 1px solid var(--border); border-left: 4px solid var(--accent); padding: 1.25rem; border-radius: var(--radius-sm); margin-bottom: 1.5rem;">
                     <h4 style="font-size: 0.95rem; color: var(--text-dark); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
-                        👨‍🏫 Perfil Académico del Ponente / Docente
+                          Perfil Académico del Ponente / Docente
                     </h4>
                     <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 1.25rem; align-items: center;">
                         <div class="form-group" style="margin-bottom: 0;">
@@ -73,6 +78,55 @@
                                 <input type="file" id="docenteFotoFile" th:field="*{docenteFotoFile}" accept="image/*" class="form-control" style="font-size: 0.85rem;">
                             </div>
                             <span class="form-text">JPG, PNG o WEBP. Se mostrará en recorte circular en el afiche y web.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección de Flyer Oficial y Difusión en Portada (Convocatoria) -->
+                <div id="seccionFlyer" style="background: linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%); border: 2px solid #F59E0B; padding: 1.5rem; border-radius: var(--radius-sm); margin-bottom: 2rem; transition: all 0.3s ease;">
+                    <div style="margin-bottom: 1.25rem;">
+                        <h4 style="font-size: 1.05rem; color: #92400E; margin-bottom: 0.3rem; display: flex; align-items: center; gap: 0.5rem; font-weight: 700;">
+                            Flyer Oficial y Difusión en Portada
+                        </h4>
+                        <p style="font-size: 0.88rem; color: #78350F; margin-bottom: 0;">
+                            Sube el afiche gráfico del curso. Al marcar <strong>"Publicar en Inicio"</strong>, se destacará como el anuncio principal en la portada antes de la lista de cursos.
+                        </p>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 1.5rem; align-items: center;">
+                        <div>
+                            <div class="form-group" style="margin-bottom: 1rem;">
+                                <label class="form-label" for="flyerFile" style="font-weight: 700; color: #78350F;">
+                                    Archivo de Imagen del Flyer (JPG, PNG o WEBP)
+                                </label>
+                                <input type="file" id="flyerFile" th:field="*{flyerFile}" accept="image/*" class="form-control" style="background: #FFFFFF;" onchange="previewFlyer(event)">
+                                <span class="form-text" style="color: #92400E;">Se subirá automáticamente a Cloudinary (almacenamiento en la nube HD).</span>
+                            </div>
+
+                            <div style="background: #FFFFFF; padding: 0.85rem 1rem; border-radius: var(--radius-sm); border: 1px solid #FCD34D;">
+                                <label style="display: flex; align-items: center; gap: 0.65rem; font-weight: 700; color: #92400E; cursor: pointer; margin-bottom: 0;">
+                                    <input type="checkbox" id="flyerPublicado" th:field="*{flyerPublicado}" style="width: 1.2rem; height: 1.2rem; accent-color: #D97706; cursor: pointer;">
+                                    <span>Publicar este Flyer en la Portada de Inicio</span>
+                                </label>
+                                <span style="display: block; font-size: 0.8rem; color: #6B7280; margin-left: 1.85rem; margin-top: 0.25rem;">
+                                    Aparecerá en gran tamaño en la página principal con botón directo de inscripción antes de la lista de cursos.
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Vista previa del Flyer -->
+                        <div style="text-align: center; background: #FFFFFF; border: 2px dashed #F59E0B; border-radius: var(--radius-sm); padding: 1rem; min-height: 200px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                            <div id="flyerPreviewContainer" th:style="*{flyerUrl != null and !flyerUrl.isEmpty()} ? 'display: block;' : 'display: none;'">
+                                <img id="flyerPreviewImg" th:src="*{flyerUrl != null ? flyerUrl : ''}" alt="Vista previa del flyer" style="max-height: 220px; max-width: 100%; object-fit: contain; border-radius: 4px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
+                                <div style="margin-top: 0.5rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                                    <span class="badge badge-accent" style="font-size: 0.75rem;">Afiche Listo</span>
+                                    <a th:if="*{flyerUrl != null}" th:href="*{flyerUrl}" target="_blank" style="font-size: 0.8rem; color: #2563EB; font-weight: 600;">Ver original</a>
+                                </div>
+                            </div>
+                            <div id="flyerPlaceholder" th:style="*{flyerUrl != null and !flyerUrl.isEmpty()} ? 'display: none;' : 'display: flex; flex-direction: column; align-items: center;'">
+                                <span style="font-size: 1.1rem; color: #92400E; font-weight: 700;">Sin flyer cargado aún</span>
+                                <span style="font-size: 0.78rem; color: #B45309; margin-top: 0.2rem;">Selecciona una imagen en formato JPG, PNG o WEBP.</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -146,7 +200,7 @@
                 <!-- Enlaces Privados para Inscritos Aprobados -->
                 <div style="background: #F8FAFC; border: 1px solid var(--border); padding: 1.5rem; border-radius: var(--radius-sm); margin-bottom: 1.5rem;">
                     <h4 style="font-size: 1rem; color: var(--primary); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
-                        🔒 Canales Privados (Visibles únicamente para participantes con pago aprobado)
+                        Canales Privados (Visibles únicamente para participantes con pago aprobado)
                     </h4>
 
                     <div class="form-group" style="margin-bottom: 1.25rem;">
@@ -169,6 +223,44 @@
             </form>
         </div>
     </div>
+
+    <script>
+        function scrollAFlyer() {
+            const seccion = document.getElementById('seccionFlyer');
+            if (seccion) {
+                seccion.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                seccion.style.boxShadow = '0 0 0 4px rgba(245, 158, 11, 0.45)';
+                seccion.style.transform = 'scale(1.015)';
+                setTimeout(() => {
+                    seccion.style.boxShadow = '';
+                    seccion.style.transform = '';
+                    const fileInput = document.getElementById('flyerFile');
+                    if (fileInput) fileInput.focus();
+                }, 800);
+            }
+        }
+
+        function previewFlyer(event) {
+            const input = event.target;
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.getElementById('flyerPreviewImg');
+                    const container = document.getElementById('flyerPreviewContainer');
+                    const placeholder = document.getElementById('flyerPlaceholder');
+                    const checkbox = document.getElementById('flyerPublicado');
+
+                    img.src = e.target.result;
+                    container.style.display = 'block';
+                    placeholder.style.display = 'none';
+                    if (checkbox && !checkbox.checked) {
+                        checkbox.checked = true; // Activar publicación al seleccionar un nuevo afiche
+                    }
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
 
     <div th:replace="~{fragments/footer :: footer}"></div>
 </body>

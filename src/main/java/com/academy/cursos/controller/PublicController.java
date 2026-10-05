@@ -1,6 +1,7 @@
 package com.academy.cursos.controller;
 
 import com.academy.cursos.dto.ContactoDTO;
+import com.academy.cursos.model.Curso;
 import com.academy.cursos.repository.AreaInvestigacionRepository;
 import com.academy.cursos.repository.LineaInvestigacionRepository;
 import com.academy.cursos.service.CursoService;
@@ -13,6 +14,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 public class PublicController {
@@ -36,7 +41,20 @@ public class PublicController {
     @GetMapping("/")
     public String index(Model model) {
         model.addAttribute("lineas", lineaRepo.findAllByOrderByOrdenAsc());
-        model.addAttribute("cursosDestacados", cursoService.listarDestacados());
+
+        Optional<Curso> flyerOpt = cursoService.obtenerFlyerPrincipal();
+        Curso flyerDestacado = flyerOpt.orElse(null);
+        model.addAttribute("flyerDestacado", flyerDestacado);
+
+        // Si hay un evento con flyer arriba, se excluye de la cuadrícula inferior para evitar duplicación.
+        // Cuando se cree un nuevo evento, ese ocupará la parte superior y el anterior bajará a la lista automáticamente.
+        List<Curso> cursos = cursoService.listarDestacados();
+        if (flyerDestacado != null) {
+            cursos = cursos.stream()
+                    .filter(c -> !c.getId().equals(flyerDestacado.getId()))
+                    .collect(Collectors.toList());
+        }
+        model.addAttribute("cursosDestacados", cursos);
         return "public/index";
     }
 

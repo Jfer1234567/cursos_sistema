@@ -85,8 +85,6 @@ public class DataInitializer implements CommandLineRunner {
             stmt.execute("UPDATE cursos SET creditos = 2 WHERE creditos IS NULL");
             stmt.execute("UPDATE certificados SET creditos = 2 WHERE creditos IS NULL");
             stmt.execute("UPDATE cursos SET docente_cargo = 'Docente Investigador — Especialista del IIICCD' WHERE docente_cargo IS NULL");
-            stmt.execute("DELETE FROM inscripciones WHERE curso_id IN (SELECT id FROM cursos WHERE docente_responsable LIKE '%Roque%')");
-            stmt.execute("DELETE FROM cursos WHERE docente_responsable LIKE '%Roque%'");
         } catch (Exception e) {
             // Silencioso si no es soportado por el dialecto (ej. pruebas en H2 que no usan IF NOT EXISTS idéntico)
         }
@@ -189,17 +187,9 @@ public class DataInitializer implements CommandLineRunner {
 
     private void initCursosDemo() {
         if (cursoRepo.count() == 0) {
-            Optional<AreaInvestigacion> areaIA = areaRepo.findAll().stream()
-                    .filter(a -> a.getNombre().equalsIgnoreCase("Inteligencia Artificial"))
-                    .findFirst();
-
-            Optional<AreaInvestigacion> areaML = areaRepo.findAll().stream()
-                    .filter(a -> a.getNombre().equalsIgnoreCase("Aprendizaje Automático"))
-                    .findFirst();
-
-            Optional<AreaInvestigacion> areaEst = areaRepo.findAll().stream()
-                    .filter(a -> a.getNombre().equalsIgnoreCase("Estadística Aplicada a la Investigación"))
-                    .findFirst();
+            Optional<AreaInvestigacion> areaIA = areaRepo.findByNombre("Inteligencia Artificial");
+            Optional<AreaInvestigacion> areaML = areaRepo.findByNombre("Aprendizaje Automático");
+            Optional<AreaInvestigacion> areaEst = areaRepo.findByNombre("Estadística Aplicada a la Investigación");
 
             if (areaIA.isPresent()) {
                 Curso c1 = new Curso();

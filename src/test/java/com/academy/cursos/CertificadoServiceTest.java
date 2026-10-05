@@ -1,6 +1,11 @@
 package com.academy.cursos;
 
-import com.academy.cursos.model.*;
+import com.academy.cursos.model.AreaInvestigacion;
+import com.academy.cursos.model.Certificado;
+import com.academy.cursos.model.Curso;
+import com.academy.cursos.model.Inscripcion;
+import com.academy.cursos.model.LineaInvestigacion;
+import com.academy.cursos.model.Usuario;
 import com.academy.cursos.model.enums.EstadoCurso;
 import com.academy.cursos.model.enums.EstadoInscripcion;
 import com.academy.cursos.model.enums.Rol;
@@ -22,6 +27,12 @@ public class CertificadoServiceTest {
 
     @Autowired
     private CertificadoService certificadoService;
+
+    @Test
+    void testServicioCertificadoInyectado() {
+        assertNotNull(certificadoService);
+        assertNotNull(certificadoService.listarTodos());
+    }
 
     @Test
     void testGenerarCertificadoYPdf() throws DocumentException {

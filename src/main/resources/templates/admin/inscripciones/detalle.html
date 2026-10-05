@@ -40,7 +40,7 @@
                     <div th:if="${inscripcion.usuario.telefono != null and !inscripcion.usuario.telefono.empty}">
                         <a th:with="telLimpio=${#strings.replace(#strings.replace(#strings.replace(inscripcion.usuario.telefono, ' ', ''), '-', ''), '+', '')},
                                     telFinal=${#strings.startsWith(telLimpio, '51') ? telLimpio : ('51' + telLimpio)}"
-                           th:href="'https://wa.me/' + ${telFinal} + '?text=' + ${#uris.escapeQueryParam('Estimado(a) ' + inscripcion.usuario.nombreCompleto + ', le saludamos del Instituto de Investigación IIICCD - FINESI / UNA Puno. Le confirmamos que su inscripción al curso ''' + inscripcion.curso.nombre + ''' ha sido APROBADA con éxito ✅.' + (inscripcion.curso.enlaceClase != null ? ' 📹 Enlace a sus clases en vivo: ' + inscripcion.curso.enlaceClase : '') + (inscripcion.curso.enlaceWhatsapp != null ? ' 💬 Grupo oficial de WhatsApp: ' + inscripcion.curso.enlaceWhatsapp : '') + ' Puede acceder a su aula virtual aquí: http://localhost:8085/login. ¡Éxitos en su especialización!')}"
+                           th:href="'https://wa.me/' + ${telFinal} + '?text=' + ${#uris.escapeQueryParam('Estimado(a) ' + inscripcion.usuario.nombreCompleto + ', le saludamos del Instituto de Investigación IIICCD - FINESI / UNA Puno. Le confirmamos que su inscripción al curso ''' + inscripcion.curso.nombre + ''' ha sido APROBADA con éxito.' + (inscripcion.curso.enlaceClase != null ? ' Enlace a sus clases en vivo: ' + inscripcion.curso.enlaceClase : '') + (inscripcion.curso.enlaceWhatsapp != null ? ' Grupo oficial de WhatsApp: ' + inscripcion.curso.enlaceWhatsapp : '') + ' Puede acceder a su aula virtual aquí: http://localhost:8085/login. ¡Éxitos en su especialización!')}"
                            target="_blank"
                            class="btn btn-sm btn-whatsapp"
                            style="width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; font-weight: 600;">
@@ -75,11 +75,11 @@
 
                 <div th:if="${inscripcion.pago.comprobanteUrl != null}" style="margin-bottom: 2.5rem; text-align: center; background: #000000; padding: 1rem; border-radius: var(--radius-sm);">
                     <div style="margin-bottom: 0.5rem;">
-                        <a th:href="@{'/' + ${inscripcion.pago.comprobanteUrl}}" target="_blank" class="btn btn-sm btn-outline" style="color: #FFFFFF; border-color: #666;">
-                            ↗ Abrir comprobante original en nueva pestaña
+                        <a th:href="${#strings.startsWith(inscripcion.pago.comprobanteUrl, 'http') ? inscripcion.pago.comprobanteUrl : '/' + inscripcion.pago.comprobanteUrl}" target="_blank" class="btn btn-sm btn-outline" style="color: #FFFFFF; border-color: #666;">
+                            Abrir comprobante original en nueva pestaña
                         </a>
                     </div>
-                    <img th:src="@{'/' + ${inscripcion.pago.comprobanteUrl}}" alt="Comprobante de pago"
+                    <img th:src="${#strings.startsWith(inscripcion.pago.comprobanteUrl, 'http') ? inscripcion.pago.comprobanteUrl : '/' + inscripcion.pago.comprobanteUrl}" alt="Comprobante de pago"
                          style="max-width: 100%; max-height: 550px; object-fit: contain; border-radius: var(--radius-sm);">
                 </div>
 
@@ -94,7 +94,7 @@
                         <form th:action="@{'/admin/pagos/' + ${inscripcion.pago.id} + '/aprobar'}" method="post"
                               onsubmit="return confirm('¿Confirmas que deseas APROBAR este pago?');">
                             <button type="submit" class="btn btn-lg btn-success btn-block">
-                                ✓ Aprobar Pago e Inscripción
+                                Aprobar Pago e Inscripción
                             </button>
                         </form>
                     </div>
@@ -110,7 +110,7 @@
                                 <input type="text" name="motivo" class="form-control" required placeholder="Motivo de observación o rechazo...">
                             </div>
                             <button type="submit" class="btn btn-lg btn-danger btn-block">
-                                ✕ Rechazar Comprobante
+                                Rechazar Comprobante
                             </button>
                         </form>
                     </div>

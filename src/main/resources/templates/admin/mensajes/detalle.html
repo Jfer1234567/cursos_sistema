@@ -20,11 +20,15 @@
                 </h1>
             </div>
             <div>
-                <span th:if="${mensaje.respondido}" class="badge badge-success" style="font-size: 0.85rem; padding: 0.4rem 0.85rem; background: #059669;">
-                    ✓ Atendido / Respondido
+                <span th:if="${mensaje.respondido}" class="badge-status badge-status-atendido" style="font-size: 0.82rem; padding: 0.45rem 0.9rem;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    Atendido / Respondido
                 </span>
-                <span th:unless="${mensaje.respondido}" class="badge badge-warning" style="font-size: 0.85rem; padding: 0.4rem 0.85rem; background: #D97706;">
-                    ● Pendiente de Respuesta
+                <span th:unless="${mensaje.respondido}" class="badge-status badge-status-nuevo" style="font-size: 0.82rem; padding: 0.45rem 0.9rem;">
+                    <span class="badge-dot badge-dot-nuevo"></span>
+                    Pendiente de Respuesta
                 </span>
             </div>
         </div>
@@ -104,7 +108,7 @@
             <form th:action="@{'/admin/mensajes/' + ${mensaje.id} + '/eliminar'}" method="post" 
                   onsubmit="return confirm('¿Estás seguro de que deseas eliminar este mensaje de la bandeja?');" style="display: inline;">
                 <button type="submit" class="btn btn-secondary" style="color: #DC2626; border-color: #FCA5A5; background: transparent; padding: 0.75rem 1.25rem;">
-                    🗑️ Eliminar Mensaje
+                     Eliminar Mensaje
                 </button>
             </form>
         </div>

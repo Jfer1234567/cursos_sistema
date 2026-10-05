@@ -72,6 +72,12 @@ public class Curso {
     @Column(name = "creditos")
     private Integer creditos = 2;
 
+    @Column(name = "flyer_url")
+    private String flyerUrl;
+
+    @Column(name = "flyer_publicado")
+    private Boolean flyerPublicado = false;
+
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
@@ -133,6 +139,10 @@ public class Curso {
     public void setDocenteCargo(String docenteCargo) { this.docenteCargo = docenteCargo; }
     public Integer getCreditos() { return creditos; }
     public void setCreditos(Integer creditos) { this.creditos = creditos; }
+    public String getFlyerUrl() { return flyerUrl; }
+    public void setFlyerUrl(String flyerUrl) { this.flyerUrl = flyerUrl; }
+    public Boolean getFlyerPublicado() { return flyerPublicado != null && flyerPublicado; }
+    public void setFlyerPublicado(Boolean flyerPublicado) { this.flyerPublicado = flyerPublicado; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }

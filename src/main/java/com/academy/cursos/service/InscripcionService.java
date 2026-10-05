@@ -47,7 +47,15 @@ public class InscripcionService {
 
         Optional<Inscripcion> existente = inscripcionRepository.findByUsuarioIdAndCursoId(usuarioId, cursoId);
         if (existente.isPresent()) {
-            return existente.get();
+            Inscripcion ins = existente.get();
+            if (ins.getEstado() == EstadoInscripcion.APROBADA || ins.getEstado() == EstadoInscripcion.COMPLETADA) {
+                throw new IllegalStateException("Ya te encuentras formalmente inscrito y con acceso aprobado a este curso.");
+            }
+            if (ins.getEstado() == EstadoInscripcion.PENDIENTE_VERIFICACION) {
+                throw new IllegalStateException("Tu comprobante ya fue enviado y se encuentra en proceso de verificación por la administración.");
+            }
+            // Si está PENDIENTE_PAGO o RECHAZADA, permite ingresar para regularizar el voucher
+            return ins;
         }
 
         if (curso.getCuposDisponibles() <= 0) {
@@ -60,6 +68,10 @@ public class InscripcionService {
         inscripcion.setEstado(EstadoInscripcion.PENDIENTE_PAGO);
 
         return inscripcionRepository.save(inscripcion);
+    }
+
+    public Optional<Inscripcion> obtenerPorUsuarioYCurso(Long usuarioId, Long cursoId) {
+        return inscripcionRepository.findByUsuarioIdAndCursoId(usuarioId, cursoId);
     }
 
     public List<Inscripcion> listarPorUsuario(Long usuarioId) {

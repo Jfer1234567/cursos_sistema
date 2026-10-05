@@ -141,10 +141,47 @@
   - Incorporación del isotipo institucional puro del IIICCD (`logo-isotipo-watermark.png` — sin pedestal ni plataforma ploma) como marca de agua ambiental suave (4.5% opacidad) en **Inicio (`/`)**, **Líneas de Investigación (`/lineas-investigacion`)**, **Catálogo de Cursos (`/catalogo`)**, **Detalle del Curso (`/cursos/{id}`)** y **Validación de Certificados (`/verificar`)**.
   - Eliminación de la sensación de "fondo blanco plano", dotando a todo el portal de identidad visual y académica de alta gama.
   - Implementación de `.public-page-wrapper` y `.ambient-watermark` con adaptación responsiva.
-- [x] **Preparación para Despliegue en Servidores Cloud (Railway.app):**
-  - Implementación de `Dockerfile` multi-stage ligero con Eclipse Temurin 17 JRE y `.dockerignore`.
-  - Configuración de puerto dinámico `${PORT:8085}` y variables de entorno para PostgreSQL (`SPRING_DATASOURCE_URL`, `SPRING_DATASOURCE_USERNAME`, `SPRING_DATASOURCE_PASSWORD`).
-  - Sincronización completa con el repositorio oficial en GitHub.
+- [x] **Rediseño Visual Premium de Badges de Estado en el Panel Administrativo:**
+  - *Eliminación de Óvalos Saturados:* Erradicadas las manchas toscas verde oscura (`#059669`) y naranja (`#D97706`) con texto ilegible en la bandeja de consultas ([`/admin/mensajes`](file:///d:/cursos_sistema/src/main/resources/templates/admin/mensajes/lista.html)) y detalle ([`admin/mensajes/detalle.html`](file:///d:/cursos_sistema/src/main/resources/templates/admin/mensajes/detalle.html)).
+  - *Sistema Soft-Tag:* Etiquetas estilizadas con bordes definidos (6px), fondos translúcidos al 10%, tipografía con contraste WCAG AAA y micro-indicadores (`.badge-status`, `.badge-status-nuevo`, `.badge-status-leido`, `.badge-status-atendido`).
+  - *Fila de Correo Profesional:* Fila no leída con borde lateral izquierdo de 3.5px (`.tr-unread`), emulando la estética de bandejas de correo profesionales como Gmail o Linear.
+  - *Pruebas Automatizadas:* 100% de éxito en la suite de pruebas (`BUILD SUCCESSFUL in 43s`).
+- [x] **Experiencia del Participante, Suscripción Única y Enlaces a Sesiones Meet/Zoom:**
+  - *Restricción Estricta de Doble Inscripción:* `InscripcionService.iniciarInscripcion` valida que si el participante ya tiene una inscripción en estado `APROBADA`, `COMPLETADA` o `PENDIENTE_VERIFICACION`, se lance una excepción explicativa impidiendo duplicados. Solo si la inscripción está en `PENDIENTE_PAGO` o `RECHAZADA` permite continuar para regularizar el comprobante.
+  - *Enlace Dinámico en la Barra de Navegación:* En `fragments/header.html`, para estudiantes autenticados, el enlace principal de cursos pasa a ser `🎓 Mis Cursos` (`/participante/dashboard`), donde acceden directamente a sus clases y grupos de WhatsApp, manteniendo a su vez la opción de explorar el catálogo general.
+  - *Sustitución Inteligente del Botón de Compra:* En la ficha de curso (`public/curso-detalle.html`), si el participante ya fue aprobado, se oculta el botón de inscripción/pago y se muestran los accesos directos a la sesión virtual (`📹 Unirse a la Clase en Vivo (Zoom / Meet)`) y comunidad oficial (`💬 Grupo Oficial de WhatsApp`).
+  - *Distintivo en Catálogo:* En `public/catalogo.html`, los cursos donde el alumno ya está matriculado y aprobado destacan con un badge de honor `✓ Inscrito • Acceso Aprobado` y acceso a la sala virtual.
+  - *Optimización N+1 con JOIN FETCH:* `InscripcionRepository.findByCursoId` actualizado con `LEFT JOIN FETCH i.usuario LEFT JOIN FETCH i.pago` para evitar `LazyInitializationException` y optimizar la carga de inscripciones en una sola consulta SQL.
+  - *Suite de Pruebas:* 100% de éxito en `./gradlew test` (26 pruebas ejecutadas exitosamente, incluyendo test automatizado de restricción de doble inscripción).
+- [x] **Publicación de Flyer Oficial y Convocatoria Destacada en Portada:**
+  - *Gestión y Flujo del Flyer:* Botón "Publicar Flyer" en el formulario del curso, con subida automática a Cloudinary (`cursos_sistema/flyers/`) y switch para activar/desactivar publicación en portada.
+  - *Diseño de Portada Restaurado y Espaciado:* Sección de ancho completo institucional (`.seccion-flyer-destacado`) con gradiente azul noche, bordes dorados, datos académicos, precios diferenciados y visor de afiche en HD.
+  - *Separación Visual Equilibrada:* Incorporados márgenes y padding sutiles (`margin-top: 2.5rem; margin-bottom: 2.25rem; padding: 4.75rem 0;`) para que respire de forma armoniosa entre el Hero y los cursos de abajo sin verse pegado.
+  - *Pruebas e Integridad:* 100% de tests pasando (27/27) y respuesta 200 OK con estilos verificados en el servidor en tiempo real.
+- [x] **Paginación Institucional en Gestión de Cursos (`/admin/cursos`):**
+  - *4 Cursos por Página:* Consulta optimizada con `PageRequest.of(page, 4, Sort.by(DESC, "createdAt", "id"))` en `CursoService` y `AdminCursoController`.
+  - *Navegación Visual:* Controles de paginación debajo de la tabla con resumen ("Mostrando X a Y de Z"), botones Anterior/Siguiente dinámicos y enlaces numéricos con resalte de página activa.
+  - *Pruebas e Integridad:* Suite de pruebas automatizadas al 100% (28/28 tests pasando exitosamente).
+- [x] **Directorio de Usuarios Organizado con Menú Desplegable por Cursos (Dropdown Institucional en `/admin/usuarios`):**
+  - *Menú Desplegable Compacto y Escalable:* Reemplazada la barra horizontal de pestañas por un selector `<select name="cursoFiltro">` integrado en la barra de búsqueda superior, con opciones para "Todos los Registrados", "Sin cursos aún" y grupos de cursos con cantidades de inscritos.
+  - *Filtrado Reactivo y Pastilla Activa:* Selección con actualización instantánea (`onchange="this.form.submit()"`), acompañada de un badge indicador con botón para limpiar el filtro.
+  - *Visualización Detallada de Cursos:* Columna "Cursos Matriculados" con badges individuales que muestran los nombres de cada curso en el que está matriculado el alumno.
+  - *Paginación Persistente a 4 Registros:* Mantiene la paginación a 4 participantes por página sin perder la selección del desplegable ni los términos de búsqueda.
+  - *Suite de Pruebas:* 100% de éxito en `./gradlew test` (30/30 pruebas pasando exitosamente, incluyendo test automatizado de filtrado con menú desplegable).
+- [x] **Diferenciación de Certificados por Rol (Admin vs Participante):**
+  - *Retorno Contextual:* En [`participante/certificado.html`](file:///d:/cursos_sistema/src/main/resources/templates/participante/certificado.html), el botón de navegación redirige a **«&larr; Volver a Certificados Emitidos»** (`@{/admin/certificados}`) para administradores y a **«&larr; Volver a Mis Cursos»** (`@{/participante/dashboard}`) para participantes.
+  - *Envío al Alumno por WhatsApp (Admin):* El botón verde para el Administrador pasa a ser **«📲 Enviar Certificado por WhatsApp»**, dirigido al número telefónico registrado del participante (`inscripcion.usuario.telefono`), normalizado con el prefijo peruano `51`.
+  - *Mensaje Institucional Personalizado:* Despacha un saludo formal, felicitaciones por la culminación del curso, código único de validación y enlace directo a la verificación pública (`/verificar?codigo=...`).
+  - *Acción Rápida en Lista Admin:* Se incorporó un botón directo de WhatsApp en la tabla de certificados emitidos ([`admin/certificados/lista.html`](file:///d:/cursos_sistema/src/main/resources/templates/admin/certificados/lista.html)) para permitir el envío con un solo clic.
+  - *Barra de Auditoría del Titular:* Banner exclusivo para el Administrador con nombre completo, tipo/número de documento, correo y teléfono del estudiante titular del certificado.
+  - *Mantenimiento del Flujo del Alumno:* El participante mantiene su botón **«📲 Recibir por WhatsApp»** dirigido al número del instituto para solicitar su comprobante o soporte oficial.
+  - *Suite de Pruebas e Integridad:* 100% de éxito en `./gradlew test` (30/30 tests aprobados) y verificación exitosa de respuestas HTTP tanto para rol ADMIN como para PARTICIPANTE.
+
+
+
+
+
+
 
 
 

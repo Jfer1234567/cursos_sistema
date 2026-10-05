@@ -27,44 +27,106 @@
             </div>
         </div>
 
-        <!-- Barra de Búsqueda y Filtros -->
+        <!-- Barra de Búsqueda y Filtros con Menú Desplegable de Cursos -->
         <div class="card card-body" style="padding: 1.25rem 1.5rem; margin-bottom: 2rem; background: #FFFFFF;">
             <form th:action="@{/admin/usuarios}" method="get" style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;">
-                <div style="flex: 1; min-width: 280px; position: relative;">
+                <!-- Buscador de Texto -->
+                <div style="flex: 1; min-width: 260px; position: relative;">
                     <input type="text" name="filtro" class="form-control" 
                            placeholder="Buscar por Nombre, DNI o Correo electrónico..." 
                            th:value="${filtro}">
                 </div>
-                <button type="submit" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 0.5rem;">
-                    🔍 Buscar Alumno
+
+                <!-- Menú Desplegable de Selección de Curso -->
+                <div style="min-width: 280px; max-width: 420px; flex: 1;">
+                    <select name="cursoFiltro" onchange="this.form.submit()" class="form-control" 
+                            style="cursor: pointer; font-weight: 500; background-color: #F8FAFC; border-color: #CBD5E1; color: #1E293B;">
+                        <option value="todos" th:selected="${cursoFiltro == null or cursoFiltro == 'todos'}">
+                            Todos los Registrados (<span th:text="${totalRegistrados}">0</span> alumnos)
+                        </option>
+                        <option value="sin-cursos" th:selected="${cursoFiltro == 'sin-cursos'}" style="color: #B45309; font-weight: 600;">
+                            Sin cursos aún (<span th:text="${totalSinCursos}">0</span> - Oportunidad WhatsApp)
+                        </option>
+                        <optgroup label="Filtrar por Curso Matriculado:">
+                            <option th:each="c : ${cursosTabs}" 
+                                    th:value="${c.id}" 
+                                    th:selected="${cursoFiltro == c.id.toString()}"
+                                    th:text="${c.nombre + ' (' + c.totalAlumnos + ' alumnos)'}">
+                                Curso (0 alumnos)
+                            </option>
+                        </optgroup>
+                    </select>
+                </div>
+
+                <!-- Botones de Acción -->
+                <button type="submit" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 0.5rem; white-space: nowrap;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <span>Buscar / Filtrar</span>
                 </button>
-                <a th:if="${filtro != null and !filtro.isEmpty()}" th:href="@{/admin/usuarios}" class="btn btn-secondary">
-                    ✕ Limpiar Filtro
+                <a th:if="${(filtro != null and !filtro.isEmpty()) or (cursoFiltro != null and cursoFiltro != 'todos')}" 
+                   th:href="@{/admin/usuarios}" 
+                   class="btn btn-secondary"
+                   style="white-space: nowrap;">
+                    Limpiar Filtros
                 </a>
             </form>
+
+            <!-- Pastilla Informativa de Filtro Activo (si se seleccionó un curso o sin-cursos) -->
+            <div th:if="${cursoFiltro != null and cursoFiltro != 'todos'}" style="margin-top: 1rem; padding-top: 0.85rem; border-top: 1px dashed #E2E8F0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem;">
+                <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.88rem; color: #475569;">
+                    <span style="font-weight: 600;">Filtro activo:</span>
+                    <span th:if="${cursoFiltro == 'sin-cursos'}" class="badge" style="background: #FEF3C7; color: #92400E; font-size: 0.82rem; border: 1px solid #FDE68A; padding: 0.35rem 0.65rem;">
+                        Participantes Sin Cursos Aún (<span th:text="${totalSinCursos}">0</span>)
+                    </span>
+                    <span th:if="${cursoSeleccionado != null}" class="badge" style="background: #EFF6FF; color: #1E40AF; font-size: 0.82rem; border: 1px solid #BFDBFE; padding: 0.35rem 0.65rem;">
+                        Curso: <strong th:text="${cursoSeleccionado.nombre}">Curso</strong> (<span th:text="${cursoSeleccionado.totalAlumnos}">0</span> alumnos)
+                    </span>
+                </div>
+                <a th:href="@{/admin/usuarios(filtro=${filtro})}" class="btn btn-sm btn-outline" style="font-size: 0.75rem; padding: 0.25rem 0.65rem;">
+                    &times; Ver todos los cursos
+                </a>
+            </div>
         </div>
 
         <!-- Tabla de Usuarios Registrados -->
         <div class="card">
             <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
                 <h3 style="font-size: 1.15rem; margin-bottom: 0;">
-                    Listado de Participantes 
+                    <span th:if="${cursoFiltro == null or cursoFiltro == 'todos'}">Listado General de Participantes</span>
+                    <span th:if="${cursoFiltro == 'sin-cursos'}">Participantes Sin Cursos Aún (Interesados / Prospección)</span>
+                    <span th:if="${cursoSeleccionado != null}">
+                        Alumnos en Curso: 
+                        <strong th:text="${cursoSeleccionado.nombre}">Curso</strong>
+                    </span>
                     <span th:if="${filtro != null and !filtro.isEmpty()}" style="font-size: 0.85rem; color: var(--text-muted); font-weight: normal;">
-                        (Filtrado por: "<span th:text="${filtro}"></span>" - <span th:text="${items.size()}"></span> encontrados)
+                        (Filtrado por: "<span th:text="${filtro}"></span>" - <span th:text="${totalElements}"></span> encontrados)
                     </span>
                 </h3>
             </div>
             <div class="card-body">
                 <div th:if="${items.empty}" style="text-align: center; padding: 3rem 1.5rem; color: var(--text-muted);">
-                    <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">👥</div>
+                    <div style="width: 54px; height: 54px; margin: 0 auto 0.75rem; background: #F1F5F9; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #64748B;">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                    </div>
                     <div style="font-size: 1.1rem; font-weight: 600; color: #334155; margin-bottom: 0.25rem;">
-                        No se encontraron usuarios registrados
+                        No se encontraron usuarios en esta vista
                     </div>
                     <p style="margin-bottom: 1rem;">
                         <span th:if="${filtro != null and !filtro.isEmpty()}">No hay coincidencias con el término buscado.</span>
-                        <span th:unless="${filtro != null and !filtro.isEmpty()}">Aún no hay cuentas registradas en la plataforma.</span>
+                        <span th:unless="${filtro != null and !filtro.isEmpty()}">No existen participantes registrados para el filtro seleccionado.</span>
                     </p>
-                    <a th:if="${filtro != null and !filtro.isEmpty()}" th:href="@{/admin/usuarios}" class="btn btn-sm btn-outline-primary">
+                    <a th:if="${filtro != null and !filtro.isEmpty()}" th:href="@{/admin/usuarios(cursoFiltro=${cursoFiltro})}" class="btn btn-sm btn-outline-primary">
+                        Limpiar término de búsqueda
+                    </a>
+                    <a th:unless="${filtro != null and !filtro.isEmpty()}" th:href="@{/admin/usuarios}" class="btn btn-sm btn-outline-primary">
                         Ver todos los registrados
                     </a>
                 </div>
@@ -78,13 +140,13 @@
                                 <th>Documento</th>
                                 <th>Contacto</th>
                                 <th>Institución</th>
-                                <th>Cursos</th>
+                                <th>Cursos Matriculados</th>
                                 <th>Fecha Registro</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr th:each="item, stat : ${items}">
-                                <td th:text="${stat.count}" style="color: var(--text-muted); font-weight: 600;">1</td>
+                                <td th:text="${(currentPage * 4) + stat.count}" style="color: var(--text-muted); font-weight: 600;">1</td>
                                 <td>
                                     <div style="font-weight: 700; color: #0F172A; font-size: 0.98rem;" th:text="${item.usuario.nombreCompleto}">
                                         Juan Pérez
@@ -117,22 +179,24 @@
                                 </td>
                                 <td>
                                     <span th:if="${item.usuario.institucionProcedencia != null and !item.usuario.institucionProcedencia.isEmpty()}" 
-                                          th:text="${item.usuario.institucionProcedencia}" style="font-size: 0.9rem;">
+                                           th:text="${item.usuario.institucionProcedencia}" style="font-size: 0.9rem;">
                                         UNA Puno
                                     </span>
                                     <span th:unless="${item.usuario.institucionProcedencia != null and !item.usuario.institucionProcedencia.isEmpty()}" 
-                                          style="color: var(--text-muted); font-size: 0.85rem;">
+                                           style="color: var(--text-muted); font-size: 0.85rem;">
                                         No especificada
                                     </span>
                                 </td>
                                 <td>
-                                    <span th:if="${item.totalInscripciones > 0}" class="badge badge-primary" 
-                                          style="font-size: 0.8rem; background: #1E40AF; padding: 0.35rem 0.65rem;"
-                                          th:text="${item.totalInscripciones + (item.totalInscripciones == 1 ? ' curso' : ' cursos')}">
-                                        1 curso
-                                    </span>
-                                    <span th:unless="${item.totalInscripciones > 0}" class="badge badge-secondary" 
-                                          style="font-size: 0.8rem; background: #E2E8F0; color: #475569; padding: 0.35rem 0.65rem;">
+                                    <div th:if="${!item.inscripciones.empty}" style="display: flex; flex-direction: column; gap: 0.35rem;">
+                                        <span th:each="ins : ${item.inscripciones}" class="badge" 
+                                              style="font-size: 0.76rem; background: #EEF2FF; color: #1E40AF; border: 1px solid #C7D2FE; padding: 0.25rem 0.5rem; text-align: left; white-space: normal; line-height: 1.25;"
+                                              th:text="${ins.curso.nombre}">
+                                            Nombre del Curso
+                                        </span>
+                                    </div>
+                                    <span th:if="${item.inscripciones.empty}" class="badge badge-secondary" 
+                                           style="font-size: 0.8rem; background: #F1F5F9; color: #64748B; padding: 0.35rem 0.65rem;">
                                         Sin cursos aún
                                     </span>
                                 </td>
@@ -147,6 +211,38 @@
                             </tr>
                         </tbody>
                     </table>
+
+                    <!-- Paginación Institucional (4 usuarios por página preservando selección de curso y búsqueda) -->
+                    <div th:if="${totalPages != null and totalPages > 1}" class="pagination-container" style="display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 1rem 0.5rem; flex-wrap: wrap; gap: 1rem; border-top: 1px solid var(--border-color);">
+                        <div style="font-size: 0.85rem; color: var(--text-muted);">
+                            Mostrando <strong th:text="${(currentPage * 4) + 1}">1</strong> a 
+                            <strong th:text="${(currentPage * 4) + items.size()}">4</strong> de 
+                            <strong th:text="${totalElements}">7</strong> participantes
+                        </div>
+                        <div class="pagination-nav" style="display: flex; gap: 0.35rem; align-items: center;">
+                            <!-- Botón Anterior -->
+                            <a th:if="${currentPage > 0}" th:href="@{/admin/usuarios(page=${currentPage - 1}, cursoFiltro=${cursoFiltro}, filtro=${filtro})}" class="btn btn-sm btn-outline" style="font-size: 0.8rem; padding: 0.35rem 0.75rem;">
+                                &larr; Anterior
+                            </a>
+                            <span th:if="${currentPage == 0}" class="btn btn-sm btn-outline disabled" style="opacity: 0.4; cursor: not-allowed; font-size: 0.8rem; padding: 0.35rem 0.75rem;">
+                                &larr; Anterior
+                            </span>
+
+                            <!-- Números de Página -->
+                            <th:block th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+                                <a th:if="${i != currentPage}" th:href="@{/admin/usuarios(page=${i}, cursoFiltro=${cursoFiltro}, filtro=${filtro})}" class="btn btn-sm btn-outline" style="font-size: 0.8rem; min-width: 32px; padding: 0.35rem 0.6rem; text-align: center;" th:text="${i + 1}">1</a>
+                                <span th:if="${i == currentPage}" class="btn btn-sm btn-primary" style="font-size: 0.8rem; min-width: 32px; padding: 0.35rem 0.6rem; text-align: center; font-weight: 700;" th:text="${i + 1}">1</span>
+                            </th:block>
+
+                            <!-- Botón Siguiente -->
+                            <a th:if="${currentPage + 1 < totalPages}" th:href="@{/admin/usuarios(page=${currentPage + 1}, cursoFiltro=${cursoFiltro}, filtro=${filtro})}" class="btn btn-sm btn-outline" style="font-size: 0.8rem; padding: 0.35rem 0.75rem;">
+                                Siguiente &rarr;
+                            </a>
+                            <span th:if="${currentPage + 1 >= totalPages}" class="btn btn-sm btn-outline disabled" style="opacity: 0.4; cursor: not-allowed; font-size: 0.8rem; padding: 0.35rem 0.75rem;">
+                                Siguiente &rarr;
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -155,3 +251,4 @@
     <div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>
+

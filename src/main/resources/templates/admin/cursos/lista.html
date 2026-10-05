@@ -15,9 +15,6 @@
                 <h1 style="font-size: 1.85rem; margin-top: 0.5rem;">Gestión de Cursos</h1>
             </div>
             <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
-                <a th:href="@{/admin/flyer}" class="btn btn-outline" style="border-color: var(--accent); color: var(--accent); font-weight: 600;">
-                    🎨 Estudio de Flyers
-                </a>
                 <a th:href="@{/admin/cursos/nuevo}" class="btn btn-primary">+ Crear Nuevo Curso</a>
             </div>
         </div>
@@ -46,7 +43,7 @@
                                 <td>
                                     <strong th:text="${curso.nombre}">Nombre</strong>
                                     <div th:if="${curso.enlaceClase != null and !curso.enlaceClase.empty}" style="font-size: 0.78rem; color: var(--success);">
-                                        ✓ Enlace Meet/Zoom configurado
+                                        Enlace Meet/Zoom configurado
                                     </div>
                                 </td>
                                 <td>
@@ -61,12 +58,20 @@
                                     <span th:if="${curso.estado.name() == 'EN_CURSO'}" class="badge badge-primary">En Curso</span>
                                     <span th:if="${curso.estado.name() == 'BORRADOR'}" class="badge badge-secondary">Borrador</span>
                                     <span th:if="${curso.estado.name() == 'FINALIZADO'}" class="badge badge-warning">Finalizado</span>
+                                    <div th:if="${curso.flyerPublicado and curso.flyerUrl != null}" style="margin-top: 0.35rem;">
+                                        <span class="badge badge-accent" style="font-size: 0.72rem;">Flyer en Portada</span>
+                                    </div>
                                 </td>
                                 <td>
-                                    <div style="display: flex; gap: 0.4rem; flex-wrap: wrap;">
-                                        <a th:href="@{'/admin/flyer/curso/' + ${curso.id}}" class="btn btn-sm btn-outline" style="border-color: #D4AF37; color: #9A7B1C;" title="Generar Flyer para este curso">
-                                            🎨 Flyer
-                                        </a>
+                                    <div style="display: flex; gap: 0.4rem; flex-wrap: wrap; align-items: center;">
+                                        <form th:if="${curso.flyerUrl != null}" th:action="@{'/admin/cursos/' + ${curso.id} + '/flyer/toggle'}" method="post" style="display: inline;">
+                                            <input type="hidden" name="publicado" th:value="${!curso.flyerPublicado}">
+                                            <button type="submit" class="btn btn-sm" th:classappend="${curso.flyerPublicado ? 'btn-accent' : 'btn-outline'}" 
+                                                    th:title="${curso.flyerPublicado ? 'Quitar afiche de la portada principal' : 'Activar afiche en la portada principal'}"
+                                                    style="font-size: 0.75rem; padding: 0.25rem 0.55rem; font-weight: 600;">
+                                                <span th:text="${curso.flyerPublicado ? 'En Portada' : 'Publicar Flyer'}">Publicar Flyer</span>
+                                            </button>
+                                        </form>
                                         <a th:href="@{'/admin/cursos/' + ${curso.id} + '/detalle'}" class="btn btn-sm btn-outline" title="Ver estudiantes y certificados">
                                             Inscritos
                                         </a>
@@ -78,6 +83,38 @@
                             </tr>
                         </tbody>
                     </table>
+
+                    <!-- Paginación Institucional (4 cursos por página) -->
+                    <div th:if="${totalPages != null and totalPages > 1}" class="pagination-container" style="display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 1rem 0.5rem; flex-wrap: wrap; gap: 1rem; border-top: 1px solid var(--border-color);">
+                        <div style="font-size: 0.85rem; color: var(--text-muted);">
+                            Mostrando <strong th:text="${(currentPage * 4) + 1}">1</strong> a 
+                            <strong th:text="${(currentPage * 4) + cursos.size()}">4</strong> de 
+                            <strong th:text="${totalElements}">5</strong> cursos registrados
+                        </div>
+                        <div class="pagination-nav" style="display: flex; gap: 0.35rem; align-items: center;">
+                            <!-- Botón Anterior -->
+                            <a th:if="${currentPage > 0}" th:href="@{/admin/cursos(page=${currentPage - 1})}" class="btn btn-sm btn-outline" style="font-size: 0.8rem; padding: 0.35rem 0.75rem;">
+                                &larr; Anterior
+                            </a>
+                            <span th:if="${currentPage == 0}" class="btn btn-sm btn-outline disabled" style="opacity: 0.4; cursor: not-allowed; font-size: 0.8rem; padding: 0.35rem 0.75rem;">
+                                &larr; Anterior
+                            </span>
+
+                            <!-- Números de Página -->
+                            <th:block th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+                                <a th:if="${i != currentPage}" th:href="@{/admin/cursos(page=${i})}" class="btn btn-sm btn-outline" style="font-size: 0.8rem; min-width: 32px; padding: 0.35rem 0.6rem; text-align: center;" th:text="${i + 1}">1</a>
+                                <span th:if="${i == currentPage}" class="btn btn-sm btn-primary" style="font-size: 0.8rem; min-width: 32px; padding: 0.35rem 0.6rem; text-align: center; font-weight: 700;" th:text="${i + 1}">1</span>
+                            </th:block>
+
+                            <!-- Botón Siguiente -->
+                            <a th:if="${currentPage + 1 < totalPages}" th:href="@{/admin/cursos(page=${currentPage + 1})}" class="btn btn-sm btn-outline" style="font-size: 0.8rem; padding: 0.35rem 0.75rem;">
+                                Siguiente &rarr;
+                            </a>
+                            <span th:if="${currentPage + 1 >= totalPages}" class="btn btn-sm btn-outline disabled" style="opacity: 0.4; cursor: not-allowed; font-size: 0.8rem; padding: 0.35rem 0.75rem;">
+                                Siguiente &rarr;
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

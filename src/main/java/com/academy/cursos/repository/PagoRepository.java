@@ -12,5 +12,6 @@ import java.util.Optional;
 public interface PagoRepository extends JpaRepository<Pago, Long> {
     List<Pago> findByEstado(EstadoPago estado);
     Optional<Pago> findByInscripcionId(Long inscripcionId);
+    Optional<Pago> findByComprobanteUrl(String comprobanteUrl);
     long countByEstado(EstadoPago estado);
 }

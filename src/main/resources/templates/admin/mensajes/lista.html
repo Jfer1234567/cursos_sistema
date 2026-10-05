@@ -35,9 +35,9 @@
                            placeholder="Buscar por Remitente, Asunto o Correo..." 
                            th:value="${filtro}">
                 </div>
-                <button type="submit" class="btn btn-primary">🔍 Buscar</button>
+                <button type="submit" class="btn btn-primary"> Buscar</button>
                 <a th:if="${filtro != null and !filtro.isEmpty()}" th:href="@{/admin/mensajes}" class="btn btn-secondary">
-                    ✕ Limpiar
+                     Limpiar
                 </a>
             </form>
         </div>
@@ -54,7 +54,7 @@
             </div>
             <div class="card-body">
                 <div th:if="${mensajes.empty}" style="text-align: center; padding: 3.5rem 1.5rem; color: var(--text-muted);">
-                    <div style="font-size: 3rem; margin-bottom: 0.5rem;">📭</div>
+                    <div style="font-size: 3rem; margin-bottom: 0.5rem;"></div>
                     <div style="font-size: 1.15rem; font-weight: 600; color: #334155; margin-bottom: 0.25rem;">
                         No hay mensajes en la bandeja
                     </div>
@@ -77,16 +77,21 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr th:each="m : ${mensajes}" th:style="${!m.leido ? 'background-color: rgba(254, 243, 199, 0.35); font-weight: 600;' : ''}">
+                            <tr th:each="m : ${mensajes}" th:classappend="${!m.leido} ? 'tr-unread' : 'tr-read'">
                                 <td>
-                                    <span th:if="${!m.leido}" class="badge badge-warning" style="font-size: 0.75rem; background: #D97706;">
-                                        ● NUEVO
+                                    <span th:if="${!m.leido}" class="badge-status badge-status-nuevo">
+                                        <span class="badge-dot badge-dot-nuevo"></span>
+                                        NUEVO
                                     </span>
-                                    <span th:if="${m.leido and !m.respondido}" class="badge badge-secondary" style="font-size: 0.75rem;">
-                                        Leído
+                                    <span th:if="${m.leido and !m.respondido}" class="badge-status badge-status-leido">
+                                        <span class="badge-dot badge-dot-leido"></span>
+                                        LEÍDO
                                     </span>
-                                    <span th:if="${m.respondido}" class="badge badge-success" style="font-size: 0.75rem; background: #059669;">
-                                        ✓ Atendido
+                                    <span th:if="${m.respondido}" class="badge-status badge-status-atendido">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                        ATENDIDO
                                     </span>
                                 </td>
                                 <td>

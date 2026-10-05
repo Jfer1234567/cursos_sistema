@@ -1,5 +1,6 @@
 package com.academy.cursos.dto;
 
+import com.academy.cursos.model.Curso;
 import com.academy.cursos.model.enums.EstadoCurso;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
@@ -66,6 +67,12 @@ public class CursoDTO {
 
     private org.springframework.web.multipart.MultipartFile docenteFotoFile;
 
+    private String flyerUrl;
+
+    private Boolean flyerPublicado = false;
+
+    private org.springframework.web.multipart.MultipartFile flyerFile;
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getNombre() { return nombre; }
@@ -106,4 +113,42 @@ public class CursoDTO {
     public void setDocenteCargo(String docenteCargo) { this.docenteCargo = docenteCargo; }
     public org.springframework.web.multipart.MultipartFile getDocenteFotoFile() { return docenteFotoFile; }
     public void setDocenteFotoFile(org.springframework.web.multipart.MultipartFile docenteFotoFile) { this.docenteFotoFile = docenteFotoFile; }
+
+    public String getFlyerUrl() { return flyerUrl; }
+    public void setFlyerUrl(String flyerUrl) { this.flyerUrl = flyerUrl; }
+    public Boolean getFlyerPublicado() { return flyerPublicado != null && flyerPublicado; }
+    public void setFlyerPublicado(Boolean flyerPublicado) { this.flyerPublicado = flyerPublicado; }
+    public org.springframework.web.multipart.MultipartFile getFlyerFile() { return flyerFile; }
+    public void setFlyerFile(org.springframework.web.multipart.MultipartFile flyerFile) { this.flyerFile = flyerFile; }
+
+    public static CursoDTO fromEntity(Curso curso) {
+        if (curso == null) {
+            return null;
+        }
+        CursoDTO dto = new CursoDTO();
+        dto.setId(curso.getId());
+        dto.setNombre(curso.getNombre());
+        dto.setDescripcionCorta(curso.getDescripcionCorta());
+        dto.setDescripcion(curso.getDescripcion());
+        if (curso.getAreaInvestigacion() != null) {
+            dto.setAreaInvestigacionId(curso.getAreaInvestigacion().getId());
+        }
+        dto.setDuracion(curso.getDuracion());
+        dto.setDocenteResponsable(curso.getDocenteResponsable());
+        dto.setPrecio(curso.getPrecio());
+        dto.setCuposTotales(curso.getCuposTotales());
+        dto.setEstado(curso.getEstado());
+        dto.setFechaInicio(curso.getFechaInicio());
+        dto.setFechaFin(curso.getFechaFin());
+        dto.setImagenUrl(curso.getImagenUrl());
+        dto.setEnlaceClase(curso.getEnlaceClase());
+        dto.setEnlaceWhatsapp(curso.getEnlaceWhatsapp());
+        dto.setPrecioComunidad(curso.getPrecioComunidad());
+        dto.setCreditos(curso.getCreditos());
+        dto.setDocenteCargo(curso.getDocenteCargo());
+        dto.setDocenteFotoUrl(curso.getDocenteFotoUrl());
+        dto.setFlyerUrl(curso.getFlyerUrl());
+        dto.setFlyerPublicado(curso.getFlyerPublicado());
+        return dto;
+    }
 }

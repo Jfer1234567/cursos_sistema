@@ -6,6 +6,10 @@ import com.academy.cursos.model.Curso;
 import com.academy.cursos.model.enums.EstadoCurso;
 import com.academy.cursos.repository.AreaInvestigacionRepository;
 import com.academy.cursos.repository.CursoRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +42,11 @@ public class CursoService {
 
     public List<Curso> listarTodos() {
         return cursoRepository.findAll();
+    }
+
+    public Page<Curso> listarPaginado(int pagina, int tamanio) {
+        Pageable pageable = PageRequest.of(Math.max(0, pagina), tamanio, Sort.by(Sort.Direction.DESC, "createdAt", "id"));
+        return cursoRepository.findAll(pageable);
     }
 
     public Optional<Curso> obtenerPorId(Long id) {
@@ -83,7 +92,7 @@ public class CursoService {
         if (dto.getDocenteFotoFile() != null && !dto.getDocenteFotoFile().isEmpty()) {
             try {
                 String rutaRelativa = archivoService.guardarArchivo(dto.getDocenteFotoFile(), "docentes");
-                curso.setDocenteFotoUrl("/uploads/" + rutaRelativa);
+                curso.setDocenteFotoUrl(rutaRelativa.startsWith("http") ? rutaRelativa : "/uploads/" + rutaRelativa);
             } catch (Exception e) {
                 throw new RuntimeException("Error al procesar la fotografía del docente: " + e.getMessage(), e);
             }
@@ -91,7 +100,70 @@ public class CursoService {
             curso.setDocenteFotoUrl(dto.getDocenteFotoUrl().trim());
         }
 
+        // Manejo del Flyer oficial del curso
+        if (dto.getFlyerFile() != null && !dto.getFlyerFile().isEmpty()) {
+            try {
+                String rutaFlyer = archivoService.guardarArchivo(dto.getFlyerFile(), "flyers");
+                curso.setFlyerUrl(rutaFlyer.startsWith("http") ? rutaFlyer : "/uploads/" + rutaFlyer);
+            } catch (Exception e) {
+                throw new RuntimeException("Error al procesar el flyer publicitario: " + e.getMessage(), e);
+            }
+        } else if (dto.getFlyerUrl() != null && !dto.getFlyerUrl().trim().isEmpty()) {
+            curso.setFlyerUrl(dto.getFlyerUrl().trim());
+        }
+
+        // Estado de publicación del flyer en el Inicio
+        boolean publicarFlyer = dto.getFlyerPublicado() != null && dto.getFlyerPublicado();
+        if (publicarFlyer) {
+            // El nuevo evento ocupa la posición superior; los eventos anteriores bajan a la lista inferior
+            List<Curso> anteriores = cursoRepository.findByFlyerPublicadoTrueAndFlyerUrlIsNotNullOrderByUpdatedAtDesc();
+            for (Curso ant : anteriores) {
+                if (curso.getId() == null || !ant.getId().equals(curso.getId())) {
+                    ant.setFlyerPublicado(false);
+                    cursoRepository.save(ant);
+                }
+            }
+        }
+        curso.setFlyerPublicado(publicarFlyer);
+
         return cursoRepository.save(curso);
+    }
+
+    public Optional<Curso> obtenerFlyerPrincipal() {
+        Optional<Curso> flyer = cursoRepository.findFirstByFlyerPublicadoTrueAndFlyerUrlIsNotNullOrderByUpdatedAtDesc();
+        if (flyer.isPresent()) {
+            return flyer;
+        }
+        // Fallback: si no hay ninguno marcado explícitamente pero hay cursos publicados con afiche,
+        // tomar el curso publicado más reciente con afiche.
+        return cursoRepository.findByEstado(EstadoCurso.PUBLICADO).stream()
+                .filter(c -> c.getFlyerUrl() != null && !c.getFlyerUrl().trim().isEmpty())
+                .sorted((a, b) -> {
+                    if (b.getCreatedAt() == null || a.getCreatedAt() == null) return 0;
+                    return b.getCreatedAt().compareTo(a.getCreatedAt());
+                })
+                .findFirst();
+    }
+
+    public List<Curso> obtenerFlyersPublicados() {
+        return cursoRepository.findByFlyerPublicadoTrueAndFlyerUrlIsNotNullOrderByUpdatedAtDesc();
+    }
+
+    @Transactional
+    public void alternarPublicacionFlyer(Long id, boolean publicado) {
+        Curso curso = cursoRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Curso no encontrado"));
+        if (publicado) {
+            List<Curso> anteriores = cursoRepository.findByFlyerPublicadoTrueAndFlyerUrlIsNotNullOrderByUpdatedAtDesc();
+            for (Curso ant : anteriores) {
+                if (!ant.getId().equals(id)) {
+                    ant.setFlyerPublicado(false);
+                    cursoRepository.save(ant);
+                }
+            }
+        }
+        curso.setFlyerPublicado(publicado);
+        cursoRepository.save(curso);
     }
 
     @Transactional

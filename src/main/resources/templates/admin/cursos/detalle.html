@@ -29,11 +29,8 @@
                     </p>
                 </div>
                 <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
-                    <a th:href="@{'/admin/flyer/curso/' + ${curso.id}}" class="btn btn-outline" style="border-color: #D4AF37; color: #9A7B1C; font-weight: 600;">
-                        🎨 Crear Flyer
-                    </a>
                     <a th:href="@{'/admin/cursos/' + ${curso.id} + '/exportar-csv'}" class="btn btn-outline" style="border-color: #107C41; color: #107C41;">
-                        📊 Exportar Padrón Excel (CSV)
+                         Exportar Padrón Excel (CSV)
                     </a>
                     <a th:href="@{'/admin/cursos/' + ${curso.id} + '/editar'}" class="btn btn-outline-primary">
                         Editar Curso
@@ -89,7 +86,7 @@
                                               onsubmit="return confirm('¿Confirmas que el participante culminó el curso satisfactoriamente? Se generará su certificado oficial.');">
                                             <input type="hidden" name="cursoId" th:value="${curso.id}">
                                             <button type="submit" class="btn btn-sm btn-success">
-                                                ✓ Marcar Completado y Emitir Certificado
+                                                Marcar Completado y Emitir Certificado
                                             </button>
                                         </form>
                                     </div>
@@ -99,7 +96,7 @@
                                         <span th:if="${ins.certificado != null}">
                                             <a th:href="@{'/participante/certificado/' + ${ins.id}}" target="_blank"
                                                class="btn btn-sm btn-outline-primary" style="font-family: monospace;">
-                                                📜 <span th:text="${ins.certificado.codigoVerificacion}">Código</span>
+                                                 <span th:text="${ins.certificado.codigoVerificacion}">Código</span>
                                             </a>
                                         </span>
                                     </div>

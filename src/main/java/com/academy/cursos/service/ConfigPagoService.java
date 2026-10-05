@@ -41,7 +41,7 @@ public class ConfigPagoService {
 
         if (qrFile != null && !qrFile.isEmpty()) {
             String ruta = archivoService.guardarArchivo(qrFile, "qr");
-            config.setQrImagenUrl("/uploads/" + ruta);
+            config.setQrImagenUrl(ruta.startsWith("http") ? ruta : "/uploads/" + ruta);
         }
 
         return configPagoRepository.save(config);

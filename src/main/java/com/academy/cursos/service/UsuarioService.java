@@ -95,4 +95,26 @@ public class UsuarioService {
         }
         return usuarioRepository.findByRolOrderByCreatedAtDesc(Rol.PARTICIPANTE);
     }
+
+    public org.springframework.data.domain.Page<Usuario> listarParticipantesPaginado(String filtro, int pagina, int tamanio) {
+        org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(Math.max(0, pagina), tamanio);
+        if (filtro != null && !filtro.trim().isEmpty()) {
+            return usuarioRepository.buscarParticipantes(Rol.PARTICIPANTE, filtro.trim(), pageable);
+        }
+        return usuarioRepository.findByRolOrderByCreatedAtDesc(Rol.PARTICIPANTE, pageable);
+    }
+
+    public org.springframework.data.domain.Page<Usuario> listarParticipantesPaginadoPorCurso(Long cursoId, String filtro, int pagina, int tamanio) {
+        org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(Math.max(0, pagina), tamanio);
+        return usuarioRepository.buscarParticipantesPorCurso(Rol.PARTICIPANTE, cursoId, filtro != null ? filtro.trim() : "", pageable);
+    }
+
+    public org.springframework.data.domain.Page<Usuario> listarParticipantesSinCursosPaginado(String filtro, int pagina, int tamanio) {
+        org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(Math.max(0, pagina), tamanio);
+        return usuarioRepository.buscarParticipantesSinCursos(Rol.PARTICIPANTE, filtro != null ? filtro.trim() : "", pageable);
+    }
+
+    public long contarSinInscripciones() {
+        return usuarioRepository.countSinInscripciones(Rol.PARTICIPANTE);
+    }
 }

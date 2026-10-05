@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="~{layout/main :: head('Certificado de Participación')}"></head>
 <body>
     <div th:replace="~{fragments/header :: header}"></div>
@@ -11,22 +11,73 @@
     <div class="container" style="padding: 2.5rem 1.5rem;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
             <div>
-                <a th:href="@{/participante/dashboard}" class="btn btn-sm btn-outline">&larr; Volver a Mis Cursos</a>
+                <!-- Retorno contextual según rol -->
+                <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin/certificados}" class="btn btn-sm btn-outline">&larr; Volver a Certificados Emitidos</a>
+                <a sec:authorize="!hasRole('ADMIN')" th:href="@{/participante/dashboard}" class="btn btn-sm btn-outline">&larr; Volver a Mis Cursos</a>
             </div>
-            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;">
                 <a th:href="@{'/participante/certificado/' + ${inscripcion.id} + '/pdf'}" class="btn btn-primary">
-                    📥 Descargar PDF Oficial
+                     Descargar PDF Oficial
                 </a>
-                <a th:href="'https://wa.me/51951234567?text=' + ${#uris.escapeQueryParam('¡Hola Instituto IIICCD - UNA Puno! Mi nombre es ' + certificado.nombreParticipante + '. Culminé con éxito el curso ''' + certificado.nombreCurso + '''. Solicito el envío/registro de mi Certificado Oficial con Código Único: ' + certificado.codigoVerificacion + '. Enlace de validación: http://localhost:8085/verificar?codigo=' + certificado.codigoVerificacion + '. ¡Muchas gracias!')}"
-                   target="_blank"
-                   class="btn btn-whatsapp"
-                   style="display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 600;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.592 2.654-.696c1.029.575 1.764.839 2.806.839 3.18 0 5.766-2.586 5.766-5.766-.001-3.18-2.586-5.767-5.766-5.767zm3.364 8.213c-.14.394-.714.729-1.026.777-.306.046-.693.076-2.275-.544-1.748-.686-2.883-2.457-2.97-2.574-.087-.117-.706-.939-.706-1.791 0-.852.447-1.272.607-1.446.16-.174.348-.217.464-.217.116 0 .232.001.333.006.107.005.25-.041.391.298.145.348.494 1.205.538 1.293.044.088.073.19.015.306-.058.116-.087.19-.174.291-.087.102-.183.228-.261.306-.088.087-.179.182-.077.357.102.175.454.748.973 1.211.669.596 1.233.78 1.408.868.175.088.277.073.38-.044.102-.116.436-.508.552-.683.116-.175.233-.146.393-.087.16.058 1.018.48 1.193.567.175.087.291.131.335.204.043.073.043.423-.097.817z"/>
-                        <path d="M12.012 2.002c-5.508 0-9.986 4.478-9.986 9.984 0 1.84.5 3.565 1.373 5.052L2 22.002l5.12-1.343a9.92 9.92 0 004.892 1.327h.004c5.508 0 9.984-4.478 9.984-9.984 0-2.668-1.039-5.176-2.925-7.062a9.927 9.927 0 00-7.063-2.938zm0 18.238h-.003a8.217 8.217 0 01-4.184-1.15l-.3-.178-3.11.816.83-3.032-.196-.312a8.204 8.204 0 01-1.258-4.398c0-4.544 3.697-8.241 8.241-8.241 2.202 0 4.272.858 5.829 2.415a8.196 8.196 0 012.413 5.827c0 4.545-3.697 8.242-8.242 8.242z"/>
-                    </svg>
-                    <span>Recibir por WhatsApp</span>
-                </a>
+
+                <!-- Acción Administrador: Enviar Certificado Oficial al WhatsApp del Alumno -->
+                <th:block sec:authorize="hasRole('ADMIN')">
+                    <div th:if="${inscripcion.usuario.telefono != null and !#strings.trim(inscripcion.usuario.telefono).empty}">
+                        <a th:with="telLimpio=${#strings.replace(#strings.replace(#strings.replace(#strings.replace(#strings.replace(inscripcion.usuario.telefono, ' ', ''), '-', ''), '+', ''), '(', ''), ')', '')},
+                                    telFinal=${#strings.startsWith(telLimpio, '51') ? telLimpio : ('51' + telLimpio)}"
+                           th:href="'https://wa.me/' + ${telFinal} + '?text=' + ${#uris.escapeQueryParam('¡Hola ' + certificado.nombreParticipante + '! Le saludamos del Instituto de Investigación IIICCD - FINESI / UNA Puno. Le hacemos entrega de su Certificado Oficial de Participación por haber culminado y aprobado satisfactoriamente el curso ''' + certificado.nombreCurso + '''. Su Código Único de Verificación es: ' + certificado.codigoVerificacion + '. Puede validar su autenticidad y descargar su certificado oficial en PDF en el enlace: http://localhost:8085/verificar?codigo=' + certificado.codigoVerificacion + ' ¡Muchas felicitaciones!')}"
+                           target="_blank"
+                           class="btn btn-whatsapp"
+                           style="display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 600;"
+                           th:title="'Enviar certificado al WhatsApp del alumno (' + ${inscripcion.usuario.telefono} + ')'">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.592 2.654-.696c1.029.575 1.764.839 2.806.839 3.18 0 5.766-2.586 5.766-5.766-.001-3.18-2.586-5.767-5.766-5.767zm3.364 8.213c-.14.394-.714.729-1.026.777-.306.046-.693.076-2.275-.544-1.748-.686-2.883-2.457-2.97-2.574-.087-.117-.706-.939-.706-1.791 0-.852.447-1.272.607-1.446.16-.174.348-.217.464-.217.116 0 .232.001.333.006.107.005.25-.041.391.298.145.348.494 1.205.538 1.293.044.088.073.19.015.306-.058.116-.087.19-.174.291-.087.102-.183.228-.261.306-.088.087-.179.182-.077.357.102.175.454.748.973 1.211.669.596 1.233.78 1.408.868.175.088.277.073.38-.044.102-.116.436-.508.552-.683.116-.175.233-.146.393-.087.16.058 1.018.48 1.193.567.175.087.291.131.335.204.043.073.043.423-.097.817z"/>
+                                <path d="M12.012 2.002c-5.508 0-9.986 4.478-9.986 9.984 0 1.84.5 3.565 1.373 5.052L2 22.002l5.12-1.343a9.92 9.92 0 004.892 1.327h.004c5.508 0 9.984-4.478 9.984-9.984 0-2.668-1.039-5.176-2.925-7.062a9.927 9.927 0 00-7.063-2.938zm0 18.238h-.003a8.217 8.217 0 01-4.184-1.15l-.3-.178-3.11.816.83-3.032-.196-.312a8.204 8.204 0 01-1.258-4.398c0-4.544 3.697-8.241 8.241-8.241 2.202 0 4.272.858 5.829 2.415a8.196 8.196 0 012.413 5.827c0 4.545-3.697 8.242-8.242 8.242z"/>
+                            </svg>
+                            <span>Enviar Certificado por WhatsApp</span>
+                        </a>
+                    </div>
+                    <div th:unless="${inscripcion.usuario.telefono != null and !#strings.trim(inscripcion.usuario.telefono).empty}">
+                        <button type="button" class="btn btn-outline" style="opacity: 0.6; cursor: not-allowed; display: inline-flex; align-items: center; gap: 0.5rem;" title="El participante no registró número de teléfono celular en su cuenta">
+                            <span>Sin Teléfono Registrado</span>
+                        </button>
+                    </div>
+                </th:block>
+
+                <!-- Acción Participante: Solicitar / Recibir por WhatsApp -->
+                <th:block sec:authorize="!hasRole('ADMIN')">
+                    <a th:href="'https://wa.me/51951234567?text=' + ${#uris.escapeQueryParam('¡Hola Instituto IIICCD - UNA Puno! Mi nombre es ' + certificado.nombreParticipante + '. Culminé con éxito el curso ''' + certificado.nombreCurso + '''. Solicito el envío/registro de mi Certificado Oficial con Código Único: ' + certificado.codigoVerificacion + '. Enlace de validación: http://localhost:8085/verificar?codigo=' + certificado.codigoVerificacion + '. ¡Muchas gracias!')}"
+                       target="_blank"
+                       class="btn btn-whatsapp"
+                       style="display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 600;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.592 2.654-.696c1.029.575 1.764.839 2.806.839 3.18 0 5.766-2.586 5.766-5.766-.001-3.18-2.586-5.767-5.766-5.767zm3.364 8.213c-.14.394-.714.729-1.026.777-.306.046-.693.076-2.275-.544-1.748-.686-2.883-2.457-2.97-2.574-.087-.117-.706-.939-.706-1.791 0-.852.447-1.272.607-1.446.16-.174.348-.217.464-.217.116 0 .232.001.333.006.107.005.25-.041.391.298.145.348.494 1.205.538 1.293.044.088.073.19.015.306-.058.116-.087.19-.174.291-.087.102-.183.228-.261.306-.088.087-.179.182-.077.357.102.175.454.748.973 1.211.669.596 1.233.78 1.408.868.175.088.277.073.38-.044.102-.116.436-.508.552-.683.116-.175.233-.146.393-.087.16.058 1.018.48 1.193.567.175.087.291.131.335.204.043.073.043.423-.097.817z"/>
+                            <path d="M12.012 2.002c-5.508 0-9.986 4.478-9.986 9.984 0 1.84.5 3.565 1.373 5.052L2 22.002l5.12-1.343a9.92 9.92 0 004.892 1.327h.004c5.508 0 9.984-4.478 9.984-9.984 0-2.668-1.039-5.176-2.925-7.062a9.927 9.927 0 00-7.063-2.938zm0 18.238h-.003a8.217 8.217 0 01-4.184-1.15l-.3-.178-3.11.816.83-3.032-.196-.312a8.204 8.204 0 01-1.258-4.398c0-4.544 3.697-8.241 8.241-8.241 2.202 0 4.272.858 5.829 2.415a8.196 8.196 0 012.413 5.827c0 4.545-3.697 8.242-8.242 8.242z"/>
+                        </svg>
+                        <span>Recibir por WhatsApp</span>
+                    </a>
+                </th:block>
+            </div>
+        </div>
+
+        <!-- Barra Informativa de Auditoría para el Administrador -->
+        <div sec:authorize="hasRole('ADMIN')"
+             style="background: #F8FAFC; border: 1px solid var(--border); border-left: 4px solid var(--primary); padding: 0.9rem 1.25rem; border-radius: var(--radius-sm); margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; font-size: 0.88rem;">
+            <div style="display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;">
+                <span class="badge badge-info" style="font-size: 0.75rem;">Panel Admin</span>
+                <span>Certificado de: <strong th:text="${inscripcion.usuario.nombreCompleto}">Nombre Completo</strong></span>
+                <span style="color: var(--text-muted);">&bull;</span>
+                <span th:text="${inscripcion.usuario.tipoDocumento + ': ' + inscripcion.usuario.numeroDocumento}">DNI: 12345678</span>
+            </div>
+            <div style="display: flex; gap: 1.25rem; flex-wrap: wrap; color: #475569;">
+                <div>
+                    <strong>Correo:</strong>
+                    <a th:href="'mailto:' + ${inscripcion.usuario.correo}" style="color: var(--primary); text-decoration: none;" th:text="${inscripcion.usuario.correo}">correo@ejemplo.com</a>
+                </div>
+                <div>
+                    <strong>Teléfono:</strong>
+                    <span th:text="${inscripcion.usuario.telefono != null and !inscripcion.usuario.telefono.empty ? inscripcion.usuario.telefono : 'Sin teléfono registrado'}">Teléfono</span>
+                </div>
             </div>
         </div>
 
@@ -142,7 +193,7 @@
                              style="width: 64px; height: 64px; border: 1px solid var(--border); border-radius: 4px; padding: 2px; background: #FFFFFF;">
                         <div style="text-align: left;">
                             <a th:href="@{/verificar(codigo=${certificado.codigoVerificacion})}" target="_blank" style="color: var(--primary); font-weight: 700; text-decoration: none; display: block;">
-                                🔗 Validar Autenticidad en Línea
+                                Validar Autenticidad en Línea
                             </a>
                             <span style="font-size: 0.78rem; color: #94A3B8;">Escanea con tu celular para validar</span>
                         </div>

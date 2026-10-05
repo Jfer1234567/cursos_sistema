@@ -137,6 +137,87 @@
 .badge-secondary { background: #E5E7EB; color: var(--secondary); }
 .badge-accent { background: #FEF9C3; color: #854D0E; }
 
+/* ==========================================================================
+   Badges de Estado Modernos (Soft-Tags para Tablas y Bandejas de Admin)
+   ========================================================================== */
+.badge-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.32rem 0.72rem;
+    font-size: 0.74rem;
+    font-weight: 700;
+    line-height: 1;
+    border-radius: 6px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    transition: all 0.15s ease;
+}
+
+.badge-status svg {
+    display: block;
+    flex-shrink: 0;
+}
+
+.badge-dot {
+    width: 6.5px;
+    height: 6.5px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+/* 1. Nuevo / Sin Leer */
+.badge-status-nuevo {
+    background-color: rgba(245, 158, 11, 0.10);
+    border: 1px solid rgba(245, 158, 11, 0.35);
+    color: #B45309;
+}
+.badge-dot-nuevo {
+    background-color: #F59E0B;
+    box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.22);
+    animation: pulse-dot 2.2s infinite ease-in-out;
+}
+
+@keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.55; transform: scale(1.2); }
+}
+
+/* 2. Leído / Sin Responder */
+.badge-status-leido {
+    background-color: rgba(100, 116, 139, 0.08);
+    border: 1px solid rgba(100, 116, 139, 0.25);
+    color: #334155;
+}
+.badge-dot-leido {
+    background-color: #64748B;
+}
+
+/* 3. Atendido / Respondido / Aprobado */
+.badge-status-atendido {
+    background-color: rgba(16, 185, 129, 0.10);
+    border: 1px solid rgba(16, 185, 129, 0.35);
+    color: #047857;
+}
+
+/* 4. Rechazado / Cancelado */
+.badge-status-rechazado {
+    background-color: rgba(239, 68, 68, 0.09);
+    border: 1px solid rgba(239, 68, 68, 0.30);
+    color: #B91C1C;
+}
+
+/* Filas destacadas de tabla (Estilo Mail Inbox Premium) */
+.tr-unread {
+    background-color: rgba(245, 158, 11, 0.035) !important;
+    border-left: 3.5px solid #F59E0B !important;
+}
+.tr-read {
+    border-left: 3.5px solid transparent;
+}
+
 /* Cards */
 .card {
     background: var(--surface);

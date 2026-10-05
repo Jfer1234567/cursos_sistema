@@ -18,7 +18,12 @@
         </div>
 
         <div th:if="${inscripciones.empty}" class="card card-body" style="text-align: center; padding: 4rem 2rem;">
-            <div style="font-size: 3rem; margin-bottom: 1rem;">🎓</div>
+            <div style="width: 64px; height: 64px; margin: 0 auto 1.25rem; background: rgba(109, 26, 36, 0.08); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--primary);">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                </svg>
+            </div>
             <h3>Aún no estás inscrito en ningún curso</h3>
             <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Explora nuestra oferta de capacitación e inscríbete a través de Yape.</p>
             <div>
@@ -53,14 +58,14 @@
                             <strong>Motivo de observación:</strong> <span th:text="${ins.notasAdmin}">Motivo</span>
                         </div>
 
-                        <!-- Enlaces de Clase Zoom/Meet y WhatsApp si está APROBADA o COMPLETADA -->
-                        <div th:if="${ins.estado.name() == 'APROBADA' or ins.estado.name() == 'COMPLETADA'}"
+                        <!-- Enlaces de Clase Zoom/Meet y WhatsApp solo si está APROBADA (en curso) -->
+                        <div th:if="${ins.estado.name() == 'APROBADA'}"
                              style="margin-top: 1rem; background: var(--success-light); padding: 1rem 1.25rem; border-radius: var(--radius-sm); border-left: 3px solid var(--success); display: flex; flex-direction: column; gap: 0.75rem;">
                             <div>
                                 <strong style="color: var(--success);">Acceso a Sesiones Virtuales:</strong>
                                 <div th:if="${ins.curso.enlaceClase != null and !ins.curso.enlaceClase.empty}">
                                     <a th:href="${ins.curso.enlaceClase}" target="_blank" class="btn btn-sm btn-success" style="margin-top: 0.4rem;">
-                                        📹 Unirse a la Clase (Zoom / Meet) &rarr;
+                                        Unirse a la Clase (Zoom / Meet) &rarr;
                                     </a>
                                 </div>
                                 <div th:unless="${ins.curso.enlaceClase != null and !ins.curso.enlaceClase.empty}" style="font-size: 0.88rem; color: var(--secondary); margin-top: 0.2rem;">
@@ -74,7 +79,7 @@
                                 <div>
                                     <a th:href="${ins.curso.enlaceWhatsapp}" target="_blank" class="btn btn-sm"
                                        style="margin-top: 0.4rem; background: #25D366; color: #FFFFFF; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem;">
-                                        💬 Unirse al Grupo de WhatsApp &rarr;
+                                        Unirse al Grupo de WhatsApp &rarr;
                                     </a>
                                 </div>
                             </div>
@@ -90,27 +95,8 @@
                         </a>
 
                         <div th:if="${ins.estado.name() == 'PENDIENTE_VERIFICACION'}" style="font-size: 0.85rem; color: var(--warning); text-align: center;">
-                            ⏳ Comprobante en revisión por la directiva
+                            Comprobante en revisión por la directiva
                         </div>
-
-                        <a th:if="${ins.estado.name() == 'COMPLETADA' and ins.certificado != null}"
-                           th:href="@{'/participante/certificado/' + ${ins.id}}"
-                           class="btn btn-outline-primary">
-                            📜 Ver Certificado
-                        </a>
-
-                        <a th:if="${ins.estado.name() == 'COMPLETADA' and ins.certificado != null}"
-                           th:href="@{'/participante/certificado/' + ${ins.id} + '/pdf'}"
-                           class="btn btn-sm btn-secondary">
-                            📥 Descargar PDF
-                        </a>
-
-                        <a th:if="${ins.estado.name() == 'COMPLETADA' and ins.certificado != null}"
-                           th:href="'https://wa.me/51951234567?text=' + ${#uris.escapeQueryParam('¡Hola Instituto IIICCD - UNA Puno! Mi nombre es ' + ins.usuario.nombreCompleto + ' (DNI: ' + ins.usuario.numeroDocumento + '). Culminé con éxito el curso ''' + ins.curso.nombre + '''. Solicito el envío/registro de mi Certificado Oficial con Código Único: ' + ins.certificado.codigoVerificacion + '. Enlace de validación: http://localhost:8085/verificar?codigo=' + ins.certificado.codigoVerificacion + '. ¡Muchas gracias!')}"
-                           target="_blank"
-                           class="btn btn-sm btn-whatsapp">
-                            📲 Recibir por WhatsApp
-                        </a>
                     </div>
                 </div>
             </div>

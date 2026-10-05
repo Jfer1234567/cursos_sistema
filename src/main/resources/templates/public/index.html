@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="~{layout/main :: head('Portal Oficial')}"></head>
 <body>
     <div th:replace="~{fragments/header :: header}"></div>
@@ -17,7 +17,7 @@
             <div class="hero-grid">
                 <div>
                     <div class="hero-badge">
-                        <span>🏛️ UNA PUNO &bull; FINESI</span>
+                        <span>UNA PUNO &bull; FINESI</span>
                     </div>
                     <h1 class="hero-title">
                         Instituto de Investigación en <span>Inteligencia Computacional</span> y Ciencia de Datos
@@ -55,6 +55,137 @@
         </div>
     </section>
 
+    <!-- Sección de Flyer Oficial Publicado (Convocatoria Destacada) - Diseño Premium -->
+    <section th:if="${flyerDestacado != null and flyerDestacado.flyerUrl != null and !flyerDestacado.flyerUrl.isEmpty()}" class="seccion-flyer-destacado">
+        <div class="container">
+            <div class="flyer-destacado-grid">
+                <!-- Información y Botones del Curso -->
+                <div>
+                    <!-- Badge con Pulso Activo -->
+                    <div class="flyer-badge-pulse-wrap">
+                        <span class="flyer-pulse-dot"></span>
+                        <span>Convocatoria Oficial &bull; Vacantes Abiertas</span>
+                    </div>
+
+                    <h2 class="flyer-destacado-title">
+                        <span th:text="${flyerDestacado.nombre}">Nombre Oficial del Curso</span>
+                    </h2>
+
+                    <p class="flyer-destacado-desc"
+                       th:text="${flyerDestacado.descripcionCorta != null and !flyerDestacado.descripcionCorta.isEmpty() ? flyerDestacado.descripcionCorta : 'Programa intensivo de alta especialización científica con certificación universitaria avalada por el Instituto de Investigación IIICCD y la Facultad de Ingeniería Estadística e Informática.'}">
+                        Descripción corta del curso y especialización.
+                    </p>
+
+                    <!-- Ficha Técnica con Íconos Vectoriales SVG -->
+                    <div class="flyer-destacado-meta">
+                        <div class="flyer-meta-card">
+                            <div class="flyer-meta-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                            </div>
+                            <div class="flyer-meta-content">
+                                <div class="flyer-meta-item-label">Docente / Ponente</div>
+                                <div class="flyer-meta-item-val" th:text="${flyerDestacado.docenteResponsable}">Dr. Leonid Alemán</div>
+                            </div>
+                        </div>
+
+                        <div class="flyer-meta-card">
+                            <div class="flyer-meta-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                                </svg>
+                            </div>
+                            <div class="flyer-meta-content">
+                                <div class="flyer-meta-item-label">Fecha de Inicio</div>
+                                <div class="flyer-meta-item-val" th:text="${flyerDestacado.fechaInicio != null ? #temporals.format(flyerDestacado.fechaInicio, 'dd/MM/yyyy') : 'Próximo Inicio'}">Próximo Inicio</div>
+                            </div>
+                        </div>
+
+                        <div class="flyer-meta-card">
+                            <div class="flyer-meta-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                            </div>
+                            <div class="flyer-meta-content">
+                                <div class="flyer-meta-item-label">Duración</div>
+                                <div class="flyer-meta-item-val" th:text="${flyerDestacado.duracion}">40 horas</div>
+                            </div>
+                        </div>
+
+                        <div class="flyer-meta-card">
+                            <div class="flyer-meta-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="8" r="6"></circle>
+                                    <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"></path>
+                                </svg>
+                            </div>
+                            <div class="flyer-meta-content">
+                                <div class="flyer-meta-item-label">Créditos</div>
+                                <div class="flyer-meta-item-val" th:text="${(flyerDestacado.creditos != null ? flyerDestacado.creditos : 2) + ' créditos'}">2 créditos</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tarifas Oficiales Diferenciadas -->
+                    <div class="flyer-destacado-precios">
+                        <div class="flyer-precio-pill">
+                            <div class="label">Público General</div>
+                            <div class="amount" th:text="${'S/ ' + flyerDestacado.precio}">S/ 120.00</div>
+                        </div>
+                        <div th:if="${flyerDestacado.precioComunidad != null}" class="flyer-precio-pill-una">
+                            <span class="tag-beneficio">Beneficio UNA</span>
+                            <div class="label">Comunidad UNA Puno</div>
+                            <div class="amount" th:text="${'S/ ' + flyerDestacado.precioComunidad}">S/ 80.00</div>
+                        </div>
+                    </div>
+
+                    <!-- Botones de Acción de Alta Conversión -->
+                    <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+                        <a th:href="@{'/cursos/' + ${flyerDestacado.id}}" class="flyer-btn-cta">
+                            <span sec:authorize="hasRole('ADMIN')">Ver Detalles del Curso</span>
+                            <span sec:authorize="!hasRole('ADMIN')">Inscribirme en este Curso</span>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polyline points="12 5 19 12 12 19"></polyline>
+                            </svg>
+                        </a>
+                        <a th:href="${flyerDestacado.flyerUrl}" target="_blank" class="flyer-btn-secondary" title="Ver afiche oficial a resolución completa">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                <line x1="11" y1="8" x2="11" y2="14"></line>
+                                <line x1="8" y1="11" x2="14" y2="11"></line>
+                            </svg>
+                            <span>Ver Afiche en HD</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Presentación Vitrina del Flyer Publicado -->
+                <div class="flyer-destacado-showcase">
+                    <div class="flyer-showcase-badge">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                        </svg>
+                        <span>Afiche Oficial del Programa</span>
+                    </div>
+                    <div class="flyer-destacado-frame">
+                        <a th:href="@{'/cursos/' + ${flyerDestacado.id}}" title="Ver detalles e inscribirse">
+                            <img th:src="${flyerDestacado.flyerUrl}" alt="Afiche Oficial de Convocatoria" class="flyer-destacado-img">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Cursos Destacados -->
     <section class="public-page-wrapper" style="padding: 5rem 0; min-height: auto;">
         <!-- Marcas de Agua Institucionales del Isotipo (sin plataforma) -->
@@ -78,7 +209,7 @@
             </div>
 
             <div th:unless="${cursosDestacados.empty}" class="cursos-grid">
-                <div th:each="c : ${cursosDestacados}" class="curso-card">
+                <div th:each="c : ${cursosDestacados}" th:if="${flyerDestacado == null or c.id != flyerDestacado.id}" class="curso-card">
                     <!-- Portada Visual o Banner Temático -->
                     <div class="curso-card-cover">
                         <img th:if="${c.imagenUrl != null and !c.imagenUrl.isEmpty()}" th:src="@{${c.imagenUrl}}" alt="Portada de curso" class="curso-cover-img">
@@ -90,10 +221,10 @@
                         <div class="curso-cover-top-badges">
                             <div>
                                 <span th:if="${c.cuposDisponibles > 5}" class="badge-pill badge-live">
-                                    ● <span th:text="${c.cuposDisponibles + ' vacantes'}">15 vacantes</span>
+                                    <span th:text="${c.cuposDisponibles + ' vacantes'}">15 vacantes</span>
                                 </span>
                                 <span th:if="${c.cuposDisponibles <= 5 and c.cuposDisponibles > 0}" class="badge-pill badge-urgent">
-                                    🔥 ¡Últimos cupos! (<span th:text="${c.cuposDisponibles}">2</span>)
+                                    ¡Últimos cupos! (<span th:text="${c.cuposDisponibles}">2</span>)
                                 </span>
                                 <span th:if="${c.cuposDisponibles == 0}" class="badge-pill badge-soldout">
                                     Agotado
@@ -124,7 +255,8 @@
                         </div>
 
                         <div style="margin-top: 1.5rem;">
-                            <a th:href="@{'/cursos/' + ${c.id}}" class="btn btn-primary btn-block">Ver Detalles e Inscribirme</a>
+                            <a sec:authorize="hasRole('ADMIN')" th:href="@{'/cursos/' + ${c.id}}" class="btn btn-primary btn-block">Ver Detalles</a>
+                            <a sec:authorize="!hasRole('ADMIN')" th:href="@{'/cursos/' + ${c.id}}" class="btn btn-primary btn-block">Ver Detalles e Inscribirme</a>
                         </div>
                     </div>
                 </div>

@@ -42,7 +42,18 @@
   - Nuevo módulo `/admin/usuarios` (`AdminUsuarioController` + `admin/usuarios/index.html`) con buscador interactivo por nombre, DNI o correo, datos de contacto, botón para enlace directo a WhatsApp (`https://wa.me/51...`) y conteo de cursos matriculados.
   - Enlace rápido "Usuarios" en la barra de navegación del administrador.
 
-- **Restricción Estricta de Dígitos en Documento y Teléfono:**
+- **Eliminación Total de Emojis y Figuritas Informales:**
+  - Para adoptar una estética solemne, académica y rigurosa acorde al Instituto de Investigación (IIICCD) y la Universidad Nacional del Altiplano (UNA Puno), se retiraron todos los emojis pictográficos e informales (📅, 🎓, 🎯, 🔭, 👨‍🏫, 📝, 💼, 📍, 📧, 📱, ⏰, ✉️, 📹, 💬, ⏳, 🔍, 🔗, 📄, ❌, ⚙, 👥, ✅, 🔴, 🔵, 🟢, ⏱, etc.) en todas las vistas del sistema.
+  - Los avatares de la directiva institucional fueron reemplazados por iniciales monogramáticas académicas elegantes (`LA`, `AQ`, `RA`) con paleta de colores y bordes institucionales.
+  - Los estados vacíos y botones de acción fueron enriquecidos con iconos vectoriales SVG limpios y tipografía clara.
+  - Se verificó mediante un script exhaustivo de categorización Unicode en Python que no queda ningún emoji en las plantillas Thymeleaf ni en scripts frontend.
+
+- **Publicación de Flyer Oficial y Carga en Cloudinary:**
+  - Se habilitó la carga de afiches promocionales (`flyerFile`) guardados en Cloudinary dentro de la carpeta `cursos_sistema/flyers`.
+  - Botón directo "Publicar Flyer" y switch de activación en portada (`/admin/cursos/nuevo` y `editar`).
+  - **Vitrina Institucional Flotante y Separación Visual:** A solicitud del usuario para separar el evento superior del resto del inicio, se envolvió el bloque en una tarjeta flotante (`.flyer-vitrina-card`) con esquinas curvadas de 24px, borde dorado perimetral suave, sombra tridimensional y espaciado amplio superior e inferior (`padding: 3.5rem 0 2rem;`), otorgándole un aire de vitrina de gala completamente independiente.
+  - **Exclusión y Transición Dinámica de Evento Superior:** El evento que ocupa la posición superior (flyer más reciente / publicado) queda automáticamente excluido de la cuadrícula inferior ("Próximos Cursos y Convocatorias") para evitar duplicación. Al crear o publicar un nuevo evento con flyer, este asume la posición superior y el evento anterior desciende a la cuadrícula inferior automáticamente.
+
   - *Frontend:* Validación interactiva en tiempo real en `/registro` y `/participante/perfil`. DNI restringido a exactamente 8 dígitos numéricos con bloqueo de letras y símbolos. Teléfono celular restringido a exactamente 9 dígitos numéricos (celular Perú). Adaptación dinámica si se selecciona Pasaporte o Carné de Extranjería (hasta 12 alfanuméricos).
   - *Backend:* Reglas de validación `@Pattern` en `RegistroDTO` y chequeo estricto en `UsuarioService` (`^[0-9]{8}$` y `^[0-9]{9}$`). Mapeo amigable de errores al campo exacto en `AuthController`.
 
@@ -69,15 +80,86 @@
 - **Sincronización Oficial en GitHub:**
   - Repositorio oficial conectado: `https://github.com/Jfer1234567/cursos_sistema` (rama `main`, sincronizado).
 
+- **Auditoría Integral y Limpieza de Código Pre-Despliegue:**
+  - *Eliminación de Residuos Obsoletos:* Removidas sentencias SQL hardcodeadas de depuración en `DataInitializer.java` (`DELETE ... Roque`).
+  - *Optimización de Consultas (Cero Streams de Tablas Completas):* Añadidos métodos directos en repositorios (`PagoRepository.findByComprobanteUrl`, `CursoRepository.countByEstadoIn` y `AreaInvestigacionRepository.findByNombre`), evitando cargar tablas completas a memoria en `ComprobanteController`, `AdminDashboardController` y `DataInitializer`.
+  - *Desacoplamiento y Limpieza en Controladores:* Incorporado `CursoDTO.fromEntity(Curso c)` en `CursoDTO.java`, simplificando radicalmente el método `editarCurso` de `AdminCursoController.java`.
+  - *Clean Code & Imports Explícitos:* Eliminados todos los imports con comodín `.*` en controladores y servicios (`AdminCursoController`, `AdminPagoController`, `AdminMensajeController`, `InscripcionController`, `ArchivoService`, `CertificadoPdfGenerator`).
+
+- **Rediseño Premium de Badges de Estado en Panel Admin:**
+  - *Sistema Soft-Tag:* Creado sistema de badges con fondo translúcido suave, micro-bordes y tipografía con contraste WCAG AAA (`.badge-status`, `.badge-status-nuevo`, `.badge-status-leido`, `.badge-status-atendido`).
+  - *Micro-Indicadores:* Integrados micro-puntos indicadores animados (`badge-dot-nuevo`) e iconos SVG (`✓`) en lugar de óvalos toscos saturados.
+  - *Bandeja Estilo Cliente de Correo Moderno:* Fila no leída con borde lateral izquierdo de 3.5px (`.tr-unread`) y fondo translúcido sutil en `admin/mensajes/lista.html` y cabecera en `detalle.html`.
+
+- **Experiencia del Participante y Suscripción Única (Sincronización de Sesiones Meet/Zoom):**
+  - *Bloqueo Estricto de Duplicados:* En `InscripcionService`, se impide formalmente una segunda inscripción para el mismo curso y usuario si el estado actual es `APROBADA`, `COMPLETADA` o `PENDIENTE_VERIFICACION`. Solo se permite regularizar si fue `RECHAZADA` o `PENDIENTE_PAGO`.
+  - *Acceso Directo a Sesiones (Zoom / Meet) y WhatsApp:* Cuando un participante tiene su inscripción aprobada o completada:
+    - En la cabecera, el botón de cursos pasa a ser `🎓 Mis Cursos`, dirigiéndolo directamente a su panel con el botón de Zoom/Meet y WhatsApp.
+    - En la ficha pública del curso (`/cursos/{id}`), el botón de compra es sustituido automáticamente por el botón destacado `📹 Unirse a la Clase en Vivo (Zoom / Meet)` y `💬 Grupo Oficial de WhatsApp`, eliminando cualquier posibilidad de recompra o confusión.
+    - En el catálogo general (`/catalogo`), la tarjeta del curso resalta con el badge `✓ Inscrito • Acceso Aprobado` y botón directo a la sala virtual.
+  - *Optimización de Consultas (`JOIN FETCH`):* Se optimizó `InscripcionRepository.findByCursoId` con `LEFT JOIN FETCH i.usuario LEFT JOIN FETCH i.pago` para evitar el problema N+1 y eliminar cualquier riesgo de `LazyInitializationException`.
+
+  - *Cursos Completados (Clases Concluidas):* Si el curso ya tiene estado `COMPLETADA`, se oculta automáticamente el bloque de "Acceso a Sesiones Virtuales" (enlace a Meet/Zoom y grupo de WhatsApp), y se retiran los botones de descarga de PDF / Ver Certificado / WhatsApp del dashboard para mantener la tarjeta limpia y sin acciones redundantes.
+
+- **Almacenamiento Cloudinary Integrado (100% Gratuito y sin Tarjeta):**
+  - Conectado con la cuenta `fq7lbg0c` (25 GB mensuales de almacenamiento y ancho de banda).
+  - Todas las subidas de comprobantes de pago de Yape, fotografías de ponentes y códigos QR se suben automáticamente a Cloudinary en la carpeta `cursos_sistema/` y se almacenan como URLs seguras HTTPS (`https://res.cloudinary.com/fq7lbg0c/...`).
+  - Cuenta con fallback resiliente al disco local en caso de ausencia de credenciales o pérdida de conectividad.
+  - Vistas adaptadas para soportar de forma híbrida tanto URLs de Cloudinary como rutas locales históricas previas.
+
+- **Publicación de Flyer Oficial en el Inicio (Convocatoria Destacada) - Paquete de Diseño Premium:**
+  - *Atmósfera Tecnológica:* Fondo multicapa en `#070B14` con resplandores ambientales (*ambient glow*) granate UNA Puno (`rgba(142, 33, 47, 0.45)`) y dorado ámbar (`rgba(217, 119, 6, 0.25)`), complementado con una trama científica sutil de red neuronal en SVG.
+  - *Insignia con Pulso en Vivo:* Badge `.flyer-badge-pulse-wrap` con micro-indicador luminoso animado (`.flyer-pulse-dot` con `@keyframes pulseRing`) que señala `● CONVOCATORIA OFICIAL • VACANTES ABIERTAS`.
+  - *Tipografía de Alto Impacto:* Título en 2.5rem con gradiente blanco a dorado ámbar brillante (`#FFFFFF` -> `#FBBF24` -> `#F59E0B`).
+  - *Ficha Técnica Glassmorphism:* Caja de datos académicos translúcida con 4 íconos vectoriales SVG nítidos (Docente/Investigador, Calendario, Cronómetro de horas y Medalla de créditos).
+  - *Tarifas con Jerarquía Universitaria:* Pastilla esmeralda para Público General y pastilla con gradiente ámbar y etiqueta flotante `Beneficio UNA` para estudiantes/egresados de la UNA Puno.
+  - *Botones CTA de Alta Conversión:* Botón granate UNA con resplandor, elevación dinámica y flecha vectorial animada `→`, junto a botón de visualización del afiche en HD con ícono de lupa.
+  - *Marco Vitrina y Dimensiones Ampliadas:* Marco con resplandor dorado exterior de 45px/60px, esquinas pulidas y micro-etiqueta superior `Afiche Oficial del Programa`. La imagen ahora aprovecha hasta `700px` de altura máxima (frente a 520px anteriores) con `width: 100%`, cuadrícula balanceada al 50%-50% (`1fr 1fr`), contenedor extendido a `1320px` y padding optimizado a `3.5rem 0`, eliminando los espacios vacíos superior e inferior.
+  - *Gestión Rápida en Lista de Cursos:* Columna y botón toggle en `admin/cursos/lista.html` para publicar o retirar el afiche de la portada con un solo clic.
+
+- **Paginación Institucional en Gestión de Cursos (`/admin/cursos`):**
+  - *Límite por Página:* Restringido a exactamente 4 cursos por página (`PageRequest.of(page, 4, Sort.by(DESC, "createdAt", "id"))`), manteniendo la tabla compacta, limpia y rápida.
+  - *Navegación Intuitiva:* Barra inferior con resumen ("Mostrando X a Y de Z cursos registrados"), botón `← Anterior`, botones numéricos `[ 1 ] [ 2 ] ...` con resalte de página activa, y botón `Siguiente →`.
+  - *Acceso Completo Garantizado:* Ningún curso queda oculto ni inaccesible; la página 1 muestra los 4 más recientes y la página 2 permite gestionar los cursos anteriores.
+
+- **Directorio de Usuarios Organizado con Menú Desplegable por Cursos (Dropdown Institucional en `/admin/usuarios`):**
+  - *Arquitectura de Filtro por Menú Desplegable:* A sugerencia del usuario para evitar sobrecarga visual de pestañas horizontales y garantizar escalabilidad total con muchos cursos, se integró un `<select name="cursoFiltro">` estilizado en la barra de búsqueda:
+    - Opción general: `Todos los Registrados (X alumnos)`.
+    - Opción especial: `Sin cursos aún (Y - Oportunidad WhatsApp)` destacada en ámbar para prospección comercial inmediata.
+    - Grupo `<optgroup label="Filtrar por Curso Matriculado:">`: lista dinámica de todos los cursos con su nombre y cantidad exacta de matriculados (`[Nombre del Curso] ([Z] alumnos)`).
+  - *Filtrado Reactivo Inmediato:* Auto-envío con `onchange="this.form.submit()"` para que al elegir un curso la lista se actualice al instante.
+  - *Indicador de Filtro Activo:* Pastilla superior que informa claramente qué curso está filtrado con botón directo `&times; Ver todos los cursos`.
+  - *Paginación Persistente a 4 Registros:* Mantiene la paginación a 4 participantes por página preservando los parámetros `cursoFiltro` y `filtro` en todos los enlaces numéricos y botones Anterior/Siguiente.
+  - *Columna de Cursos Matriculados:* Muestra badges individuales con el nombre específico de cada curso matriculado.
+  - *Consultas Eficientes:* Implementadas consultas JPQL nativas `buscarParticipantesPorCurso`, `buscarParticipantesSinCursos` y `findByUsuarioIdConCurso` con `JOIN FETCH` para evitar el problema N+1.
+
+- **Adaptación Contextual de Botones de Cursos según Rol (*Role-Based UX*):**
+  - *Distinción de Rol Administrador:* Cuando un usuario con rol `ADMIN` navega por el portal público:
+    - En las tarjetas del Catálogo (`/catalogo`) y Portada (`/`): el botón muestra de forma limpia y profesional **«Ver Detalles»** (y en el afiche destacado **«Ver Detalles del Curso»**), en lugar del texto para participantes *«Ver Detalles e Inscribirme»*.
+    - En la Ficha de Detalle del Curso (`/cursos/{id}`): el formulario de matrícula y botón *«Inscribirme Ahora»* se oculta por completo, reemplazándose por una pastilla sobria que indica *«Vista de Administrador: Las opciones de matrícula están activas para participantes»*, previniendo auto-inscripciones accidentales y manteniendo la coherencia institucional.
+
+- **Flujo y Acciones Diferenciadas de Certificados según Rol (Admin vs Participante):**
+  - *Dilema Resuelto:* Anteriormente, al abrir un certificado emitido desde `/admin/certificados`, el Administrador veía botones dirigidos al alumno (`← Volver a Mis Cursos` y `📲 Recibir por WhatsApp` hacia el instituto).
+  - *Experiencia del Administrador:*
+    - Botón de retorno contextual: **«← Volver a Certificados Emitidos»** (`/admin/certificados`).
+    - Botón verde principal: **«📲 Enviar Certificado por WhatsApp»** dirigido al número celular registrado del estudiante (`inscripcion.usuario.telefono`), normalizado con código de país (`51`).
+    - Mensaje institucional formal prellenado: Saludo formal al alumno, felicitación oficial por haber culminado el curso, código único de verificación y enlace oficial de consulta y descarga en `/verificar?codigo=...`.
+    - Manejo de excepciones: Si el alumno no registró celular, el botón muestra `Sin Teléfono Registrado` de forma deshabilitada e informativa.
+    - Barra informativa de auditoría: Banner superior que expone Nombre completo, DNI, Correo y Teléfono del alumno titular.
+    - Botón de acción rápida en la tabla de `/admin/certificados`: Permite enviar el certificado por WhatsApp al instante desde la lista sin entrar a la vista previa si no es necesario.
+  - *Experiencia del Participante:*
+    - Mantiene su navegación: **«← Volver a Mis Cursos»** (`/participante/dashboard`).
+    - Botón verde: **«📲 Recibir por WhatsApp»** dirigido al número oficial del instituto solicitando el registro/envío del certificado.
+
 **Servidor Local Activo:**
-- Aplicación corriendo en segundo plano en `http://localhost:8085`.
+- Aplicación corriendo en segundo plano en `http://localhost:8085` (`task-5244`).
 - Base de datos conectada: PostgreSQL `cursos_2`.
-- Integridad: 100% de tests unitarios y de integración aprobados (Gradle test suite exitoso).
-
-
-
+- Integridad: 100% de tests pasando (30/30 tests ejecutados exitosamente).
+- Servidor sirviendo la aplicación completa con HTTP 200 OK.
 
 **Pendientes / Próximos Pasos:**
-- Configuración de las variables de entorno de producción (`MAIL_USERNAME`, `MAIL_PASSWORD`, credenciales de PostgreSQL en servidor definitivo).
-- Despliegue en el hosting o infraestructura asignada por la universidad.
+- Plan de optimización de rendimiento y fluidez (asincronía de emails con `@Async`, compresión GZIP y reducción de I/O) a solicitud del usuario más adelante.
+- Despliegue y configuración en producción.
+
+
 

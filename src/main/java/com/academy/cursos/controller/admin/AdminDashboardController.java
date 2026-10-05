@@ -15,6 +15,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/admin")
 public class AdminDashboardController {
@@ -43,9 +45,7 @@ public class AdminDashboardController {
 
     @GetMapping
     public String dashboard(Model model) {
-        long cursosActivos = cursoRepo.findAll().stream()
-                .filter(c -> c.getEstado() == EstadoCurso.PUBLICADO || c.getEstado() == EstadoCurso.EN_CURSO)
-                .count();
+        long cursosActivos = cursoRepo.countByEstadoIn(List.of(EstadoCurso.PUBLICADO, EstadoCurso.EN_CURSO));
         long pagosPendientes = pagoRepo.countByEstado(EstadoPago.PENDIENTE);
         long inscripcionesAprobadas = inscripcionRepo.countByEstado(EstadoInscripcion.APROBADA);
         long certificadosEmitidos = certificadoRepo.count();
