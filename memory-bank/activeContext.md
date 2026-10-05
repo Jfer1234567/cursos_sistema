@@ -151,15 +151,22 @@
     - Mantiene su navegación: **«← Volver a Mis Cursos»** (`/participante/dashboard`).
     - Botón verde: **«📲 Recibir por WhatsApp»** dirigido al número oficial del instituto solicitando el registro/envío del certificado.
 
-**Servidor Local Activo:**
-- Aplicación corriendo en segundo plano en `http://localhost:8085` (`task-5244`).
-- Base de datos conectada: PostgreSQL `cursos_2`.
-- Integridad: 100% de tests pasando (30/30 tests ejecutados exitosamente).
-- Servidor sirviendo la aplicación completa con HTTP 200 OK.
+**Despliegue en Producción (Cloud):**
+- **Plataforma Web:** Render.com (Web Service Docker con JDK 17 / Eclipse Temurin).
+- **Base de Datos Cloud:** Neon.tech (PostgreSQL Serverless 18.6 con SSL).
+- **Almacenamiento Multimedia:** Cloudinary (carpeta `cursos_sistema/` para comprobantes y afiches promocionales).
+- **Estado del Despliegue:** **100% EN VIVO Y FUNCIONAL (`DEPLOYED` con check verde en Render)**.
+- **Repositorio Sincronizado:** Rama `main` en GitHub (`Jfer1234567/cursos_sistema`).
 
-**Pendientes / Próximos Pasos:**
-- Plan de optimización de rendimiento y fluidez (asincronía de emails con `@Async`, compresión GZIP y reducción de I/O) a solicitud del usuario más adelante.
-- Despliegue y configuración en producción.
+**Servidor Local:**
+- Aplicación local disponible en `http://localhost:8085`.
+- Base de datos local: PostgreSQL `cursos_2`.
+- Integridad: 100% de tests pasando (30/30 tests ejecutados exitosamente).
+
+**Próximos Pasos:**
+- Monitoreo en vivo de la plataforma en producción.
+- Carga de primeros cursos y flyers oficiales desde el panel de administración.
+
 
 
 

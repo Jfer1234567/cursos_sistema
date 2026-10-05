@@ -173,9 +173,13 @@
   - *Envío al Alumno por WhatsApp (Admin):* El botón verde para el Administrador pasa a ser **«📲 Enviar Certificado por WhatsApp»**, dirigido al número telefónico registrado del participante (`inscripcion.usuario.telefono`), normalizado con el prefijo peruano `51`.
   - *Mensaje Institucional Personalizado:* Despacha un saludo formal, felicitaciones por la culminación del curso, código único de validación y enlace directo a la verificación pública (`/verificar?codigo=...`).
   - *Acción Rápida en Lista Admin:* Se incorporó un botón directo de WhatsApp en la tabla de certificados emitidos ([`admin/certificados/lista.html`](file:///d:/cursos_sistema/src/main/resources/templates/admin/certificados/lista.html)) para permitir el envío con un solo clic.
-  - *Barra de Auditoría del Titular:* Banner exclusivo para el Administrador con nombre completo, tipo/número de documento, correo y teléfono del estudiante titular del certificado.
-  - *Mantenimiento del Flujo del Alumno:* El participante mantiene su botón **«📲 Recibir por WhatsApp»** dirigido al número del instituto para solicitar su comprobante o soporte oficial.
-  - *Suite de Pruebas e Integridad:* 100% de éxito en `./gradlew test` (30/30 tests aprobados) y verificación exitosa de respuestas HTTP tanto para rol ADMIN como para PARTICIPANTE.
+- [x] **Despliegue Completo en Producción (Render.com + Neon.tech):**
+  - *Infraestructura Cloud:* Web Service desplegado en Render con contenedor Docker multi-stage (Eclipse Temurin 17 JRE Alpine) y base de datos PostgreSQL Serverless en Neon.tech.
+  - *Gestión de Memoria:* Parámetros JVM calibrados con `-XX:MaxRAMPercentage=75.0` para operar con máxima estabilidad en el tier de 512 MB.
+  - *Resiliencia de Almacenamiento:* Permisos de usuario `appuser` configurados en `/app/uploads` con fallback automático a directorio temporal.
+  - *Base de Datos Automatizada:* Conexión SSL establecida y esquema de base de datos generado al 100% por Hibernate en Neon (`areas_investigacion`, `cursos`, `usuarios`, `inscripciones`, `pagos`, `certificados`, `mensajes_contacto`, `config_pago`).
+  - *Estado Oficial:* **DESPLEGADO Y ACTIVO EN VIVO (Check verde en Render)**.
+
 
 
 
