@@ -1,6 +1,7 @@
 # Progreso (Progress)
 
 **Tareas Completadas:**
+- [x] Elaboración y actualización del Informe Técnico Oficial en formato Microsoft Word (`.docx`): ubicado en `informe/Informe_Tecnico_Sistema_Cursos_IIICCD_Actualizado.docx` (incluye Especificación Formal de Requerimientos bajo estándar IEEE 830 con 22 RF y 10 RNF, y Diagrama Gráfico de Base de Datos Relacional PostgreSQL 16 en alta resolución 300 DPI con análisis de cardinalidades y diccionario completo de tablas).
 - [x] Configuración inicial y creación de estructura `memory-bank/`.
 - [x] Inicialización del proyecto Spring Boot con Gradle (Java 17).
 - [x] Configuración de `application.properties` para PostgreSQL, correo y uploads.

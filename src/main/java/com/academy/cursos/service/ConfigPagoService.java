@@ -2,6 +2,8 @@ package com.academy.cursos.service;
 
 import com.academy.cursos.model.ConfigPago;
 import com.academy.cursos.repository.ConfigPagoRepository;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,6 +21,7 @@ public class ConfigPagoService {
         this.archivoService = archivoService;
     }
 
+    @Cacheable("configPago")
     public ConfigPago obtenerConfigActiva() {
         return configPagoRepository.findFirstByActivoTrue()
                 .orElseGet(() -> {
@@ -33,6 +36,7 @@ public class ConfigPagoService {
     }
 
     @Transactional
+    @CacheEvict(value = "configPago", allEntries = true)
     public ConfigPago actualizarConfig(String numeroYape, String titularYape, String instrucciones, MultipartFile qrFile) throws IOException {
         ConfigPago config = obtenerConfigActiva();
         config.setNumeroYape(numeroYape);

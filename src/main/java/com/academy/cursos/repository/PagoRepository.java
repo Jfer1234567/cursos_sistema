@@ -2,6 +2,7 @@ package com.academy.cursos.repository;
 
 import com.academy.cursos.model.Pago;
 import com.academy.cursos.model.enums.EstadoPago;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,6 +11,7 @@ import java.util.Optional;
 
 @Repository
 public interface PagoRepository extends JpaRepository<Pago, Long> {
+    @EntityGraph(attributePaths = {"inscripcion", "inscripcion.usuario", "inscripcion.curso"})
     List<Pago> findByEstado(EstadoPago estado);
     Optional<Pago> findByInscripcionId(Long inscripcionId);
     Optional<Pago> findByComprobanteUrl(String comprobanteUrl);

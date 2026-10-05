@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
@@ -134,8 +135,11 @@ public class AdminUsuarioController {
         long totalRegistrados = usuarioService.contarParticipantes();
         long totalSinCursos = usuarioService.contarSinInscripciones();
 
+        Map<Long, Long> conteoPorCurso = inscripcionRepo.contarInscripcionesPorCurso().stream()
+                .collect(Collectors.toMap(r -> (Long) r[0], r -> (Long) r[1]));
+
         List<CursoTabItem> cursosTabs = cursoRepo.findAll().stream()
-                .map(c -> new CursoTabItem(c.getId(), c.getNombre(), inscripcionRepo.countByCursoId(c.getId())))
+                .map(c -> new CursoTabItem(c.getId(), c.getNombre(), conteoPorCurso.getOrDefault(c.getId(), 0L)))
                 .collect(Collectors.toList());
 
         final Long finalCursoId = cursoId;

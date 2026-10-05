@@ -10,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,10 +34,12 @@ public class CursoService {
         this.archivoService = archivoService;
     }
 
+    @Cacheable(value = "cursosPublicados", key = "#lineaId != null ? #lineaId : -1")
     public List<Curso> listarPublicados(Long lineaId) {
         return cursoRepository.findByEstadoAndLineaInvestigacion(EstadoCurso.PUBLICADO, lineaId);
     }
 
+    @Cacheable(value = "cursosDestacados")
     public List<Curso> listarDestacados() {
         return cursoRepository.findTop6ByEstadoOrderByCreatedAtDesc(EstadoCurso.PUBLICADO);
     }
@@ -54,6 +58,7 @@ public class CursoService {
     }
 
     @Transactional
+    @CacheEvict(value = {"cursosPublicados", "cursosDestacados", "flyerPrincipal"}, allEntries = true)
     public Curso guardarOActualizar(CursoDTO dto) {
         AreaInvestigacion area = areaRepository.findById(dto.getAreaInvestigacionId())
                 .orElseThrow(() -> new IllegalArgumentException("Área de investigación no encontrada"));
@@ -129,6 +134,7 @@ public class CursoService {
         return cursoRepository.save(curso);
     }
 
+    @Cacheable(value = "flyerPrincipal")
     public Optional<Curso> obtenerFlyerPrincipal() {
         Optional<Curso> flyer = cursoRepository.findFirstByFlyerPublicadoTrueAndFlyerUrlIsNotNullOrderByUpdatedAtDesc();
         if (flyer.isPresent()) {
@@ -150,6 +156,7 @@ public class CursoService {
     }
 
     @Transactional
+    @CacheEvict(value = {"cursosPublicados", "cursosDestacados", "flyerPrincipal"}, allEntries = true)
     public void alternarPublicacionFlyer(Long id, boolean publicado) {
         Curso curso = cursoRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Curso no encontrado"));
@@ -167,6 +174,7 @@ public class CursoService {
     }
 
     @Transactional
+    @CacheEvict(value = {"cursosPublicados", "cursosDestacados", "flyerPrincipal"}, allEntries = true)
     public void cambiarEstado(Long id, EstadoCurso nuevoEstado) {
         Curso curso = cursoRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Curso no encontrado"));
@@ -175,6 +183,7 @@ public class CursoService {
     }
 
     @Transactional
+    @CacheEvict(value = {"cursosPublicados", "cursosDestacados", "flyerPrincipal"}, allEntries = true)
     public void eliminar(Long id) {
         cursoRepository.deleteById(id);
     }

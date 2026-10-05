@@ -2,6 +2,7 @@ package com.academy.cursos.repository;
 
 import com.academy.cursos.model.Curso;
 import com.academy.cursos.model.enums.EstadoCurso;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,11 +13,14 @@ import java.util.Optional;
 
 @Repository
 public interface CursoRepository extends JpaRepository<Curso, Long> {
+    @EntityGraph(attributePaths = {"areaInvestigacion", "areaInvestigacion.lineaInvestigacion"})
     List<Curso> findByEstado(EstadoCurso estado);
 
+    @EntityGraph(attributePaths = {"areaInvestigacion", "areaInvestigacion.lineaInvestigacion"})
     @Query("SELECT c FROM Curso c WHERE c.estado = :estado AND (:lineaId IS NULL OR c.areaInvestigacion.lineaInvestigacion.id = :lineaId)")
     List<Curso> findByEstadoAndLineaInvestigacion(@Param("estado") EstadoCurso estado, @Param("lineaId") Long lineaId);
 
+    @EntityGraph(attributePaths = {"areaInvestigacion", "areaInvestigacion.lineaInvestigacion"})
     List<Curso> findTop6ByEstadoOrderByCreatedAtDesc(EstadoCurso estado);
 
     long countByEstado(EstadoCurso estado);

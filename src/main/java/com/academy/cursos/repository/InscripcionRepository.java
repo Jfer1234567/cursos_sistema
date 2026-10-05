@@ -2,6 +2,7 @@ package com.academy.cursos.repository;
 
 import com.academy.cursos.model.Inscripcion;
 import com.academy.cursos.model.enums.EstadoInscripcion;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,11 +13,15 @@ import java.util.Optional;
 
 @Repository
 public interface InscripcionRepository extends JpaRepository<Inscripcion, Long> {
+    @EntityGraph(attributePaths = {"curso", "pago"})
     List<Inscripcion> findByUsuarioId(Long usuarioId);
 
     @Query("SELECT DISTINCT i FROM Inscripcion i LEFT JOIN FETCH i.usuario LEFT JOIN FETCH i.pago WHERE i.curso.id = :cursoId")
     List<Inscripcion> findByCursoId(@Param("cursoId") Long cursoId);
+
+    @EntityGraph(attributePaths = {"usuario", "curso", "curso.areaInvestigacion", "curso.areaInvestigacion.lineaInvestigacion", "pago"})
     List<Inscripcion> findByEstado(EstadoInscripcion estado);
+
     Optional<Inscripcion> findByUsuarioIdAndCursoId(Long usuarioId, Long cursoId);
     long countByEstado(EstadoInscripcion estado);
     long countByUsuarioId(Long usuarioId);
@@ -24,4 +29,7 @@ public interface InscripcionRepository extends JpaRepository<Inscripcion, Long> 
 
     @Query("SELECT i FROM Inscripcion i JOIN FETCH i.curso WHERE i.usuario.id = :usuarioId")
     List<Inscripcion> findByUsuarioIdConCurso(@Param("usuarioId") Long usuarioId);
+
+    @Query("SELECT i.curso.id, COUNT(i.id) FROM Inscripcion i GROUP BY i.curso.id")
+    List<Object[]> contarInscripcionesPorCurso();
 }
