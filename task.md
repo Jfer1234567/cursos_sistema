@@ -1,13 +1,11 @@
-# Tarea: Diferenciación de Flujo de Certificados por Rol (Admin vs Participante)
+# Tarea: Optimización de Rendimiento y Eliminación de Lentitud en Render
 
-- [x] 1. Diagnóstico y preparación de la plantilla `participante/certificado.html` <!-- id: 0 -->
-- [x] 2. Implementar diferenciación de navegación: `&larr; Volver a Certificados Emitidos` (Admin) vs `&larr; Volver a Mis Cursos` (Participante) <!-- id: 1 -->
-- [x] 3. Implementar lógica de envío de WhatsApp para el Administrador con los datos del participante que culminó <!-- id: 2 -->
-  - [x] 3.1 Normalización telefónica del participante (`telLimpio` y prefijo `51`) <!-- id: 3 -->
-  - [x] 3.2 Redacción del mensaje institucional formal de entrega y verificación <!-- id: 4 -->
-  - [x] 3.3 Manejo de participantes sin teléfono celular registrado <!-- id: 5 -->
-- [x] 4. Preservar botón `Recibir por WhatsApp` para rol Participante <!-- id: 6 -->
-- [x] 5. Añadir barra de metadatos del estudiante para el Administrador <!-- id: 7 -->
-- [x] 6. Ejecución de pruebas automatizadas (`./gradlew test`) <!-- id: 8 -->
-- [x] 7. Verificación en navegador / renderizado web en `http://localhost:8085` <!-- id: 9 -->
-- [x] 8. Actualización de `memory-bank` y reporte al usuario <!-- id: 10 -->
+- [ ] 1. Habilitar ejecución asíncrona global `@EnableAsync` en `CursosApplication.java` <!-- id: 0 -->
+- [ ] 2. Desacoplar el envío de correos con `@Async` en `CorreoService.java` <!-- id: 1 -->
+- [ ] 3. Configurar timeouts estrictos de SMTP (3s) en `application.properties` <!-- id: 2 -->
+- [ ] 4. Activar caché de plantillas `spring.thymeleaf.cache=true` <!-- id: 3 -->
+- [ ] 5. Activar compresión HTTP GZIP para reducir transferencia de datos <!-- id: 4 -->
+- [ ] 6. Desactivar logging de SQL verboso en consola (`spring.jpa.show-sql=false`) <!-- id: 5 -->
+- [ ] 7. Ejecutar suite de pruebas `./gradlew test` <!-- id: 6 -->
+- [ ] 8. Commit y push a GitHub para despliegue automático en Render <!-- id: 7 -->
+- [ ] 9. Actualizar Memory Bank <!-- id: 8 -->
