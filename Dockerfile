@@ -33,5 +33,5 @@ COPY --from=build /app/build/libs/*.jar app.jar
 ENV PORT=8085
 EXPOSE 8085
 
-# Ejecutar la aplicación Spring Boot
-ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "app.jar"]
+# Ejecutar la aplicación Spring Boot con optimización de memoria para contenedores (MaxRAMPercentage 75% para límite de 512MB)
+ENTRYPOINT ["java", "-XX:MaxRAMPercentage=75.0", "-XX:+ExitOnOutOfMemoryError", "-Djava.security.egd=file:/dev/./urandom", "-jar", "app.jar"]
