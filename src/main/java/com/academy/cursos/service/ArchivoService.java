@@ -35,12 +35,19 @@ public class ArchivoService {
             Cloudinary cloudinary) {
         this.cloudinary = cloudinary;
         String cleanPath = uploadsDir.replace("file:", "");
-        this.uploadsPath = Paths.get(cleanPath).toAbsolutePath().normalize();
+        Path target = Paths.get(cleanPath).toAbsolutePath().normalize();
         try {
-            Files.createDirectories(this.uploadsPath);
-        } catch (IOException e) {
-            throw new RuntimeException("No se pudo inicializar la carpeta de uploads", e);
+            Files.createDirectories(target);
+        } catch (Exception e) {
+            log.warn("No se pudo crear la carpeta de uploads en {}: {}. Usando directorio temporal del sistema.", target, e.getMessage());
+            try {
+                target = Paths.get(System.getProperty("java.io.tmpdir"), "uploads").toAbsolutePath().normalize();
+                Files.createDirectories(target);
+            } catch (Exception ex) {
+                log.error("Tampoco se pudo crear la carpeta temporal de uploads: {}", ex.getMessage());
+            }
         }
+        this.uploadsPath = target;
     }
 
     public String guardarArchivo(MultipartFile file, String subcarpeta) throws IOException {

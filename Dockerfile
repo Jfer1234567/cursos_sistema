@@ -22,12 +22,15 @@ RUN ./gradlew bootJar --no-daemon -x test
 FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 
-# Crear usuario sin privilegios para mayor seguridad
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
-USER appuser
+# Crear usuario sin privilegios y asegurar permisos sobre el directorio de trabajo y uploads
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup \
+    && mkdir -p /app/uploads \
+    && chown -R appuser:appgroup /app
 
-# Copiar el JAR generado desde la etapa de compilación
-COPY --from=build /app/build/libs/*.jar app.jar
+# Copiar el JAR generado desde la etapa de compilación con permisos de appuser
+COPY --from=build --chown=appuser:appgroup /app/build/libs/*.jar app.jar
+
+USER appuser
 
 # Variables de entorno por defecto
 ENV PORT=8085
