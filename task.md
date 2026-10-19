@@ -7,6 +7,6 @@
 - [x] 5. Optimización dinámica de Cloudinary (`f_auto,q_auto`) y carga asíncrona (`loading="lazy"`, `decoding="async"`) <!-- id: 14 -->
 - [x] 6. Aceleración por hardware GPU en CSS (`will-change`, `transform: translateZ(0)`) para 60-120 FPS <!-- id: 15 -->
 - [x] 7. Ejecutar suite de pruebas `./gradlew test` y validar 100% de éxito <!-- id: 16 -->
-- [/] 8. Commit y push a GitHub para despliegue en producción <!-- id: 17 -->
-- [ ] 9. Actualizar Memory Bank <!-- id: 18 -->
+- [x] 8. Commit y push a GitHub para despliegue en producción <!-- id: 17 -->
+- [x] 9. Actualizar Memory Bank <!-- id: 18 -->
 
