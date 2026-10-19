@@ -199,6 +199,11 @@
   - *Eliminación de Botones:* Removidos los botones 'Explorar Cursos' y 'Validar Certificado' de la sección hero en [`public/index.html`](file:///d:/cursos_sistema/src/main/resources/templates/public/index.html).
   - *Armonización Visual:* Ajustado `margin-bottom: 0` en `.hero-desc` en [`pages.css`](file:///d:/cursos_sistema/src/main/resources/static/css/pages.css) para mantener balance estético con la tarjeta de estadísticas.
   - *Validación:* 30/30 tests pasando exitosamente. Desplegado en GitHub `main`.
+- [x] **Acceso Directo al Certificado en el Dashboard del Participante:**
+  - *Botones de Acción Oficial:* Se incorporaron los botones **«Ver Certificado»** (con ícono SVG de birrete y enlace a `/participante/certificado/{id}`) y **«Descargar PDF»** (con enlace directo a `/participante/certificado/{id}/pdf`) en la tarjeta del curso en [`participante/dashboard.html`](file:///d:/cursos_sistema/src/main/resources/templates/participante/dashboard.html) cuando la inscripción pasa al estado `COMPLETADA`.
+  - *Badge Dinámico:* Se agregó el indicador visual `✓ Inscripción Activa (En Curso)` para estado `APROBADA` y se mantuvo el badge de honor `Curso Completado (Certificado Listo)` para estado `COMPLETADA`.
+  - *Verificación Completa:* 30/30 tests automatizados pasando exitosamente con Gradle. Cambios sincronizados en GitHub `main` para Render.
+
 
 
 
