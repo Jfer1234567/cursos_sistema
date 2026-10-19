@@ -195,7 +195,10 @@
   - *Motor SPA Granular Zero-Flicker:* `main.js` ahora realiza swaps selectivos de `<main class="main-content">` y del contenedor de alertas `#global-alerts-container`. La cabecera institucional (`<header>`) y pie de página (`<footer>`) se mantienen fijos y estables en pantalla sin parpadeos, actualizando estados activos de navegación en tiempo real.
   - *Aceleración por Hardware GPU en CSS:* Añadido `transform: translateZ(0);`, `will-change: transform, box-shadow;` y `backface-visibility: hidden;` en tarjetas de cursos, botones, modales y marcas de agua para transiciones fluidas a 60-120 FPS.
   - *Cloudinary Dinámico y Carga Asíncrona:* Integrado `f_auto,q_auto` en URLs de Cloudinary para despacho automático en AVIF/WebP, junto con `loading="lazy"` y `decoding="async"` en imágenes de catálogo, afiches y fotos de docentes.
-  - *Suite de Pruebas:* 30/30 pruebas pasando exitosamente en `./gradlew test`. Desplegado en GitHub `main`.
+- [x] **Depuración de Botones en Banner Principal:**
+  - *Eliminación de Botones:* Removidos los botones 'Explorar Cursos' y 'Validar Certificado' de la sección hero en [`public/index.html`](file:///d:/cursos_sistema/src/main/resources/templates/public/index.html).
+  - *Armonización Visual:* Ajustado `margin-bottom: 0` en `.hero-desc` en [`pages.css`](file:///d:/cursos_sistema/src/main/resources/static/css/pages.css) para mantener balance estético con la tarjeta de estadísticas.
+  - *Validación:* 30/30 tests pasando exitosamente. Desplegado en GitHub `main`.
 
 
 
