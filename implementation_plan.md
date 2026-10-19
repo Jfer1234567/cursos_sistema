@@ -1,95 +1,74 @@
-# Plan de Implementación: Fluidez Instantánea SPA y Optimización Extrema de Rendimiento
+# Plan de Implementación: Manual de Usuario Oficial con Capturas de Pantalla Reales
 
-## 1. Diagnóstico del Problema ("Demora al dar clic a cualquier botón o función")
+## 1. Objetivo y Justificación
+Generar un **Manual de Usuario Completo, Profesional e Ilustrado con Capturas de Pantalla Reales** del Sistema Web de Gestión de Cursos y Certificación Oficial del Instituto de Investigación en Inteligencia Computacional y Ciencia de Datos (IIICCD - FINESI - UNA Puno).
 
-Aunque la compresión GZIP y el prefetch mejoraron la transferencia de recursos estáticos, la navegación y las funciones siguen sintiéndose lentas por 4 causas de fondo:
-
-1. **Recarga Tradicional Completa del Navegador (Falta de Motor SPA / Pjax):**
-   - Cada clic en un enlace o botón (`/catalogo`, `/cursos/{id}`, `/lineas-investigacion`, `/login`, etc.) destruye todo el DOM actual, deja la pantalla en blanco y espera a que el servidor envíe el nuevo HTML para reconstruir estilos, fuentes y scripts.
-   - Las grandes plataformas (GitHub, Linear, Stripe, Shopify) **nunca** recargan toda la página; usan un motor de transición instantánea que intercambia el contenido en < 10 ms manteniendo estilos y scripts en memoria.
-
-2. **Tormenta de Consultas SQL N+1 a Neon DB (Ohio):**
-   - El servidor de Render está en una región y la base de datos Neon PostgreSQL está en Ohio (`us-east-2`). La latencia de ida y vuelta de red es de ~70 ms por consulta.
-   - Varias vistas ejecutaban consultas perezosas (Lazy) dentro de bucles Thymeleaf:
-     - En el catálogo y cursos destacados: cada curso consultaba por separado su `AreaInvestigacion` y su `LineaInvestigacion` (hasta 20 consultas individuales = 1.4 segundos de espera).
-     - En el Dashboard de Administración: cada pago pendiente disparaba 3 consultas adicionales (`inscripcion`, `usuario`, `curso`). 5 pagos = 15 consultas = 1 segundo de espera.
-     - En la bandeja de pagos pendientes (`/admin/inscripciones/pendientes`): 5 consultas por fila (hasta 3.5 segundos de bloqueo).
-     - En la pestaña de usuarios (`/admin/usuarios`): un bucle `stream().map()` ejecutaba `countByCursoId` para cada curso uno a uno.
-
-3. **Falta de Caché de Datos en Memoria RAM del Servidor:**
-   - La información pública (líneas de investigación, áreas, cursos destacados, configuración de pagos) se consultaba una y otra vez en Neon DB en cada petición, cuando podría responderse en 0 ms desde la memoria RAM de Spring Boot.
-
-4. **Tamaño Excesivo de Fotos de Vouchers (3MB a 8MB) y Subida Doble:**
-   - Los participantes suben fotos de vouchers tomadas con smartphones de alta resolución (5MB).
-   - Enviar 5MB por red móvil y luego que Render lo suba a Cloudinary tomaba 8-15 segundos.
+El documento se generará en formato **Microsoft Word (`.docx`)** en la carpeta `informe/`, complementando el Informe Técnico IEEE 830 previamente elaborado, listo para ser entregado a la directiva del instituto, jurados e ingenieros evaluadores.
 
 ---
 
-## 2. Propuesta de Solución Integral
+## 2. Estructura y Módulos del Manual
 
-### A. Eliminación Radical de Consultas N+1 con `JOIN FETCH`
-- **`CursoRepository.java`**:
-  - `findTop6ByEstadoOrderByCreatedAtDesc` y `findByEstadoAndLineaInvestigacion` ahora usarán `LEFT JOIN FETCH c.areaInvestigacion a LEFT JOIN FETCH a.lineaInvestigacion` para traer todo el grafo en **1 sola consulta**.
-- **`PagoRepository.java`**:
-  - Nuevo método `findByEstadoConDetalles` con `JOIN FETCH p.inscripcion i JOIN FETCH i.usuario JOIN FETCH i.curso` para el Dashboard de Administración (1 consulta en lugar de 15).
-- **`InscripcionRepository.java`**:
-  - Nuevo método `findByEstadoConDetalles` con `JOIN FETCH i.usuario JOIN FETCH i.curso c JOIN FETCH c.areaInvestigacion a JOIN FETCH a.lineaInvestigacion LEFT JOIN FETCH i.pago` para la bandeja de verificación (1 consulta en lugar de 50).
-  - Consulta agrupada `obtenerConteoAlumnosPorCurso()` que reemplaza el bucle N+1 en `AdminUsuarioController`.
-- **`InscripcionService.java`**:
-  - `listarPorUsuario` usará `findByUsuarioIdConCurso` para que el panel del estudiante cargue en 1 sola consulta.
+### Portada y Datos Institucionales
+- Logotipo oficial del IIICCD y membrete de la Universidad Nacional del Altiplano - FINESI.
+- Título formal: *Manual de Usuario y Operación del Sistema Web de Cursos y Certificación Digital*.
+- Metadatos académicos: Versión 1.0, fecha, roles autorizados, ámbito de aplicación.
 
-### B. Caché de Alto Rendimiento en Memoria RAM (`@EnableCaching`)
-- Activar `@EnableCaching` en `CursosApplication.java`.
-- Cachear en `CursoService` los métodos `listarDestacados()`, `listarPublicados()` y `obtenerFlyerPrincipal()`.
-- Cachear en `ConfigPagoService` la configuración de pago (`obtenerConfiguracion()`).
-- Invalidación atómica (`@CacheEvict`) al crear, editar o cambiar estado de cursos o pagos para garantizar cero datos obsoletos.
-- **Resultado:** El servidor responderá a los clics de navegación en **< 15 ms** en lugar de 400 ms.
+### Parte 1: Guía del Participante (Estudiante / Investigador)
+1. **Acceso al Portal y Catálogo:** Navegación, búsqueda de cursos por línea de investigación y consulta de vacantes/tarifas (Comunidad UNA vs. General).
+2. **Registro de Cuenta:** Formulario validado con DNI (8 dígitos) y WhatsApp (9 dígitos).
+3. **Inicio de Sesión y Recuperación:** Autenticación protegida con visualización de contraseña.
+4. **Ficha de Curso y Matrícula:** Revisión del perfil del docente, temario, horas académicas y créditos.
+5. **Proceso de Pago con Yape:** Escaneo del QR institucional, ingreso del código de operación y subida del comprobante (con autocompresión en cliente).
+6. **Aula Virtual y Comunidad:** Acceso protegido a los enlaces de clases en vivo (Zoom/Google Meet) y botón para unirse al grupo oficial de WhatsApp tras la aprobación.
+7. **Diploma Digital Oficial:** Visualización del certificado con orla de gala, descarga en PDF 300 DPI, botón «Añadir a LinkedIn» y botón para recibirlo por WhatsApp.
 
-### C. Motor de Navegación Instantánea SPA (Pjax / In-Memory Swapper) en `main.js`
-- Al pasar el cursor o hacer touch sobre cualquier enlace interno, la página HTML se descarga y se guarda en un mapa en memoria (`pageCache`).
-- Al hacer clic:
-  - Si ya está en caché: se intercambia el contenido (`<main>` / `<body>`) y se actualiza el título en **0 a 5 milisegundos**.
-  - Si aún no está en caché: se muestra la barra superior de progreso institucional inmediatamente (0 ms) y se hace un `fetch` suave sin recarga de pantalla en blanco.
-  - Se actualiza la URL con `history.pushState` y se maneja `popstate` para que los botones Atrás/Adelante del navegador funcionen al instante.
-  - Se re-inicializan componentes dinámicos (alertas, menús, vistas previas).
+### Parte 2: Guía de la Directiva y Operación (Administrador)
+1. **Dashboard y Métricas:** Lectura de indicadores en tiempo real (Cursos activos, pagos pendientes, inscripciones aprobadas, certificados emitidos, usuarios y mensajes).
+2. **Gestión Integral de Cursos:** Creación, edición, asignación de fotografía y grado del ponente, control de cupos y enlaces de sesión virtual.
+3. **Estudio y Generador de Flyers Oficiales (`/admin/flyer`):** Diseño de afiches promocionales en tiempo real, selección de temas cromáticos (Granate, Cyber Dark, Esmeralda), formatos (4:5 y 1:1) y descarga en PNG Ultra HD.
+4. **Bandeja de Pagos y Comprobantes Yape (`/admin/inscripciones/pendientes`):** Visualización del comprobante, validación de código de operación, aprobación inmediata con reserva de cupo y rechazo con notas de retroalimentación.
+5. **Emisión de Certificados y Notificación WhatsApp:** Marcado de curso completado, generación de snapshots inmutables y botón «📲 Enviar Certificado por WhatsApp» al número del estudiante en un solo clic.
+6. **Directorio de Usuarios y Prospección (`/admin/usuarios`):** Búsqueda por DNI/nombre y filtrado reactivo con menú desplegable por curso matriculado o alumnos sin cursos.
+7. **Bandeja de Mensajes y Consultas (`/admin/mensajes`):** Atención de dudas enviadas desde el formulario de contacto con respuestas directas por correo (`mailto:`) y WhatsApp (`wa.me`).
+8. **Configuración de Cobros Yape y QR (`/admin/config/pago`):** Actualización de número celular, titular, instrucciones y reemplazo del código QR sin reiniciar el servidor.
 
-### D. Micro-Interacciones Táctiles y Feedback Inmediato en Botones
-- Añadir en `components.css` la pseudo-clase `:active` (`transform: scale(0.97)`) para que cada botón y tarjeta reaccione al tacto en 0 ms.
-- En formularios, al hacer clic en enviar:
-  - Cambiar el botón inmediatamente a estado de carga con un spinner fino y texto activo ("Procesando...", "Subiendo comprobante...").
-  - Deshabilitar el botón para evitar doble clic o peticiones duplicadas.
-
-### E. Compresión Automática de Vouchers en el Navegador
-- En `main.js`, detectar la selección de imágenes en el input de comprobantes.
-- Comprimir la foto en 50 ms usando HTML5 Canvas (resolución máxima 1600px, calidad 0.85 JPEG/WebP) reduciendo el tamaño de 5MB a ~250KB sin pérdida de legibilidad de texto ni números de operación.
-- La subida pasará de demorar 10 segundos a **menos de 0.5 segundos**.
+### Parte 3: Verificación Pública y Preguntas Frecuentes
+- Uso del validador público `/verificar` con código único `IIICCD-XXXXXX` o escaneo de QR.
+- Matriz de preguntas frecuentes y resolución de incidencias comunes.
 
 ---
 
-## 3. Archivos a Modificar
-
-1. `src/main/java/com/academy/cursos/CursosApplication.java` (añadir `@EnableCaching`).
-2. `src/main/java/com/academy/cursos/repository/CursoRepository.java` (`JOIN FETCH` en cursos publicados y destacados).
-3. `src/main/java/com/academy/cursos/repository/PagoRepository.java` (`JOIN FETCH` para pagos con detalles).
-4. `src/main/java/com/academy/cursos/repository/InscripcionRepository.java` (`JOIN FETCH` para bandeja de inscripciones y consulta agrupada).
-5. `src/main/java/com/academy/cursos/service/CursoService.java` (`@Cacheable` y `@CacheEvict`).
-6. `src/main/java/com/academy/cursos/service/InscripcionService.java` (usar métodos optimizados con fetch).
-7. `src/main/java/com/academy/cursos/service/ConfigPagoService.java` (`@Cacheable` y `@CacheEvict`).
-8. `src/main/java/com/academy/cursos/controller/admin/AdminDashboardController.java` (usar `findByEstadoConDetalles`).
-9. `src/main/java/com/academy/cursos/controller/admin/AdminInscripcionController.java` (usar `findByEstadoConDetalles`).
-10. `src/main/java/com/academy/cursos/controller/admin/AdminUsuarioController.java` (usar conteo agrupado sin bucles).
-11. `src/main/resources/static/js/main.js` (motor SPA Instant Click + compresión de imágenes + micro-feedback).
-12. `src/main/resources/static/css/components.css` (estilos táctiles `:active`, spinners de botones).
+## 3. Estrategia de Captura de Pantallas
+1. **Captura Automatizada:** Se utilizará un script auxiliar en Python o Microsoft Edge headless con resolución de alta densidad (1280x800 y 1440x900) para generar capturas limpias y nítidas de cada vista clave del sistema.
+2. **Imágenes Incluidas:**
+   - Portal de Inicio y Hero Institucional.
+   - Catálogo de Cursos con Badges y Buscador.
+   - Detalle del Curso con Ponente y Tarifas.
+   - Pantalla de Login Split-Screen Dual-Card.
+   - Pantalla de Registro con validaciones numéricas.
+   - Panel del Participante («Mis Cursos») con accesos a Zoom y Certificado.
+   - Diploma Digital Oficial y Verificador con Sello Dorado.
+   - Panel de Administración y Tarjetas de Métricas.
+   - Gestión de Cursos y Formulario con Subida de Foto del Docente.
+   - Generador de Flyers Oficiales del IIICCD.
+   - Bandeja de Pagos Pendientes con Comprobante Yape.
+   - Directorio de Usuarios con Menú Desplegable de Cursos.
+   - Bandeja de Mensajes de Contacto.
+   - Configuración de Cobros Yape y QR.
+3. **Formateo en Word:** Cada captura estará enmarcada, centrada, con sombreado sutil institucional y numerada formalmente (*"Figura 1: ..."*, *"Figura 2: ..."*).
 
 ---
 
-## 4. Plan de Verificación
+## 4. Archivos a Crear / Modificar
+- `informe/generar_manual_usuario.py` (Script en Python que construye el documento con `python-docx`).
+- `informe/capturas/` (Carpeta con las imágenes PNG capturadas en alta resolución).
+- `informe/Manual_de_Usuario_Sistema_Cursos_IIICCD.docx` (Documento final generado en Microsoft Word).
 
-1. **Pruebas Unitarias y de Integración:**
-   - Ejecutar `./gradlew test` asegurando que los 30 tests existentes pasen al 100%.
-2. **Validación de Consultas SQL:**
-   - Verificar que no ocurran `LazyInitializationException` y que no haya consultas duplicadas.
-3. **Validación de Compresión Frontend:**
-   - Comprobar que los scripts de `main.js` no tengan errores de sintaxis y que la navegación SPA funcione sin romper formularios ni descargas.
-4. **Despliegue y Validación Cloud:**
-   - Sincronizar en GitHub para que Render actualice el servicio de producción.
+---
+
+## 5. Plan de Verificación
+1. **Ejecución del Generador:** Ejecutar `python informe/generar_manual_usuario.py`.
+2. **Validación de Archivo:** Comprobar que el archivo `.docx` se guarde sin errores de sintaxis ni bloqueos de permisos.
+3. **Verificación de Contenido:** Verificar que todas las figuras e imágenes existan, estén correctamente referenciadas en las tablas/celdas y que el tamaño del archivo refleje la inclusión completa de imágenes HD (esperado > 4-8 MB).
+4. **Presentación:** Informar al usuario y proporcionarle la ruta exacta para su apertura en Word.

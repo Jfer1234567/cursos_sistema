@@ -203,6 +203,10 @@
   - *Botones de Acción Oficial:* Se incorporaron los botones **«Ver Certificado»** (con ícono SVG de birrete y enlace a `/participante/certificado/{id}`) y **«Descargar PDF»** (con enlace directo a `/participante/certificado/{id}/pdf`) en la tarjeta del curso en [`participante/dashboard.html`](file:///d:/cursos_sistema/src/main/resources/templates/participante/dashboard.html) cuando la inscripción pasa al estado `COMPLETADA`.
   - *Badge Dinámico:* Se agregó el indicador visual `✓ Inscripción Activa (En Curso)` para estado `APROBADA` y se mantuvo el badge de honor `Curso Completado (Certificado Listo)` para estado `COMPLETADA`.
   - *Verificación Completa:* 30/30 tests automatizados pasando exitosamente con Gradle. Cambios sincronizados en GitHub `main` para Render.
+- [x] **Manual de Usuario y Operaciones Oficial con 19 Capturas Reales en Word (.docx):**
+  - *Automatización de Capturas HD:* Script Playwright con Microsoft Edge headless que capturó en alta resolución las 19 pantallas de la plataforma en producción (Hero, Flyer Destacado, Catálogo, Ficha de Curso, Registro, Login Split-Screen, Dashboard Participante, Diploma de Honor con QR, Verificador Universal, Dashboard Admin, Gestión de Cursos con paginación, Formulario con Foto de Ponente, Flyer Studio, Bandeja de Pagos Yape, Directorio con Filtro Desplegable, Bandeja de Mensajes, Configuración Yape/QR, Lista de Certificados y Quiénes Somos).
+  - *Compilación en Word de Gala (.docx):* Generador en Python (`informe/generar_manual_usuario.py`) con membrete institucional UNA Puno - FINESI - IIICCD, paleta de colores Granate/Oro/Azul Marino, tablas estilizadas, callouts con borde lateral, pasos numerados, epígrafes formales de figuras y bloque de firmas de conformidad.
+  - *Documento Generado:* Ubicado en `informe/Manual_de_Usuario_Sistema_Cursos_IIICCD.docx` con un peso de 4.4 MB y estructura de nivel profesional listo para jurados y entrega directiva.
 
 
 
