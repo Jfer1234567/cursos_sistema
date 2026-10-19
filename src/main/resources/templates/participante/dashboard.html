@@ -87,15 +87,42 @@
                     </div>
 
                     <!-- Acciones según estado -->
-                    <div style="display: flex; flex-direction: column; gap: 0.75rem; min-width: 200px;">
+                    <div style="display: flex; flex-direction: column; gap: 0.75rem; min-width: 210px;">
                         <a th:if="${ins.estado.name() == 'PENDIENTE_PAGO' or ins.estado.name() == 'RECHAZADA'}"
                            th:href="@{'/inscripcion/' + ${ins.id}}"
                            class="btn btn-primary">
                             Subir Voucher Yape
                         </a>
 
-                        <div th:if="${ins.estado.name() == 'PENDIENTE_VERIFICACION'}" style="font-size: 0.85rem; color: var(--warning); text-align: center;">
+                        <div th:if="${ins.estado.name() == 'PENDIENTE_VERIFICACION'}" style="font-size: 0.85rem; color: var(--warning); text-align: center; font-weight: 500;">
                             Comprobante en revisión por la directiva
+                        </div>
+
+                        <div th:if="${ins.estado.name() == 'APROBADA'}" style="font-size: 0.85rem; color: var(--success); text-align: center; font-weight: 600;">
+                            ✓ Inscripción Activa (En Curso)
+                        </div>
+
+                        <!-- Botones de Certificado Oficial cuando el curso ha concluido -->
+                        <div th:if="${ins.estado.name() == 'COMPLETADA'}" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                            <a th:href="@{'/participante/certificado/' + ${ins.id}}"
+                               class="btn btn-primary"
+                               style="background: linear-gradient(135deg, #6D1A24, #8B1A1A); border: 1px solid #C99738; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; font-weight: 600;">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                                    <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                                </svg>
+                                <span>Ver Certificado</span>
+                            </a>
+                            <a th:href="@{'/participante/certificado/' + ${ins.id} + '/pdf'}"
+                               class="btn btn-sm btn-outline"
+                               style="display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                    <polyline points="7 10 12 15 17 10"/>
+                                    <line x1="12" y1="15" x2="12" y2="3"/>
+                                </svg>
+                                <span>Descargar PDF</span>
+                            </a>
                         </div>
                     </div>
                 </div>
