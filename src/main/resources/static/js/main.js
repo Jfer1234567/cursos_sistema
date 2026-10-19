@@ -42,8 +42,23 @@
         }, 80);
     }
 
-    // 2. Caché en Memoria RAM del Navegador para Vistas (0 ms por clic)
+    // 2. Caché en Memoria RAM del Navegador para Vistas (0 ms por clic) con TTL de 30s
     const pageCache = new Map();
+    const CACHE_TTL_MS = 30000; // 30 segundos
+
+    function getFromCache(url) {
+        const item = pageCache.get(url);
+        if (!item) return null;
+        if (Date.now() - item.time > CACHE_TTL_MS) {
+            pageCache.delete(url);
+            return null;
+        }
+        return item.htmlText;
+    }
+
+    function setInCache(url, htmlText) {
+        pageCache.set(url, { htmlText, time: Date.now() });
+    }
 
     function isEligibleLink(a) {
         if (!a || !a.href || a.target || a.hasAttribute('download')) return false;
@@ -81,12 +96,12 @@
 
     // Precargar página completa en memoria RAM al hover o touch
     async function prefetchToMemory(url) {
-        if (!url || pageCache.has(url)) return;
+        if (!url || getFromCache(url)) return;
         try {
             const res = await fetch(url, { headers: { 'X-Requested-With': 'SPA-Prefetch' } });
             if (res.ok) {
                 const htmlText = await res.text();
-                pageCache.set(url, htmlText);
+                setInCache(url, htmlText);
             }
         } catch (e) {
             // Silencioso
@@ -97,9 +112,9 @@
     async function navigateInstant(url, pushState = true) {
         startProgress();
 
-        if (pageCache.has(url)) {
-            const htmlText = pageCache.get(url);
-            renderPage(htmlText, url, pushState);
+        const cachedHtml = getFromCache(url);
+        if (cachedHtml) {
+            renderPage(cachedHtml, url, pushState);
             finishProgress();
             return;
         }
@@ -111,7 +126,7 @@
                 return;
             }
             const htmlText = await res.text();
-            pageCache.set(url, htmlText);
+            setInCache(url, htmlText);
             renderPage(htmlText, url, pushState);
             finishProgress();
         } catch (e) {
@@ -165,8 +180,9 @@
     // Manejar botón Atrás / Adelante del navegador instantáneamente
     window.addEventListener('popstate', (e) => {
         const url = window.location.href;
-        if (pageCache.has(url)) {
-            renderPage(pageCache.get(url), url, false);
+        const cachedHtml = getFromCache(url);
+        if (cachedHtml) {
+            renderPage(cachedHtml, url, false);
         } else {
             navigateInstant(url, false);
         }
@@ -203,9 +219,9 @@
     function initInteractiveComponents() {
         initProgressBar();
 
-        // Guardar la página actual en caché
-        if (!pageCache.has(window.location.href)) {
-            pageCache.set(window.location.href, document.documentElement.outerHTML);
+        // Guardar la página actual en caché con TTL
+        if (!getFromCache(window.location.href)) {
+            setInCache(window.location.href, document.documentElement.outerHTML);
         }
 
         // A. Menú móvil responsive
