@@ -62,21 +62,34 @@
         }
     }
 
-    // Precargar página en memoria al hover o touch
+    // Actualizar enlaces activos en la cabecera institucional
+    function updateActiveNavLinks(targetUrl) {
+        try {
+            const urlObj = new URL(targetUrl, window.location.origin);
+            const pathname = urlObj.pathname;
+            document.querySelectorAll('.site-header .nav-link').forEach(link => {
+                const href = link.getAttribute('href');
+                if (!href) return;
+                if (href === pathname || (href !== '/' && pathname.startsWith(href))) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+        } catch (e) {}
+    }
+
+    // Precargar página completa en memoria RAM al hover o touch
     async function prefetchToMemory(url) {
         if (!url || pageCache.has(url)) return;
         try {
             const res = await fetch(url, { headers: { 'X-Requested-With': 'SPA-Prefetch' } });
             if (res.ok) {
                 const htmlText = await res.text();
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(htmlText, 'text/html');
-                const title = doc.querySelector('title')?.innerText || document.title;
-                const bodyContent = doc.body.innerHTML;
-                pageCache.set(url, { title, bodyContent });
+                pageCache.set(url, htmlText);
             }
         } catch (e) {
-            // Ignorar fallos silenciosamente
+            // Silencioso
         }
     }
 
@@ -85,8 +98,8 @@
         startProgress();
 
         if (pageCache.has(url)) {
-            const cached = pageCache.get(url);
-            renderPage(cached.title, cached.bodyContent, url, pushState);
+            const htmlText = pageCache.get(url);
+            renderPage(htmlText, url, pushState);
             finishProgress();
             return;
         }
@@ -98,43 +111,62 @@
                 return;
             }
             const htmlText = await res.text();
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(htmlText, 'text/html');
-            const title = doc.querySelector('title')?.innerText || document.title;
-            const bodyContent = doc.body.innerHTML;
-
-            pageCache.set(url, { title, bodyContent });
-            renderPage(title, bodyContent, url, pushState);
+            pageCache.set(url, htmlText);
+            renderPage(htmlText, url, pushState);
             finishProgress();
         } catch (e) {
             window.location.href = url;
         }
     }
 
-    function renderPage(title, bodyContent, url, pushState) {
+    // Renderizado granular: preserva cabecera institucional y pie de página estables sin parpadeos
+    function renderPage(htmlText, url, pushState) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlText, 'text/html');
+        const title = doc.querySelector('title')?.innerText || document.title;
         document.title = title;
-        document.body.innerHTML = bodyContent;
-        document.body.classList.add('spa-fade-in');
 
         if (pushState) {
             window.history.pushState({ url }, title, url);
         }
 
-        window.scrollTo({ top: 0, behavior: 'instant' });
-        setTimeout(() => {
-            document.body.classList.remove('spa-fade-in');
-        }, 150);
+        const currentMain = document.querySelector('main.main-content');
+        const newMain = doc.querySelector('main.main-content');
 
-        // Re-inicializar componentes dinámicos en la nueva vista
-        initInteractiveComponents();
+        if (currentMain && newMain) {
+            // Actualizar alertas del sistema
+            const currentAlerts = document.getElementById('global-alerts-container');
+            const newAlerts = doc.getElementById('global-alerts-container');
+            if (currentAlerts && newAlerts) {
+                currentAlerts.innerHTML = newAlerts.innerHTML;
+            }
+
+            // Transición suave y ultrarrápida del contenido central (0-40 ms)
+            currentMain.style.opacity = '0';
+            currentMain.style.transform = 'translateY(3px)';
+            currentMain.style.transition = 'opacity 0.08s ease-out, transform 0.08s ease-out';
+
+            setTimeout(() => {
+                currentMain.innerHTML = newMain.innerHTML;
+                currentMain.style.opacity = '1';
+                currentMain.style.transform = 'translateY(0)';
+                updateActiveNavLinks(url);
+                window.scrollTo({ top: 0, behavior: 'instant' });
+                initInteractiveComponents();
+            }, 40);
+        } else {
+            // Si una de las páginas es de diseño atípico (ej. login puro o 404), swap completo
+            document.body.innerHTML = doc.body.innerHTML;
+            window.scrollTo({ top: 0, behavior: 'instant' });
+            initInteractiveComponents();
+        }
     }
 
-    // Manejar botón Atrás / Adelante del navegador
+    // Manejar botón Atrás / Adelante del navegador instantáneamente
     window.addEventListener('popstate', (e) => {
         const url = window.location.href;
         if (pageCache.has(url)) {
-            const cached = pageCache.get(url);
-            renderPage(cached.title, cached.bodyContent, url, false);
+            renderPage(pageCache.get(url), url, false);
         } else {
             navigateInstant(url, false);
         }
@@ -173,10 +205,7 @@
 
         // Guardar la página actual en caché
         if (!pageCache.has(window.location.href)) {
-            pageCache.set(window.location.href, {
-                title: document.title,
-                bodyContent: document.body.innerHTML
-            });
+            pageCache.set(window.location.href, document.documentElement.outerHTML);
         }
 
         // A. Menú móvil responsive

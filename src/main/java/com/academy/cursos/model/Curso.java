@@ -125,7 +125,16 @@ public class Curso {
     public void setFechaInicio(LocalDate fechaInicio) { this.fechaInicio = fechaInicio; }
     public LocalDate getFechaFin() { return fechaFin; }
     public void setFechaFin(LocalDate fechaFin) { this.fechaFin = fechaFin; }
+    private String optimizarUrl(String url) {
+        if (url == null || url.isBlank()) return url;
+        if (url.contains("cloudinary.com") && url.contains("/upload/") && !url.contains("/f_auto")) {
+            return url.replace("/upload/", "/upload/f_auto,q_auto/");
+        }
+        return url;
+    }
+
     public String getImagenUrl() { return imagenUrl; }
+    public String getImagenOptimizadoUrl() { return optimizarUrl(imagenUrl); }
     public void setImagenUrl(String imagenUrl) { this.imagenUrl = imagenUrl; }
     public String getEnlaceClase() { return enlaceClase; }
     public void setEnlaceClase(String enlaceClase) { this.enlaceClase = enlaceClase; }
@@ -134,12 +143,14 @@ public class Curso {
     public BigDecimal getPrecioComunidad() { return precioComunidad; }
     public void setPrecioComunidad(BigDecimal precioComunidad) { this.precioComunidad = precioComunidad; }
     public String getDocenteFotoUrl() { return docenteFotoUrl; }
+    public String getDocenteFotoOptimizadoUrl() { return optimizarUrl(docenteFotoUrl); }
     public void setDocenteFotoUrl(String docenteFotoUrl) { this.docenteFotoUrl = docenteFotoUrl; }
     public String getDocenteCargo() { return docenteCargo; }
     public void setDocenteCargo(String docenteCargo) { this.docenteCargo = docenteCargo; }
     public Integer getCreditos() { return creditos; }
     public void setCreditos(Integer creditos) { this.creditos = creditos; }
     public String getFlyerUrl() { return flyerUrl; }
+    public String getFlyerOptimizadoUrl() { return optimizarUrl(flyerUrl); }
     public void setFlyerUrl(String flyerUrl) { this.flyerUrl = flyerUrl; }
     public Boolean getFlyerPublicado() { return flyerPublicado != null && flyerPublicado; }
     public void setFlyerPublicado(Boolean flyerPublicado) { this.flyerPublicado = flyerPublicado; }

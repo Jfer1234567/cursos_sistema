@@ -3,8 +3,6 @@
    main.css - Variables, Reset, Tipografía y Layout Base
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-
 :root {
     --primary: #8B1A1A;
     --primary-light: #A62626;

@@ -299,10 +299,13 @@
     border: 1px solid var(--border);
     overflow: hidden;
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s ease;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    will-change: transform, box-shadow;
 }
 
 .curso-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-5px) translateZ(0);
     box-shadow: 0 20px 30px -8px rgba(0, 0, 0, 0.12), 0 8px 12px -4px rgba(109, 26, 36, 0.06);
     border-color: rgba(109, 26, 36, 0.25);
 }
@@ -566,6 +569,9 @@
     user-select: none;
     z-index: 1;
     filter: drop-shadow(0 0 50px rgba(109, 26, 36, 0.15));
+    transform: translateZ(0);
+    will-change: transform;
+    backface-visibility: hidden;
 }
 
 .ambient-watermark-left {

@@ -2,9 +2,9 @@ package com.academy.cursos.controller;
 
 import com.academy.cursos.model.Curso;
 import com.academy.cursos.model.Inscripcion;
-import com.academy.cursos.repository.LineaInvestigacionRepository;
 import com.academy.cursos.service.CursoService;
 import com.academy.cursos.service.InscripcionService;
+import com.academy.cursos.service.InvestigacionService;
 import com.academy.cursos.service.UsuarioService;
 import java.security.Principal;
 import org.springframework.stereotype.Controller;
@@ -22,17 +22,17 @@ import java.util.Optional;
 public class CatalogoCursoController {
 
     private final CursoService cursoService;
-    private final LineaInvestigacionRepository lineaRepo;
+    private final InvestigacionService investigacionService;
     private final InscripcionService inscripcionService;
     private final UsuarioService usuarioService;
 
     public CatalogoCursoController(
             CursoService cursoService,
-            LineaInvestigacionRepository lineaRepo,
+            InvestigacionService investigacionService,
             InscripcionService inscripcionService,
             UsuarioService usuarioService) {
         this.cursoService = cursoService;
-        this.lineaRepo = lineaRepo;
+        this.investigacionService = investigacionService;
         this.inscripcionService = inscripcionService;
         this.usuarioService = usuarioService;
     }
@@ -43,7 +43,7 @@ public class CatalogoCursoController {
             Principal principal,
             Model model) {
 
-        model.addAttribute("lineas", lineaRepo.findAllByOrderByOrdenAsc());
+        model.addAttribute("lineas", investigacionService.listarLineas());
         model.addAttribute("lineaSeleccionada", lineaId);
         model.addAttribute("cursos", cursoService.listarPublicados(lineaId));
 

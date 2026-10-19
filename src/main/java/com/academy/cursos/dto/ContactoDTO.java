@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Size;
 
 public class ContactoDTO {
 
-    @NotBlank(message = "El nombre completo es obligatorio")
+    @NotBlank (message = "el nombre completo es obligatorio")
     @Size(max = 150, message = "El nombre no puede exceder 150 caracteres")
     private String nombreCompleto;
 

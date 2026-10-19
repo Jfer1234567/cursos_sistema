@@ -60,7 +60,7 @@
             <div th:each="c : ${cursos}" class="curso-card">
                 <!-- Portada Visual o Banner Temático -->
                 <div class="curso-card-cover">
-                    <img th:if="${c.imagenUrl != null and !c.imagenUrl.isEmpty()}" th:src="@{${c.imagenUrl}}" alt="Portada de curso" class="curso-cover-img">
+                    <img th:if="${c.imagenUrl != null and !c.imagenUrl.isEmpty()}" th:src="@{${c.imagenUrl}}" alt="Portada de curso" class="curso-cover-img" loading="lazy" decoding="async">
                     <div th:unless="${c.imagenUrl != null and !c.imagenUrl.isEmpty()}" 
                          th:class="${'curso-cover-pattern cover-linea-' + (c.areaInvestigacion.lineaInvestigacion.id != null ? c.areaInvestigacion.lineaInvestigacion.id : 1)}"></div>
                     <div class="curso-cover-overlay"></div>

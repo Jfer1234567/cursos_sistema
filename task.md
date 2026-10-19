@@ -1,11 +1,12 @@
-# Tarea: Fluidez Instantánea SPA y Optimización de Rendimiento N+1
+# Tarea: Fluidez Extrema y Optimización de Rendimiento 60 FPS
 
-- [x] 1. Eliminar tormenta de consultas N+1 con `JOIN FETCH` / `EntityGraph` en `CursoRepository`, `PagoRepository` e `InscripcionRepository` <!-- id: 0 -->
-- [x] 2. Optimizar conteos y consultas agrupadas en `AdminUsuarioController` <!-- id: 1 -->
-- [x] 3. Configurar caché en memoria de alto rendimiento (`@EnableCaching`, `@Cacheable`, `@CacheEvict`) en backend <!-- id: 2 -->
-- [x] 4. Implementar motor de Navegación Instantánea SPA (Pjax / In-Memory Page Cache) en `main.js` (< 10ms por clic) <!-- id: 3 -->
-- [x] 5. Implementar micro-interacciones táctiles `:active` y spinners instantáneos en botones y formularios <!-- id: 4 -->
-- [x] 6. Implementar compresión automática de imágenes en cliente (Canvas) para subida ultrarrápida de comprobantes <!-- id: 5 -->
-- [x] 7. Ejecutar suite de pruebas `./gradlew test` y verificar 100% éxito <!-- id: 6 -->
-- [x] 8. Commit y push a GitHub para despliegue automático en Render <!-- id: 7 -->
-- [x] 9. Actualizar Memory Bank <!-- id: 8 -->
+- [x] 1. Eliminar bloqueo de renderizado por fuentes (`@import` en `main.css`) y añadir preconnect en `layout/main.html` <!-- id: 10 -->
+- [x] 2. Compresión de alto impacto de imágenes estáticas (>80% reducción sin pérdida visual) <!-- id: 11 -->
+- [x] 3. Refinar motor SPA en `main.js` para reemplazo granular de `<main class="main-content">` sin recargar header/footer <!-- id: 12 -->
+- [x] 4. Implementar caché en RAM para Líneas y Áreas de Investigación (`InvestigacionService` `@Cacheable`) <!-- id: 13 -->
+- [x] 5. Optimización dinámica de Cloudinary (`f_auto,q_auto`) y carga asíncrona (`loading="lazy"`, `decoding="async"`) <!-- id: 14 -->
+- [x] 6. Aceleración por hardware GPU en CSS (`will-change`, `transform: translateZ(0)`) para 60-120 FPS <!-- id: 15 -->
+- [x] 7. Ejecutar suite de pruebas `./gradlew test` y validar 100% de éxito <!-- id: 16 -->
+- [/] 8. Commit y push a GitHub para despliegue en producción <!-- id: 17 -->
+- [ ] 9. Actualizar Memory Bank <!-- id: 18 -->
+

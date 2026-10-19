@@ -6,9 +6,9 @@ import com.academy.cursos.model.Inscripcion;
 import com.academy.cursos.model.Pago;
 import com.academy.cursos.model.Usuario;
 import com.academy.cursos.model.enums.EstadoCurso;
-import com.academy.cursos.repository.AreaInvestigacionRepository;
 import com.academy.cursos.service.CursoService;
 import com.academy.cursos.service.InscripcionService;
+import com.academy.cursos.service.InvestigacionService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -35,15 +35,15 @@ import java.util.List;
 public class AdminCursoController {
 
     private final CursoService cursoService;
-    private final AreaInvestigacionRepository areaRepo;
+    private final InvestigacionService investigacionService;
     private final InscripcionService inscripcionService;
 
     public AdminCursoController(
             CursoService cursoService,
-            AreaInvestigacionRepository areaRepo,
+            InvestigacionService investigacionService,
             InscripcionService inscripcionService) {
         this.cursoService = cursoService;
-        this.areaRepo = areaRepo;
+        this.investigacionService = investigacionService;
         this.inscripcionService = inscripcionService;
     }
 
@@ -66,7 +66,7 @@ public class AdminCursoController {
         if (!model.containsAttribute("cursoDTO")) {
             model.addAttribute("cursoDTO", new CursoDTO());
         }
-        model.addAttribute("areas", areaRepo.findAll());
+        model.addAttribute("areas", investigacionService.listarAreas());
         model.addAttribute("estados", EstadoCurso.values());
         return "admin/cursos/form";
     }
@@ -79,7 +79,7 @@ public class AdminCursoController {
             RedirectAttributes redirectAttributes) {
 
         if (bindingResult.hasErrors()) {
-            model.addAttribute("areas", areaRepo.findAll());
+            model.addAttribute("areas", investigacionService.listarAreas());
             model.addAttribute("estados", EstadoCurso.values());
             return "admin/cursos/form";
         }
@@ -100,7 +100,7 @@ public class AdminCursoController {
                 .orElseThrow(() -> new IllegalArgumentException("Curso no encontrado"));
 
         model.addAttribute("cursoDTO", CursoDTO.fromEntity(curso));
-        model.addAttribute("areas", areaRepo.findAll());
+        model.addAttribute("areas", investigacionService.listarAreas());
         model.addAttribute("estados", EstadoCurso.values());
         return "admin/cursos/form";
     }

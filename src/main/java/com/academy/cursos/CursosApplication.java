@@ -19,6 +19,13 @@ public class CursosApplication {
 
 	@Bean
 	public CacheManager cacheManager() {
-		return new ConcurrentMapCacheManager("cursosPublicados", "cursosDestacados", "flyerPrincipal", "configPago");
+		return new ConcurrentMapCacheManager(
+				"cursosPublicados", 
+				"cursosDestacados", 
+				"flyerPrincipal", 
+				"configPago", 
+				"lineasInvestigacion", 
+				"areasInvestigacion"
+		);
 	}
 }

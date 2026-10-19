@@ -17,11 +17,14 @@
     cursor: pointer;
     transition: var(--transition);
     text-align: center;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    will-change: transform, box-shadow;
 }
 
 /* Micro-interacción táctil instantánea (0 ms) */
 .btn:active, button:active {
-    transform: scale(0.975);
+    transform: scale(0.975) translateZ(0);
     transition: transform 0.04s ease;
 }
 
@@ -255,6 +258,9 @@
     border-radius: var(--radius-md);
     overflow: hidden;
     transition: var(--transition);
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    will-change: box-shadow;
 }
 
 .card:hover {

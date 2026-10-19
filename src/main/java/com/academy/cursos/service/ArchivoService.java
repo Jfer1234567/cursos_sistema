@@ -66,6 +66,7 @@ public class ArchivoService {
                 ));
                 String secureUrl = (String) uploadResult.get("secure_url");
                 if (secureUrl != null && !secureUrl.isBlank()) {
+                    secureUrl = optimizarCloudinaryUrl(secureUrl);
                     log.info("Archivo subido con éxito a Cloudinary: {}", secureUrl);
                     return secureUrl;
                 }
@@ -106,5 +107,13 @@ public class ArchivoService {
         } catch (MalformedURLException e) {
             throw new RuntimeException("Error en la ruta del archivo: " + rutaRelativa, e);
         }
+    }
+
+    public static String optimizarCloudinaryUrl(String url) {
+        if (url == null || url.isBlank()) return url;
+        if (url.contains("cloudinary.com") && url.contains("/upload/") && !url.contains("/f_auto")) {
+            return url.replace("/upload/", "/upload/f_auto,q_auto/");
+        }
+        return url;
     }
 }
