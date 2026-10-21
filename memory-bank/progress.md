@@ -212,18 +212,8 @@
   - *Eliminación Segura con Validación:* En `CursoService.eliminar(id)`, se verifica mediante `InscripcionRepository.countByCursoId` que el curso tenga 0 alumnos inscritos. Si ya cuenta con inscritos, arroja advertencia amigable protegiendo la base de datos.
   - *Interfaz de Usuario:* Creada la "Zona de Peligro" al final de `admin/cursos/form.html` (al editar) y botón de eliminación rápida con icono de papelera en la tabla de `admin/cursos/lista.html`, ambos con diálogo interactivo de confirmación.
   - *Pruebas Unitarias:* Nuevos tests automatizados en `CursoFlyerTest.java` aprobados al 100% con Gradle.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+- [x] **Optimización de Usabilidad y Eliminación de Sobrecarga de Botones (Hick & Nielsen):**
+  - *Tabla de Cursos (`admin/cursos/lista.html`):* Sustitución de los 4 botones dispersos por fila por el patrón enterprise: Botón visible `[ Editar ]` (`btn-sm btn-outline-primary`) + Menú contextual desplegable `[ ⋮ ]` con accesos a *Ver Inscritos/Padrón*, *Estudio Flyer*, *Publicar/Quitar de Portada* y *Eliminar Curso* (con diálogo de confirmación y estilo de alerta destructiva). Se añadieron estilos de hover, scripts de interacción nativa (click outside y tecla Escape) y `min-height: 280px` en `table-responsive` para evitar desbordes.
+  - *Navbar Superior (`fragments/header.html`):* Depuración del botón redundante `Pagos` para el rol Administrador, dejando una barra limpia con `Inicio`, `Líneas`, `Cursos`, `Contacto`, `[ Panel Admin ]` y `[ Salir ]`.
+  - *Cabecera del Dashboard (`admin/dashboard.html`):* Reorganización con jerarquía visual estricta: `[ + Nuevo Curso ]` como el único botón primario sólido destacado (`btn-primary`), y los accesos a `Mensajes`, `Alumnos` y `Configurar Yape` agrupados como botones compactos secundarios (`btn-sm btn-outline`) con íconos vectoriales y badges de contador.
+  - *Verificación:* 30/30 tests unitarios y de integración ejecutados y aprobados al 100% con Gradle (`./gradlew test`). Sincronizado en rama `main` para despliegue continuo en Render.

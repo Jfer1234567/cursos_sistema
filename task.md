@@ -1,7 +1,7 @@
-# Tareas: Opción de Eliminar Curso y Corrección de Cursos Borrador/Finalizados en Inicio
+# Tareas: Optimización de Usabilidad y Eliminación de Sobrecarga de Botones
 
-- [x] 1. Corregir consulta del Flyer Destacado en `CursoRepository` y `CursoService` para restringir a `EstadoCurso.PUBLICADO` (evitando que borradores o finalizados aparezcan en el inicio) <!-- id: 40 -->
-- [x] 2. Implementar método seguro de eliminación en `CursoService` (validando 0 inscritos) y endpoint `@PostMapping("/{id}/eliminar")` en `AdminCursoController` <!-- id: 41 -->
-- [x] 3. Diseñar e integrar la "Zona de Peligro" con botón `Eliminar Curso` y diálogo de confirmación en `admin/cursos/form.html` (al editar) y botón de eliminación en `admin/cursos/lista.html` <!-- id: 42 -->
-- [x] 4. Ejecutar suite de pruebas con `./gradlew test` (validando 100% de éxito en tests de cursos) <!-- id: 43 -->
-- [x] 5. Commit y push a GitHub para despliegue en Render y actualización de Memory Bank <!-- id: 44 -->
+- [x] 1. Rediseñar columna de ACCIONES en `admin/cursos/lista.html` reemplazando los 4 botones dispersos por el patrón enterprise: Botón «Editar» + Menú contextual desplegable «⋮» <!-- id: 50 -->
+- [x] 2. Depurar el Navbar superior en `fragments/header.html` retirando el botón redundante «Pagos» para el rol Administrador <!-- id: 51 -->
+- [x] 3. Simplificar la cabecera del Dashboard administrativo en `admin/dashboard.html` destacando «+ Nuevo Curso» como única acción primaria y agrupando accesos secundarios <!-- id: 52 -->
+- [x] 4. Ejecutar verificación de compilación y pruebas con `./gradlew test` <!-- id: 53 -->
+- [/] 5. Sincronizar en GitHub `main` para Render y actualizar Memory Bank <!-- id: 54 -->

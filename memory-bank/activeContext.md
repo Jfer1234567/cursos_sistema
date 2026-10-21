@@ -176,10 +176,11 @@
 - Base de datos local: PostgreSQL `cursos_2`.
 - Integridad: 100% de tests pasando (30/30 tests ejecutados exitosamente).
 
+- **Optimización de Usabilidad y Eliminación de Sobrecarga de Botones (Leyes de Hick y Nielsen):**
+  - *Tabla de Cursos (`/admin/cursos`):* Se sustituyeron los 4 botones dispersos por fila (`Publicar Flyer`, `Inscritos`, `Editar`, `Eliminar`) por el patrón enterprise: Botón visible principal `[ Editar ]` y menú desplegable contextual `[ ⋮ ]` que contiene ordenadamente las acciones secundarias y la opción destructiva en rojo con confirmación nativa. Se dotó al contenedor de `min-height: 280px` para prevenir recortes verticales de menú en listas cortas.
+  - *Navbar de Administrador (`header.html`):* Se retiró el botón redundante `Pagos` para el rol Administrador, descongestionando el menú superior y centralizando la gestión a través del botón principal `[ Panel Admin ]`.
+  - *Cabecera del Dashboard (`admin/dashboard.html`):* Se estableció una jerarquía visual clara: `[ + Nuevo Curso ]` como único botón primario sólido (`btn-primary`), mientras que `Mensajes`, `Alumnos` y `Configurar Yape` se configuraron como botones de utilidad compactos (`btn-sm btn-outline`) con íconos vectoriales y contadores dinámicos.
+
 **Próximos Pasos:**
-- Monitoreo en vivo de la plataforma en producción.
+- Monitoreo en vivo de la plataforma en producción en Render tras el despliegue automático.
 - Carga de primeros cursos y flyers oficiales desde el panel de administración.
-
-
-
-

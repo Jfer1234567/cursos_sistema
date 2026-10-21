@@ -50,7 +50,6 @@
             <!-- Si está autenticado como ADMIN -->
             <div sec:authorize="hasRole('ADMIN')" class="nav-auth">
                 <a th:href="@{/admin}" class="btn btn-sm btn-primary">Panel Admin</a>
-                <a th:href="@{/admin/inscripciones/pendientes}" class="btn btn-sm btn-outline-primary">Pagos</a>
                 <form th:action="@{/logout}" method="post" style="display:inline;">
                     <button type="submit" class="btn btn-sm btn-secondary">Salir</button>
                 </form>

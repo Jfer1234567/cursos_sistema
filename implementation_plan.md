@@ -1,71 +1,49 @@
-# Plan de Implementación: Botón Eliminar Curso y Exclusión de Borradores en Portada
+# Plan de Implementación: Optimización de Usabilidad y Eliminación de Sobrecarga de Botones
 
-## 1. Diagnóstico del Problema Reportado
-El usuario ha detectado dos comportamientos críticos:
-1. **El curso en BORRADOR sigue apareciendo en el Inicio:**
-   - En la captura se observa el curso *"CIENCIA DE DATOS 2"* en estado `BORRADOR`.
-   - Sin embargo, en la portada (`/`) el afiche de ese curso sigue mostrándose como evento destacado.
-   - **Causa raíz:** En `CursoRepository` y `CursoService.obtenerFlyerPrincipal()`, el método `findFirstByFlyerPublicadoTrueAndFlyerUrlIsNotNullOrderByUpdatedAtDesc()` busca únicamente por `flyerPublicado = true`, **sin verificar que `c.estado == EstadoCurso.PUBLICADO`**. Por lo tanto, si el curso fue cambiado a `BORRADOR` o `FINALIZADO`, seguía figurando en la portada.
-2. **Falta de la opción Eliminar Curso:**
-   - El curso *"CIENCIA DE DATOS 2"* tiene **20/20 cupos libres (0 inscritos)**, por lo que es un curso de prueba que el usuario desea eliminar completamente.
-   - Actualmente no existe el botón ni el endpoint para eliminar cursos.
+## 1. Justificación y Fundamento de Usabilidad (Hick & Nielsen)
+El usuario solicita aplicar estándares de usabilidad y accesibilidad para reducir la saturación y sobrecarga visual de botones (*button fatigue / cognitive overload*) en las pantallas administrativas.
+
+### Diagnóstico de Sobrecarga Actual:
+1. **Tabla de Cursos (`/admin/cursos`):** Cada fila tiene hasta 4 botones dispersos (`Publicar Flyer`, `Inscritos`, `Editar`, `🗑️ Eliminar`), generando hasta 16 botones en una sola columna.
+2. **Navbar del Administrador (`header.html`):** Muestra el botón redundante `Pagos (X)` cuando ya existe `Panel Admin` con las tarjetas de métricas en grande.
+3. **Cabecera del Dashboard (`admin/dashboard.html`):** 4 botones compitiendo en línea superior (`Bandeja de Mensajes`, `Directorio de Alumnos`, `+ Nuevo Curso`, `Configurar Yape`).
 
 ---
 
 ## 2. Solución Propuesta
 
-### A. Exclusión Inmediata de Cursos no Publicados en Portada
-1. En `CursoRepository.java`:
-   - Reemplazar consultas de flyer para exigir `estado = :estado`:
-     ```java
-     Optional<Curso> findFirstByEstadoAndFlyerPublicadoTrueAndFlyerUrlIsNotNullOrderByUpdatedAtDesc(EstadoCurso estado);
-     List<Curso> findByEstadoAndFlyerPublicadoTrueAndFlyerUrlIsNotNullOrderByUpdatedAtDesc(EstadoCurso estado);
-     ```
-2. En `CursoService.java`:
-   - `obtenerFlyerPrincipal()` buscará exclusivamente cursos con `EstadoCurso.PUBLICADO`.
-   - En `cambiarEstado(id, nuevoEstado)` y `guardarOActualizar(cursoDTO)`: Si el estado cambia a `BORRADOR` o `FINALIZADO`, apagar automáticamente `flyerPublicado = false` e invalidar la caché `@CacheEvict(value = "flyerPrincipal")`.
+### A. Rediseño de la Tabla de Cursos (`admin/cursos/lista.html`)
+Implementar el estándar de las grandes plataformas (GitHub, Stripe, Linear):
+- **Botón Visible Principal:** **`Editar`** (`btn-sm btn-outline-primary`).
+- **Menú Contextual Desplegable (`⋮`):** Un botón compacto de tres puntos que despliega un menú flotante con:
+  - `👥 Ver Alumnos Inscritos` (`/admin/cursos/{id}/detalle`)
+  - `⭐ Mostrar / Quitar de Portada` (toggle de flyer)
+  - `🎨 Generar Flyer Oficial` (`/admin/flyer/curso/{id}`)
+  - `─────────────────────` (separador)
+  - `🗑️ Eliminar Curso` (opción en texto rojo con diálogo de confirmación)
+- **Resultado:** De 16 botones dispersos se pasa a **1 botón y 1 selector ordenado**, liberando espacio y permitiendo una tabla limpia y legible.
 
-### B. Implementación de Eliminación Segura de Cursos
-1. En `CursoService.java`:
-   - Inyectar `InscripcionRepository`.
-   - En `eliminar(Long id)`:
-     ```java
-     long inscritos = inscripcionRepository.countByCursoId(id);
-     if (inscritos > 0) {
-         throw new IllegalStateException("No se puede eliminar el curso porque ya cuenta con " + inscritos + " alumno(s) inscrito(s).");
-     }
-     cursoRepository.deleteById(id);
-     ```
-2. En `AdminCursoController.java`:
-   - Endpoint `@PostMapping("/{id}/eliminar")`:
-     - Invoca `cursoService.eliminar(id)`.
-     - Si tiene éxito: `redirectAttributes.addFlashAttribute("successMsg", "Curso eliminado exitosamente.")`.
-     - Si tiene inscritos o error: `redirectAttributes.addFlashAttribute("errorMsg", e.getMessage())`.
-     - Redirige a `/admin/cursos`.
+### B. Depuración del Menú de Navegación (`fragments/header.html`)
+- Retirar el enlace redundante `<a th:href="@{/admin/inscripciones/pendientes}">Pagos</a>` en el bloque de autenticación del administrador.
+- El navbar para el administrador queda limpio: `Inicio` | `Cursos` | `[ Panel Admin ]` | `[ Salir ]`.
 
-### C. Interfaz de Usuario: "Zona de Peligro" y Acciones Rápidas
-1. En `src/main/resources/templates/admin/cursos/form.html`:
-   - Cuando se esté editando (`th:if="${cursoDTO.id != null}"`), agregar debajo del formulario una **Zona de Peligro** destacada con fondo rojo suave (`#FEF2F2`) y borde institucional:
-     - Título: `Zona de Peligro`.
-     - Texto: `Eliminar permanentemente este curso. Esta acción no se puede deshacer y solo está permitida si el curso no cuenta con participantes inscritos.`
-     - Botón rojo: `🗑️ Eliminar este Curso` con confirmación nativa `onsubmit="return confirm('¿Estás seguro de que deseas eliminar permanentemente este curso?');"`.
-2. En `src/main/resources/templates/admin/cursos/lista.html`:
-   - En la columna de "ACCIONES", junto a `Editar`, agregar un botón `Eliminar` (icono de papelera) con confirmación, para poder borrar cursos con 0 inscritos sin necesidad de entrar a editar.
+### C. Jerarquía Visual en el Dashboard (`admin/dashboard.html`)
+- Mantener **`+ Nuevo Curso`** como el **único botón primario sólido** (`btn-primary`).
+- Diseñar los accesos a `Bandeja de Mensajes` y `Directorio de Alumnos` como enlaces de estado refinados o pastillas agrupadas (`nav-pills`), evitando la sensación de 4 botones toscos en hilera.
 
 ---
 
 ## 3. Archivos a Modificar
-- `src/main/java/com/academy/cursos/repository/CursoRepository.java` (añadir métodos de flyer con filtro de estado).
-- `src/main/java/com/academy/cursos/service/CursoService.java` (lógica de exclusión de flyer y validación de 0 inscritos al eliminar).
-- `src/main/java/com/academy/cursos/controller/admin/AdminCursoController.java` (endpoint `POST /{id}/eliminar`).
-- `src/main/resources/templates/admin/cursos/form.html` (Zona de Peligro con botón eliminar).
-- `src/main/resources/templates/admin/cursos/lista.html` (botón de eliminación en la tabla de cursos).
+- `src/main/resources/templates/admin/cursos/lista.html` (menú contextual desplegable `⋮`).
+- `src/main/resources/templates/fragments/header.html` (retirar botón redundante de Pagos).
+- `src/main/resources/templates/admin/dashboard.html` (jerarquía visual de botones superiores).
 
 ---
 
 ## 4. Plan de Verificación
-1. **Pruebas Automatizadas:** Ejecutar `./gradlew test` asegurando que todos los tests pasen al 100%.
-2. **Prueba de Eliminación de Curso:** Verificar que un curso con 0 inscritos se elimine limpiamente de la base de datos y de la lista.
-3. **Prueba de Integridad:** Verificar que un curso con inscritos arroje mensaje explicativo impidiendo la rotura de la base de datos.
-4. **Prueba de Portada:** Verificar que al cambiar un curso a `BORRADOR` o `FINALIZADO`, desaparezca inmediatamente del inicio.
-5. **Despliegue:** Sincronizar en GitHub `main` para Render.
+1. **Compilación y Pruebas:** Ejecutar `./gradlew test` asegurando que los 30 tests existentes pasen al 100%.
+2. **Verificación Visual:**
+   - Comprobar que el menú `⋮` en la tabla de cursos abra y cierre correctamente sin romper la tabla.
+   - Comprobar que las acciones (`Inscritos`, `Flyer`, `Eliminar`) sigan funcionando a través del menú.
+   - Comprobar que el navbar y el dashboard se vean limpios y ordenados.
+3. **Despliegue:** Sincronizar en GitHub `main` para Render.
