@@ -22,16 +22,19 @@ public class InscripcionService {
     private final CursoRepository cursoRepository;
     private final UsuarioRepository usuarioRepository;
     private final CertificadoService certificadoService;
+    private final CorreoService correoService;
 
     public InscripcionService(
             InscripcionRepository inscripcionRepository,
             CursoRepository cursoRepository,
             UsuarioRepository usuarioRepository,
-            @Lazy CertificadoService certificadoService) {
+            @Lazy CertificadoService certificadoService,
+            @Lazy CorreoService correoService) {
         this.inscripcionRepository = inscripcionRepository;
         this.cursoRepository = cursoRepository;
         this.usuarioRepository = usuarioRepository;
         this.certificadoService = certificadoService;
+        this.correoService = correoService;
     }
 
     @Transactional
@@ -54,7 +57,20 @@ public class InscripcionService {
             if (ins.getEstado() == EstadoInscripcion.PENDIENTE_VERIFICACION) {
                 throw new IllegalStateException("Tu comprobante ya fue enviado y se encuentra en proceso de verificación por la administración.");
             }
-            // Si está PENDIENTE_PAGO o RECHAZADA, permite ingresar para regularizar el voucher
+            // Si el curso es gratuito y la inscripción estaba en PENDIENTE_PAGO o RECHAZADA, la aprobamos de inmediato
+            if (curso.esGratuito()) {
+                ins.setEstado(EstadoInscripcion.APROBADA);
+                if (curso.getCuposDisponibles() > 0) {
+                    curso.setCuposDisponibles(curso.getCuposDisponibles() - 1);
+                    cursoRepository.save(curso);
+                }
+                Inscripcion guardada = inscripcionRepository.save(ins);
+                if (correoService != null) {
+                    correoService.enviarInscripcionGratuitaConfirmada(usuario, curso);
+                }
+                return guardada;
+            }
+            // Si está PENDIENTE_PAGO o RECHAZADA en curso de pago, permite ingresar para regularizar el voucher
             return ins;
         }
 
@@ -65,8 +81,20 @@ public class InscripcionService {
         Inscripcion inscripcion = new Inscripcion();
         inscripcion.setUsuario(usuario);
         inscripcion.setCurso(curso);
-        inscripcion.setEstado(EstadoInscripcion.PENDIENTE_PAGO);
 
+        // Si el curso es gratuito (S/ 0.00), matrícula y aprobación inmediata sin Yape
+        if (curso.esGratuito()) {
+            inscripcion.setEstado(EstadoInscripcion.APROBADA);
+            curso.setCuposDisponibles(curso.getCuposDisponibles() - 1);
+            cursoRepository.save(curso);
+            Inscripcion guardada = inscripcionRepository.save(inscripcion);
+            if (correoService != null) {
+                correoService.enviarInscripcionGratuitaConfirmada(usuario, curso);
+            }
+            return guardada;
+        }
+
+        inscripcion.setEstado(EstadoInscripcion.PENDIENTE_PAGO);
         return inscripcionRepository.save(inscripcion);
     }
 

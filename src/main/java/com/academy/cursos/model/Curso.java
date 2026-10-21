@@ -154,6 +154,11 @@ public class Curso {
     public void setFlyerUrl(String flyerUrl) { this.flyerUrl = flyerUrl; }
     public Boolean getFlyerPublicado() { return flyerPublicado != null && flyerPublicado; }
     public void setFlyerPublicado(Boolean flyerPublicado) { this.flyerPublicado = flyerPublicado; }
+
+    public boolean esGratuito() {
+        return precio == null || precio.compareTo(BigDecimal.ZERO) <= 0;
+    }
+
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }

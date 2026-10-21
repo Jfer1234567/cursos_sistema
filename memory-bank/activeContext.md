@@ -181,6 +181,12 @@
   - *Navbar de Administrador (`header.html`):* Se retiró el botón redundante `Pagos` para el rol Administrador, descongestionando el menú superior y centralizando la gestión a través del botón principal `[ Panel Admin ]`.
   - *Cabecera del Dashboard (`admin/dashboard.html`):* Se estableció una jerarquía visual clara: `[ + Nuevo Curso ]` como único botón primario sólido (`btn-primary`), mientras que `Mensajes`, `Alumnos` y `Configurar Yape` se configuraron como botones de utilidad compactos (`btn-sm btn-outline`) con íconos vectoriales y contadores dinámicos.
 
+- **Soporte Integral para Cursos Gratuitos (Acceso Libre) sin Yape:**
+  - *Dominio y Lógica de Servicio:* Método `esGratuito()` en `Curso`. Si `precio <= 0`, `InscripcionService.iniciarInscripcion()` asigna de inmediato el estado `APROBADA`, decrementa los cupos disponibles y envía el correo con enlaces de Meet y WhatsApp.
+  - *Omisión de Yape en UI/Controlador:* `InscripcionController` redirige directamente al dashboard del alumno evitando la pasarela de pagos.
+  - *Identidad Visual:* Badges verdes `GRATIS / Acceso Libre` en catálogo, detalle de curso y portada institucional. En el listado administrativo se muestra `Gratis`, y en el formulario se documenta `0.00` como clave de gratuidad.
+  - *Pruebas:* Suite ampliada a 31 pruebas automatizadas con 100% de éxito.
+
 **Próximos Pasos:**
 - Monitoreo en vivo de la plataforma en producción en Render tras el despliegue automático.
 - Carga de primeros cursos y flyers oficiales desde el panel de administración.

@@ -76,6 +76,26 @@ public class CorreoService {
         enviarCorreoSeguro(u.getCorreo(), asunto, contenido);
     }
 
+    public void enviarInscripcionGratuitaConfirmada(Usuario u, Curso c) {
+        String asunto = "¡Inscripción confirmada! — Acceso Libre a " + c.getNombre();
+        String enlace = (c.getEnlaceClase() != null && !c.getEnlaceClase().isBlank())
+                ? c.getEnlaceClase()
+                : "Se publicará en tu panel de participante antes de iniciar las clases.";
+
+        String enlaceWsp = (c.getEnlaceWhatsapp() != null && !c.getEnlaceWhatsapp().isBlank())
+                ? "\nGrupo Oficial de WhatsApp (comunicados y material de clase):\n" + c.getEnlaceWhatsapp() + "\n"
+                : "";
+
+        String contenido = "Estimado(a) " + u.getNombreCompleto() + ",\n\n" +
+                "Tu inscripción al curso de acceso libre \"" + c.getNombre() + "\" ha sido CONFIRMADA CON ÉXITO.\n\n" +
+                "Enlace de acceso a las sesiones virtuales (Zoom/Meet):\n" + enlace + "\n" +
+                enlaceWsp + "\n" +
+                "Puedes ingresar en cualquier momento a tu panel de participante para consultar tus cursos activos.\n\n" +
+                "¡Muchos éxitos en tu capacitación!\n" +
+                "Atentamente,\nDirectiva IIICCD";
+        enviarCorreoSeguro(u.getCorreo(), asunto, contenido);
+    }
+
     public void enviarPagoRechazado(Usuario u, Curso c, String motivo) {
         String asunto = "Observación en tu comprobante de pago — " + c.getNombre();
         String contenido = "Estimado(a) " + u.getNombreCompleto() + ",\n\n" +

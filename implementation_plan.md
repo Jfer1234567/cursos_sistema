@@ -1,49 +1,64 @@
-# Plan de Implementación: Optimización de Usabilidad y Eliminación de Sobrecarga de Botones
+# Plan de Implementación: Soporte Integral para Cursos Gratuitos (Acceso Libre) sin Yape
 
-## 1. Justificación y Fundamento de Usabilidad (Hick & Nielsen)
-El usuario solicita aplicar estándares de usabilidad y accesibilidad para reducir la saturación y sobrecarga visual de botones (*button fatigue / cognitive overload*) en las pantallas administrativas.
-
-### Diagnóstico de Sobrecarga Actual:
-1. **Tabla de Cursos (`/admin/cursos`):** Cada fila tiene hasta 4 botones dispersos (`Publicar Flyer`, `Inscritos`, `Editar`, `🗑️ Eliminar`), generando hasta 16 botones en una sola columna.
-2. **Navbar del Administrador (`header.html`):** Muestra el botón redundante `Pagos (X)` cuando ya existe `Panel Admin` con las tarjetas de métricas en grande.
-3. **Cabecera del Dashboard (`admin/dashboard.html`):** 4 botones compitiendo en línea superior (`Bandeja de Mensajes`, `Directorio de Alumnos`, `+ Nuevo Curso`, `Configurar Yape`).
+## 1. Justificación y Objetivos de Negocio
+Permitir que el Instituto IIICCD ofrezca capacitaciones, talleres introductorios y webinars de **Acceso Libre y Gratuito (Precio: S/ 0.00)** sin fricción para los participantes:
+1. **Omisión Absoluta del Paso de Pago:** Un curso con costo cero no debe solicitar transferencia por Yape, captura de pantalla de comprobante ni número de operación.
+2. **Matrícula Inmediata (Zero-Click Payment):** Al hacer clic en «Inscribirme Gratis», el sistema aprueba inmediatamente la inscripción (`APROBADA`), descuenta el cupo disponible y le otorga acceso al enlace de Meet/Zoom y grupo de WhatsApp al instante.
+3. **Claridad Visual:** En catálogo, detalle y portada, sustituir el texto `S/ 0.00` por insignias atractivas de **`GRATIS`** o **`ACCESO LIBRE`** y botones con texto específico: **`Inscribirme Gratis`**.
 
 ---
 
-## 2. Solución Propuesta
+## 2. Cambios Técnicos Detallados
 
-### A. Rediseño de la Tabla de Cursos (`admin/cursos/lista.html`)
-Implementar el estándar de las grandes plataformas (GitHub, Stripe, Linear):
-- **Botón Visible Principal:** **`Editar`** (`btn-sm btn-outline-primary`).
-- **Menú Contextual Desplegable (`⋮`):** Un botón compacto de tres puntos que despliega un menú flotante con:
-  - `👥 Ver Alumnos Inscritos` (`/admin/cursos/{id}/detalle`)
-  - `⭐ Mostrar / Quitar de Portada` (toggle de flyer)
-  - `🎨 Generar Flyer Oficial` (`/admin/flyer/curso/{id}`)
-  - `─────────────────────` (separador)
-  - `🗑️ Eliminar Curso` (opción en texto rojo con diálogo de confirmación)
-- **Resultado:** De 16 botones dispersos se pasa a **1 botón y 1 selector ordenado**, liberando espacio y permitiendo una tabla limpia y legible.
+### A. Modelo de Dominio (`Curso.java`)
+- Añadir método de conveniencia:
+  ```java
+  public boolean esGratuito() {
+      return precio == null || precio.compareTo(BigDecimal.ZERO) <= 0;
+  }
+  ```
 
-### B. Depuración del Menú de Navegación (`fragments/header.html`)
-- Retirar el enlace redundante `<a th:href="@{/admin/inscripciones/pendientes}">Pagos</a>` en el bloque de autenticación del administrador.
-- El navbar para el administrador queda limpio: `Inicio` | `Cursos` | `[ Panel Admin ]` | `[ Salir ]`.
+### B. Capa de Servicios (`InscripcionService.java`)
+- En `iniciarInscripcion(Long usuarioId, Long cursoId)`:
+  - Validar cupos disponibles > 0.
+  - Si `curso.esGratuito()`:
+    - Asignar estado directo: `inscripcion.setEstado(EstadoInscripcion.APROBADA);`
+    - Descontar cupo: `curso.setCuposDisponibles(curso.getCuposDisponibles() - 1); cursoRepository.save(curso);`
+    - Enviar correo transaccional de bienvenida y confirmación de acceso inmediato.
+    - Persistir y retornar la inscripción aprobada.
 
-### C. Jerarquía Visual en el Dashboard (`admin/dashboard.html`)
-- Mantener **`+ Nuevo Curso`** como el **único botón primario sólido** (`btn-primary`).
-- Diseñar los accesos a `Bandeja de Mensajes` y `Directorio de Alumnos` como enlaces de estado refinados o pastillas agrupadas (`nav-pills`), evitando la sensación de 4 botones toscos en hilera.
+### C. Controlador de Inscripción (`InscripcionController.java`)
+- En `iniciarInscripcion`:
+  - Si la inscripción resultante está en estado `APROBADA`, redirigir directamente a `/participante/dashboard` con mensaje flash de éxito:
+    *«¡Inscripción exitosa! Tienes acceso inmediato al curso gratuito [Nombre]. Enlaces y materiales disponibles en tu panel.»*
+- En `verFormularioPago`:
+  - Si la inscripción ya está `APROBADA` o el curso es gratuito, redirigir a `/participante/dashboard` evitando que el usuario acceda a la vista de Yape.
+
+### D. Vistas Frontend (Thymeleaf)
+- **`public/catalogo.html`:**
+  - Si `curso.esGratuito()` o `curso.precio.compareTo(T(java.math.BigDecimal).ZERO) <= 0`:
+    - Mostrar badge verde: `<span class="badge badge-success" style="background: #059669; color: #FFFFFF; font-weight: 700;">GRATIS</span>`.
+    - Botón de tarjeta: `Ver Detalles (Acceso Libre)`.
+- **`public/curso-detalle.html`:**
+  - Bloque de inversión: Reemplazar el monto en soles por caja verde destacada **`Curso 100% Gratuito - Acceso Libre`**.
+  - Botón principal de llamada a la acción: `<button type="submit" class="btn btn-primary btn-block">Inscribirme Gratis (Acceso Inmediato)</button>`.
+  - Nota informativa aclarando que no requiere pago ni comprobante.
+- **`public/index.html`:**
+  - En la sección de flyer destacado y próximos cursos, mostrar el badge de curso gratuito si corresponde.
+- **`admin/cursos/lista.html`:**
+  - Columna de precio: Si es 0, mostrar `<span class="badge badge-success">Gratis</span>` en vez de `S/ 0.00`.
+- **`admin/cursos/form.html`:**
+  - Texto de ayuda en campo precio: *"Ingresa 0.00 si deseas que el curso sea gratuito (los alumnos se inscribirán de forma automática y directa sin solicitar Yape)."*
 
 ---
 
-## 3. Archivos a Modificar
-- `src/main/resources/templates/admin/cursos/lista.html` (menú contextual desplegable `⋮`).
-- `src/main/resources/templates/fragments/header.html` (retirar botón redundante de Pagos).
-- `src/main/resources/templates/admin/dashboard.html` (jerarquía visual de botones superiores).
-
----
-
-## 4. Plan de Verificación
-1. **Compilación y Pruebas:** Ejecutar `./gradlew test` asegurando que los 30 tests existentes pasen al 100%.
-2. **Verificación Visual:**
-   - Comprobar que el menú `⋮` en la tabla de cursos abra y cierre correctamente sin romper la tabla.
-   - Comprobar que las acciones (`Inscritos`, `Flyer`, `Eliminar`) sigan funcionando a través del menú.
-   - Comprobar que el navbar y el dashboard se vean limpios y ordenados.
-3. **Despliegue:** Sincronizar en GitHub `main` para Render.
+## 3. Plan de Verificación
+1. **Pruebas Automatizadas Unitarias:**
+   - Crear test `testInscripcionCursoGratuitoAprobacionInmediata()` en `MejorasProfesionalesTest.java`:
+     - Asignar `precio = 0.00` a un curso con cupos disponibles.
+     - Invocar `iniciarInscripcion`.
+     - Validar que el estado retornado sea `APROBADA` y los cupos hayan disminuido en 1.
+2. **Suite Completa:**
+   - Ejecutar `./gradlew test` asegurando que el 100% de las pruebas pasen sin regresiones.
+3. **Despliegue y Validación:**
+   - Sincronizar en GitHub `main` para Render y verificar en servidor local.

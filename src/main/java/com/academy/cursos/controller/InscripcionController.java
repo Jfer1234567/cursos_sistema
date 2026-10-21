@@ -4,6 +4,7 @@ import com.academy.cursos.dto.PagoDTO;
 import com.academy.cursos.model.ConfigPago;
 import com.academy.cursos.model.Inscripcion;
 import com.academy.cursos.model.Usuario;
+import com.academy.cursos.model.enums.EstadoInscripcion;
 import com.academy.cursos.service.ConfigPagoService;
 import com.academy.cursos.service.InscripcionService;
 import com.academy.cursos.service.PagoService;
@@ -51,6 +52,12 @@ public class InscripcionController {
 
         try {
             Inscripcion inscripcion = inscripcionService.iniciarInscripcion(usuario.getId(), cursoId);
+            if (inscripcion.getEstado() == EstadoInscripcion.APROBADA) {
+                redirectAttributes.addFlashAttribute("successMsg",
+                        "¡Inscripción exitosa! Te has matriculado correctamente al curso gratuito \"" +
+                        inscripcion.getCurso().getNombre() + "\". Ya tienes acceso inmediato a los enlaces de clases y materiales.");
+                return "redirect:/participante/dashboard";
+            }
             return "redirect:/inscripcion/" + inscripcion.getId();
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMsg", e.getMessage());
@@ -73,6 +80,13 @@ public class InscripcionController {
         // Seguridad: verificar que pertenezca al usuario autenticado (o admin)
         if (!inscripcion.getUsuario().getId().equals(usuario.getId()) &&
                 !usuario.getRol().name().equals("ADMIN")) {
+            return "redirect:/participante/dashboard";
+        }
+
+        // Si el curso es gratuito o ya está aprobada, redirigir al dashboard evitando la pasarela de Yape
+        if (inscripcion.getCurso().esGratuito() ||
+                inscripcion.getEstado() == EstadoInscripcion.APROBADA ||
+                inscripcion.getEstado() == EstadoInscripcion.COMPLETADA) {
             return "redirect:/participante/dashboard";
         }
 

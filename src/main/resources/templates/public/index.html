@@ -131,11 +131,15 @@
 
                     <!-- Tarifas Oficiales Diferenciadas -->
                     <div class="flyer-destacado-precios">
-                        <div class="flyer-precio-pill">
+                        <div th:if="${flyerDestacado.esGratuito()}" class="flyer-precio-pill" style="border-color: #10B981; background: rgba(16,185,129,0.1);">
+                            <div class="label" style="color: #065F46;">Modalidad</div>
+                            <div class="amount" style="color: #047857;">Acceso Libre (Gratuito)</div>
+                        </div>
+                        <div th:unless="${flyerDestacado.esGratuito()}" class="flyer-precio-pill">
                             <div class="label">Público General</div>
                             <div class="amount" th:text="${'S/ ' + flyerDestacado.precio}">S/ 120.00</div>
                         </div>
-                        <div th:if="${flyerDestacado.precioComunidad != null}" class="flyer-precio-pill-una">
+                        <div th:if="${!flyerDestacado.esGratuito() and flyerDestacado.precioComunidad != null}" class="flyer-precio-pill-una">
                             <span class="tag-beneficio">Beneficio UNA</span>
                             <div class="label">Comunidad UNA Puno</div>
                             <div class="amount" th:text="${'S/ ' + flyerDestacado.precioComunidad}">S/ 80.00</div>
@@ -146,7 +150,10 @@
                     <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
                         <a th:href="@{'/cursos/' + ${flyerDestacado.id}}" class="flyer-btn-cta">
                             <span sec:authorize="hasRole('ADMIN')">Ver Detalles del Curso</span>
-                            <span sec:authorize="!hasRole('ADMIN')">Inscribirme en este Curso</span>
+                            <span sec:authorize="!hasRole('ADMIN')">
+                                <span th:if="${flyerDestacado.esGratuito()}">Inscribirme Gratis &rarr;</span>
+                                <span th:unless="${flyerDestacado.esGratuito()}">Inscribirme en este Curso</span>
+                            </span>
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                 <line x1="5" y1="12" x2="19" y2="12"></line>
                                 <polyline points="12 5 19 12 12 19"></polyline>

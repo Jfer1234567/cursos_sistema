@@ -85,9 +85,13 @@
                     <div class="curso-cover-bottom">
                         <span class="curso-cover-linea" th:text="${c.areaInvestigacion.lineaInvestigacion.nombre}">Línea</span>
                         <div class="curso-cover-price-box">
-                            <div class="curso-cover-price" th:text="${'S/ ' + c.precio}">S/ 150.00</div>
-                            <div th:if="${c.precioComunidad != null}" class="curso-cover-subprice">
+                            <div th:if="${c.esGratuito()}" class="curso-cover-price" style="color: #10B981; font-weight: 800; text-shadow: 0 1px 2px rgba(0,0,0,0.5);">GRATIS</div>
+                            <div th:unless="${c.esGratuito()}" class="curso-cover-price" th:text="${'S/ ' + c.precio}">S/ 150.00</div>
+                            <div th:if="${!c.esGratuito() and c.precioComunidad != null}" class="curso-cover-subprice">
                                 UNA: S/ <span th:text="${c.precioComunidad}">100.00</span>
+                            </div>
+                            <div th:if="${c.esGratuito()}" class="curso-cover-subprice" style="color: #E2E8F0;">
+                                Acceso Libre
                             </div>
                         </div>
                     </div>
@@ -149,10 +153,10 @@
                             </a>
                         </div>
 
-                        <!-- Si NO es Admin y no está inscrito o es visitante -->
                         <div sec:authorize="!hasRole('ADMIN')" th:unless="${misInscripcionesMap != null and misInscripcionesMap.containsKey(c.id) and (misInscripcionesMap.get(c.id).estado.name() == 'APROBADA' or misInscripcionesMap.get(c.id).estado.name() == 'COMPLETADA' or misInscripcionesMap.get(c.id).estado.name() == 'PENDIENTE_VERIFICACION')}">
                             <a th:href="@{'/cursos/' + ${c.id}}" class="btn btn-primary btn-block">
-                                Ver Detalles e Inscribirme
+                                <span th:if="${c.esGratuito()}">Inscribirme Gratis &rarr;</span>
+                                <span th:unless="${c.esGratuito()}">Ver Detalles e Inscribirme</span>
                             </a>
                         </div>
                     </div>

@@ -51,7 +51,10 @@
                                     <div th:text="${curso.areaInvestigacion.nombre}" style="font-size: 0.8rem; color: var(--text-muted);">Área</div>
                                 </td>
                                 <td th:text="${curso.docenteResponsable}">Docente</td>
-                                <td><strong th:text="${'S/ ' + curso.precio}">S/ 120.00</strong></td>
+                                <td>
+                                    <span th:if="${curso.esGratuito()}" class="badge badge-success" style="font-weight: 700; background: #059669; color: white;">Gratis</span>
+                                    <strong th:unless="${curso.esGratuito()}" th:text="${'S/ ' + curso.precio}">S/ 120.00</strong>
+                                </td>
                                 <td th:text="${curso.cuposDisponibles + ' / ' + curso.cuposTotales}">10/20</td>
                                 <td>
                                     <span th:if="${curso.estado.name() == 'PUBLICADO'}" class="badge badge-success">Publicado</span>

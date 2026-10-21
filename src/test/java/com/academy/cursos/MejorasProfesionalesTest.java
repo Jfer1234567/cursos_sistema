@@ -10,6 +10,7 @@ import com.academy.cursos.model.Usuario;
 import com.academy.cursos.model.Inscripcion;
 import com.academy.cursos.model.enums.EstadoInscripcion;
 import com.academy.cursos.repository.AreaInvestigacionRepository;
+import com.academy.cursos.repository.CursoRepository;
 import com.academy.cursos.repository.InscripcionRepository;
 import com.academy.cursos.repository.UsuarioRepository;
 import com.academy.cursos.service.CursoService;
@@ -33,6 +34,9 @@ public class MejorasProfesionalesTest {
 
     @Autowired
     private CursoService cursoService;
+
+    @Autowired
+    private CursoRepository cursoRepo;
 
     @Autowired
     private AreaInvestigacionRepository areaRepo;
@@ -203,6 +207,40 @@ public class MejorasProfesionalesTest {
                 (java.util.List<AdminUsuarioController.CursoTabItem>) modelCurso.getAttribute("cursosTabs");
         assertNotNull(cursosTabs);
         assertFalse(cursosTabs.isEmpty(), "Debe haber opciones de cursos generadas para el menú desplegable");
+    }
+
+    @Test
+    void testInscripcionCursoGratuitoAprobacionInmediata() {
+        Usuario usuario = usuarioRepo.findAll().stream().findFirst().orElseThrow();
+
+        // 1. Crear un curso gratuito de prueba con S/ 0.00
+        Curso cursoGratis = new Curso();
+        cursoGratis.setNombre("Taller Gratuito de Introducción a Python");
+        cursoGratis.setDescripcionCorta("Taller libre.");
+        cursoGratis.setDescripcion("Contenido introductorio libre.");
+        cursoGratis.setAreaInvestigacion(areaRepo.findAll().stream().findFirst().orElseThrow());
+        cursoGratis.setDocenteResponsable("Docente Invitado");
+        cursoGratis.setDuracion("10 horas");
+        cursoGratis.setCreditos(1);
+        cursoGratis.setPrecio(BigDecimal.ZERO);
+        cursoGratis.setCuposTotales(15);
+        cursoGratis.setCuposDisponibles(15);
+        cursoGratis.setEstado(EstadoCurso.PUBLICADO);
+        cursoGratis = cursoRepo.save(cursoGratis);
+
+        assertTrue(cursoGratis.esGratuito(), "El curso debe ser identificado como gratuito (precio 0.00)");
+
+        // 2. Ejecutar matrícula directa
+        Inscripcion ins = inscripcionService.iniciarInscripcion(usuario.getId(), cursoGratis.getId());
+
+        // 3. Validar aprobación automática e inmediata (sin pasar por PENDIENTE_PAGO)
+        assertNotNull(ins.getId());
+        assertEquals(EstadoInscripcion.APROBADA, ins.getEstado(),
+                "La inscripción a un curso gratuito debe quedar inmediatamente en estado APROBADA");
+
+        // 4. Validar que los cupos disponibles se redujeron en 1
+        Curso cursoActualizado = cursoRepo.findById(cursoGratis.getId()).orElseThrow();
+        assertEquals(14, cursoActualizado.getCuposDisponibles(), "El cupo disponible debió decrementarse en 1");
     }
 }
 
