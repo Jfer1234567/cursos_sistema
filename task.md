@@ -4,4 +4,4 @@
 - [x] 2. Depurar el Navbar superior en `fragments/header.html` retirando el botón redundante «Pagos» para el rol Administrador <!-- id: 51 -->
 - [x] 3. Simplificar la cabecera del Dashboard administrativo en `admin/dashboard.html` destacando «+ Nuevo Curso» como única acción primaria y agrupando accesos secundarios <!-- id: 52 -->
 - [x] 4. Ejecutar verificación de compilación y pruebas con `./gradlew test` <!-- id: 53 -->
-- [/] 5. Sincronizar en GitHub `main` para Render y actualizar Memory Bank <!-- id: 54 -->
+- [x] 5. Sincronizar en GitHub `main` para Render y actualizar Memory Bank <!-- id: 54 -->
