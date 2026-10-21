@@ -207,6 +207,11 @@
   - *Automatización de Capturas HD:* Script Playwright con Microsoft Edge headless que capturó en alta resolución las 19 pantallas de la plataforma en producción (Hero, Flyer Destacado, Catálogo, Ficha de Curso, Registro, Login Split-Screen, Dashboard Participante, Diploma de Honor con QR, Verificador Universal, Dashboard Admin, Gestión de Cursos con paginación, Formulario con Foto de Ponente, Flyer Studio, Bandeja de Pagos Yape, Directorio con Filtro Desplegable, Bandeja de Mensajes, Configuración Yape/QR, Lista de Certificados y Quiénes Somos).
   - *Compilación en Word de Gala (.docx):* Generador en Python (`informe/generar_manual_usuario.py`) con membrete institucional UNA Puno - FINESI - IIICCD, paleta de colores Granate/Oro/Azul Marino, tablas estilizadas, callouts con borde lateral, pasos numerados, epígrafes formales de figuras y bloque de firmas de conformidad.
   - *Documento Generado:* Ubicado en `informe/Manual_de_Usuario_Sistema_Cursos_IIICCD.docx` con un peso de 4.4 MB y estructura de nivel profesional listo para jurados y entrega directiva.
+- [x] **Eliminación Segura de Cursos y Exclusión de Borradores en el Inicio:**
+  - *Exclusión de Portada:* Restringido `CursoRepository` y `CursoService.obtenerFlyerPrincipal()` para exigir `estado == EstadoCurso.PUBLICADO`. Si un curso pasa a `BORRADOR` o `FINALIZADO`, se oculta de inmediato y automáticamente del Inicio, desactivando el switch de flyer.
+  - *Eliminación Segura con Validación:* En `CursoService.eliminar(id)`, se verifica mediante `InscripcionRepository.countByCursoId` que el curso tenga 0 alumnos inscritos. Si ya cuenta con inscritos, arroja advertencia amigable protegiendo la base de datos.
+  - *Interfaz de Usuario:* Creada la "Zona de Peligro" al final de `admin/cursos/form.html` (al editar) y botón de eliminación rápida con icono de papelera en la tabla de `admin/cursos/lista.html`, ambos con diálogo interactivo de confirmación.
+  - *Pruebas Unitarias:* Nuevos tests automatizados en `CursoFlyerTest.java` aprobados al 100% con Gradle.
 
 
 

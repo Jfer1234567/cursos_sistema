@@ -135,6 +135,19 @@ public class AdminCursoController {
         return "redirect:/admin/cursos";
     }
 
+    @PostMapping("/{id}/eliminar")
+    public String eliminarCurso(
+            @PathVariable Long id,
+            RedirectAttributes redirectAttributes) {
+        try {
+            cursoService.eliminar(id);
+            redirectAttributes.addFlashAttribute("successMsg", "Curso eliminado exitosamente del sistema.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMsg", e.getMessage());
+        }
+        return "redirect:/admin/cursos";
+    }
+
     @GetMapping("/{id}/detalle")
     public String detalleCurso(@PathVariable Long id, Model model) {
         Curso curso = cursoService.obtenerPorId(id)

@@ -30,4 +30,8 @@ public interface CursoRepository extends JpaRepository<Curso, Long> {
     List<Curso> findByFlyerPublicadoTrueAndFlyerUrlIsNotNullOrderByUpdatedAtDesc();
 
     Optional<Curso> findFirstByFlyerPublicadoTrueAndFlyerUrlIsNotNullOrderByUpdatedAtDesc();
+
+    List<Curso> findByEstadoAndFlyerPublicadoTrueAndFlyerUrlIsNotNullOrderByUpdatedAtDesc(EstadoCurso estado);
+
+    Optional<Curso> findFirstByEstadoAndFlyerPublicadoTrueAndFlyerUrlIsNotNullOrderByUpdatedAtDesc(EstadoCurso estado);
 }

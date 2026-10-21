@@ -1,74 +1,71 @@
-# Plan de Implementación: Manual de Usuario Oficial con Capturas de Pantalla Reales
+# Plan de Implementación: Botón Eliminar Curso y Exclusión de Borradores en Portada
 
-## 1. Objetivo y Justificación
-Generar un **Manual de Usuario Completo, Profesional e Ilustrado con Capturas de Pantalla Reales** del Sistema Web de Gestión de Cursos y Certificación Oficial del Instituto de Investigación en Inteligencia Computacional y Ciencia de Datos (IIICCD - FINESI - UNA Puno).
-
-El documento se generará en formato **Microsoft Word (`.docx`)** en la carpeta `informe/`, complementando el Informe Técnico IEEE 830 previamente elaborado, listo para ser entregado a la directiva del instituto, jurados e ingenieros evaluadores.
-
----
-
-## 2. Estructura y Módulos del Manual
-
-### Portada y Datos Institucionales
-- Logotipo oficial del IIICCD y membrete de la Universidad Nacional del Altiplano - FINESI.
-- Título formal: *Manual de Usuario y Operación del Sistema Web de Cursos y Certificación Digital*.
-- Metadatos académicos: Versión 1.0, fecha, roles autorizados, ámbito de aplicación.
-
-### Parte 1: Guía del Participante (Estudiante / Investigador)
-1. **Acceso al Portal y Catálogo:** Navegación, búsqueda de cursos por línea de investigación y consulta de vacantes/tarifas (Comunidad UNA vs. General).
-2. **Registro de Cuenta:** Formulario validado con DNI (8 dígitos) y WhatsApp (9 dígitos).
-3. **Inicio de Sesión y Recuperación:** Autenticación protegida con visualización de contraseña.
-4. **Ficha de Curso y Matrícula:** Revisión del perfil del docente, temario, horas académicas y créditos.
-5. **Proceso de Pago con Yape:** Escaneo del QR institucional, ingreso del código de operación y subida del comprobante (con autocompresión en cliente).
-6. **Aula Virtual y Comunidad:** Acceso protegido a los enlaces de clases en vivo (Zoom/Google Meet) y botón para unirse al grupo oficial de WhatsApp tras la aprobación.
-7. **Diploma Digital Oficial:** Visualización del certificado con orla de gala, descarga en PDF 300 DPI, botón «Añadir a LinkedIn» y botón para recibirlo por WhatsApp.
-
-### Parte 2: Guía de la Directiva y Operación (Administrador)
-1. **Dashboard y Métricas:** Lectura de indicadores en tiempo real (Cursos activos, pagos pendientes, inscripciones aprobadas, certificados emitidos, usuarios y mensajes).
-2. **Gestión Integral de Cursos:** Creación, edición, asignación de fotografía y grado del ponente, control de cupos y enlaces de sesión virtual.
-3. **Estudio y Generador de Flyers Oficiales (`/admin/flyer`):** Diseño de afiches promocionales en tiempo real, selección de temas cromáticos (Granate, Cyber Dark, Esmeralda), formatos (4:5 y 1:1) y descarga en PNG Ultra HD.
-4. **Bandeja de Pagos y Comprobantes Yape (`/admin/inscripciones/pendientes`):** Visualización del comprobante, validación de código de operación, aprobación inmediata con reserva de cupo y rechazo con notas de retroalimentación.
-5. **Emisión de Certificados y Notificación WhatsApp:** Marcado de curso completado, generación de snapshots inmutables y botón «📲 Enviar Certificado por WhatsApp» al número del estudiante en un solo clic.
-6. **Directorio de Usuarios y Prospección (`/admin/usuarios`):** Búsqueda por DNI/nombre y filtrado reactivo con menú desplegable por curso matriculado o alumnos sin cursos.
-7. **Bandeja de Mensajes y Consultas (`/admin/mensajes`):** Atención de dudas enviadas desde el formulario de contacto con respuestas directas por correo (`mailto:`) y WhatsApp (`wa.me`).
-8. **Configuración de Cobros Yape y QR (`/admin/config/pago`):** Actualización de número celular, titular, instrucciones y reemplazo del código QR sin reiniciar el servidor.
-
-### Parte 3: Verificación Pública y Preguntas Frecuentes
-- Uso del validador público `/verificar` con código único `IIICCD-XXXXXX` o escaneo de QR.
-- Matriz de preguntas frecuentes y resolución de incidencias comunes.
+## 1. Diagnóstico del Problema Reportado
+El usuario ha detectado dos comportamientos críticos:
+1. **El curso en BORRADOR sigue apareciendo en el Inicio:**
+   - En la captura se observa el curso *"CIENCIA DE DATOS 2"* en estado `BORRADOR`.
+   - Sin embargo, en la portada (`/`) el afiche de ese curso sigue mostrándose como evento destacado.
+   - **Causa raíz:** En `CursoRepository` y `CursoService.obtenerFlyerPrincipal()`, el método `findFirstByFlyerPublicadoTrueAndFlyerUrlIsNotNullOrderByUpdatedAtDesc()` busca únicamente por `flyerPublicado = true`, **sin verificar que `c.estado == EstadoCurso.PUBLICADO`**. Por lo tanto, si el curso fue cambiado a `BORRADOR` o `FINALIZADO`, seguía figurando en la portada.
+2. **Falta de la opción Eliminar Curso:**
+   - El curso *"CIENCIA DE DATOS 2"* tiene **20/20 cupos libres (0 inscritos)**, por lo que es un curso de prueba que el usuario desea eliminar completamente.
+   - Actualmente no existe el botón ni el endpoint para eliminar cursos.
 
 ---
 
-## 3. Estrategia de Captura de Pantallas
-1. **Captura Automatizada:** Se utilizará un script auxiliar en Python o Microsoft Edge headless con resolución de alta densidad (1280x800 y 1440x900) para generar capturas limpias y nítidas de cada vista clave del sistema.
-2. **Imágenes Incluidas:**
-   - Portal de Inicio y Hero Institucional.
-   - Catálogo de Cursos con Badges y Buscador.
-   - Detalle del Curso con Ponente y Tarifas.
-   - Pantalla de Login Split-Screen Dual-Card.
-   - Pantalla de Registro con validaciones numéricas.
-   - Panel del Participante («Mis Cursos») con accesos a Zoom y Certificado.
-   - Diploma Digital Oficial y Verificador con Sello Dorado.
-   - Panel de Administración y Tarjetas de Métricas.
-   - Gestión de Cursos y Formulario con Subida de Foto del Docente.
-   - Generador de Flyers Oficiales del IIICCD.
-   - Bandeja de Pagos Pendientes con Comprobante Yape.
-   - Directorio de Usuarios con Menú Desplegable de Cursos.
-   - Bandeja de Mensajes de Contacto.
-   - Configuración de Cobros Yape y QR.
-3. **Formateo en Word:** Cada captura estará enmarcada, centrada, con sombreado sutil institucional y numerada formalmente (*"Figura 1: ..."*, *"Figura 2: ..."*).
+## 2. Solución Propuesta
+
+### A. Exclusión Inmediata de Cursos no Publicados en Portada
+1. En `CursoRepository.java`:
+   - Reemplazar consultas de flyer para exigir `estado = :estado`:
+     ```java
+     Optional<Curso> findFirstByEstadoAndFlyerPublicadoTrueAndFlyerUrlIsNotNullOrderByUpdatedAtDesc(EstadoCurso estado);
+     List<Curso> findByEstadoAndFlyerPublicadoTrueAndFlyerUrlIsNotNullOrderByUpdatedAtDesc(EstadoCurso estado);
+     ```
+2. En `CursoService.java`:
+   - `obtenerFlyerPrincipal()` buscará exclusivamente cursos con `EstadoCurso.PUBLICADO`.
+   - En `cambiarEstado(id, nuevoEstado)` y `guardarOActualizar(cursoDTO)`: Si el estado cambia a `BORRADOR` o `FINALIZADO`, apagar automáticamente `flyerPublicado = false` e invalidar la caché `@CacheEvict(value = "flyerPrincipal")`.
+
+### B. Implementación de Eliminación Segura de Cursos
+1. En `CursoService.java`:
+   - Inyectar `InscripcionRepository`.
+   - En `eliminar(Long id)`:
+     ```java
+     long inscritos = inscripcionRepository.countByCursoId(id);
+     if (inscritos > 0) {
+         throw new IllegalStateException("No se puede eliminar el curso porque ya cuenta con " + inscritos + " alumno(s) inscrito(s).");
+     }
+     cursoRepository.deleteById(id);
+     ```
+2. En `AdminCursoController.java`:
+   - Endpoint `@PostMapping("/{id}/eliminar")`:
+     - Invoca `cursoService.eliminar(id)`.
+     - Si tiene éxito: `redirectAttributes.addFlashAttribute("successMsg", "Curso eliminado exitosamente.")`.
+     - Si tiene inscritos o error: `redirectAttributes.addFlashAttribute("errorMsg", e.getMessage())`.
+     - Redirige a `/admin/cursos`.
+
+### C. Interfaz de Usuario: "Zona de Peligro" y Acciones Rápidas
+1. En `src/main/resources/templates/admin/cursos/form.html`:
+   - Cuando se esté editando (`th:if="${cursoDTO.id != null}"`), agregar debajo del formulario una **Zona de Peligro** destacada con fondo rojo suave (`#FEF2F2`) y borde institucional:
+     - Título: `Zona de Peligro`.
+     - Texto: `Eliminar permanentemente este curso. Esta acción no se puede deshacer y solo está permitida si el curso no cuenta con participantes inscritos.`
+     - Botón rojo: `🗑️ Eliminar este Curso` con confirmación nativa `onsubmit="return confirm('¿Estás seguro de que deseas eliminar permanentemente este curso?');"`.
+2. En `src/main/resources/templates/admin/cursos/lista.html`:
+   - En la columna de "ACCIONES", junto a `Editar`, agregar un botón `Eliminar` (icono de papelera) con confirmación, para poder borrar cursos con 0 inscritos sin necesidad de entrar a editar.
 
 ---
 
-## 4. Archivos a Crear / Modificar
-- `informe/generar_manual_usuario.py` (Script en Python que construye el documento con `python-docx`).
-- `informe/capturas/` (Carpeta con las imágenes PNG capturadas en alta resolución).
-- `informe/Manual_de_Usuario_Sistema_Cursos_IIICCD.docx` (Documento final generado en Microsoft Word).
+## 3. Archivos a Modificar
+- `src/main/java/com/academy/cursos/repository/CursoRepository.java` (añadir métodos de flyer con filtro de estado).
+- `src/main/java/com/academy/cursos/service/CursoService.java` (lógica de exclusión de flyer y validación de 0 inscritos al eliminar).
+- `src/main/java/com/academy/cursos/controller/admin/AdminCursoController.java` (endpoint `POST /{id}/eliminar`).
+- `src/main/resources/templates/admin/cursos/form.html` (Zona de Peligro con botón eliminar).
+- `src/main/resources/templates/admin/cursos/lista.html` (botón de eliminación en la tabla de cursos).
 
 ---
 
-## 5. Plan de Verificación
-1. **Ejecución del Generador:** Ejecutar `python informe/generar_manual_usuario.py`.
-2. **Validación de Archivo:** Comprobar que el archivo `.docx` se guarde sin errores de sintaxis ni bloqueos de permisos.
-3. **Verificación de Contenido:** Verificar que todas las figuras e imágenes existan, estén correctamente referenciadas en las tablas/celdas y que el tamaño del archivo refleje la inclusión completa de imágenes HD (esperado > 4-8 MB).
-4. **Presentación:** Informar al usuario y proporcionarle la ruta exacta para su apertura en Word.
+## 4. Plan de Verificación
+1. **Pruebas Automatizadas:** Ejecutar `./gradlew test` asegurando que todos los tests pasen al 100%.
+2. **Prueba de Eliminación de Curso:** Verificar que un curso con 0 inscritos se elimine limpiamente de la base de datos y de la lista.
+3. **Prueba de Integridad:** Verificar que un curso con inscritos arroje mensaje explicativo impidiendo la rotura de la base de datos.
+4. **Prueba de Portada:** Verificar que al cambiar un curso a `BORRADOR` o `FINALIZADO`, desaparezca inmediatamente del inicio.
+5. **Despliegue:** Sincronizar en GitHub `main` para Render.

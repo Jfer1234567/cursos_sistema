@@ -69,4 +69,63 @@ public class CursoFlyerTest {
         Curso actualizado = cursoRepository.findById(guardado.getId()).orElseThrow();
         assertFalse(actualizado.getFlyerPublicado());
     }
+
+    @Test
+    @DisplayName("Un curso en BORRADOR no debe proyectarse como flyer principal en el Inicio")
+    void testCursoBorradorNoApareceEnFlyerPrincipal() {
+        AreaInvestigacion area = areaRepository.findAll().stream().findFirst()
+                .orElseThrow(() -> new IllegalStateException("No hay áreas en la BD de prueba"));
+
+        CursoDTO dto = new CursoDTO();
+        dto.setNombre("Curso Borrador Oculto");
+        dto.setDescripcion("Detalles de prueba borrador");
+        dto.setAreaInvestigacionId(area.getId());
+        dto.setDocenteResponsable("Docente Borrador");
+        dto.setPrecio(new BigDecimal("100.00"));
+        dto.setCuposTotales(20);
+        dto.setDuracion("20 horas");
+        dto.setCreditos(2);
+        dto.setEstado(EstadoCurso.BORRADOR);
+        dto.setFlyerUrl("https://res.cloudinary.com/fq7lbg0c/image/upload/v12345/flyer_borrador.jpg");
+        dto.setFlyerPublicado(true);
+
+        Curso guardado = cursoService.guardarOActualizar(dto);
+
+        // Al ser BORRADOR, el servicio debe despublicar automáticamente el flyer
+        assertFalse(guardado.getFlyerPublicado());
+
+        // Y no debe figurar como flyer principal
+        Optional<Curso> flyer = cursoService.obtenerFlyerPrincipal();
+        if (flyer.isPresent()) {
+            assertNotEquals(guardado.getId(), flyer.get().getId(), "Un curso en BORRADOR no debe ser el flyer principal");
+        }
+    }
+
+    @Test
+    @DisplayName("Debe permitir eliminar un curso que no tenga alumnos inscritos")
+    void testEliminarCursoSinInscritos() {
+        AreaInvestigacion area = areaRepository.findAll().stream().findFirst()
+                .orElseThrow(() -> new IllegalStateException("No hay áreas en la BD de prueba"));
+
+        CursoDTO dto = new CursoDTO();
+        dto.setNombre("Curso de Prueba a Eliminar");
+        dto.setDescripcion("Curso temporal que será eliminado");
+        dto.setAreaInvestigacionId(area.getId());
+        dto.setDocenteResponsable("Docente Test");
+        dto.setPrecio(new BigDecimal("50.00"));
+        dto.setCuposTotales(15);
+        dto.setDuracion("10 horas");
+        dto.setCreditos(1);
+        dto.setEstado(EstadoCurso.BORRADOR);
+
+        Curso creado = cursoService.guardarOActualizar(dto);
+        Long cursoId = creado.getId();
+        assertNotNull(cursoId);
+
+        // Eliminar curso
+        cursoService.eliminar(cursoId);
+
+        // Verificar que ya no existe en la base de datos
+        assertTrue(cursoRepository.findById(cursoId).isEmpty());
+    }
 }

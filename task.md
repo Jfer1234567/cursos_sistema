@@ -1,8 +1,7 @@
-# Tareas: Generación del Manual de Usuario Oficial con Capturas de Pantalla Reales
+# Tareas: Opción de Eliminar Curso y Corrección de Cursos Borrador/Finalizados en Inicio
 
-- [x] 1. Automatizar la captura de pantallas en alta definición de las interfaces del sistema (Portal, Catálogo, Login, Registro, Verificador, Dashboard Participante, Panel Admin, Cursos, Flyer Studio, Pagos, Usuarios, etc.) <!-- id: 30 -->
-- [x] 2. Desarrollar el generador en Python (`informe/generar_manual_usuario.py`) con formato Word institucional (.docx) de gala para la UNA Puno / FINESI / IIICCD <!-- id: 31 -->
-- [x] 3. Redactar el contenido estructurado paso a paso: Guía del Participante, Guía del Administrador y Módulo de Validación de Certificados <!-- id: 32 -->
-- [x] 4. Incrustar todas las capturas con marcos institucionales, leyendas descriptivas, notas de advertencia y tips de uso <!-- id: 33 -->
-- [x] 5. Ejecutar la generación del documento `Manual_de_Usuario_Sistema_Cursos_IIICCD.docx` y verificar integridad, páginas e imágenes <!-- id: 34 -->
-- [x] 6. Actualizar Memory Bank y presentar el manual completo al usuario <!-- id: 35 -->
+- [x] 1. Corregir consulta del Flyer Destacado en `CursoRepository` y `CursoService` para restringir a `EstadoCurso.PUBLICADO` (evitando que borradores o finalizados aparezcan en el inicio) <!-- id: 40 -->
+- [x] 2. Implementar método seguro de eliminación en `CursoService` (validando 0 inscritos) y endpoint `@PostMapping("/{id}/eliminar")` en `AdminCursoController` <!-- id: 41 -->
+- [x] 3. Diseñar e integrar la "Zona de Peligro" con botón `Eliminar Curso` y diálogo de confirmación en `admin/cursos/form.html` (al editar) y botón de eliminación en `admin/cursos/lista.html` <!-- id: 42 -->
+- [x] 4. Ejecutar suite de pruebas con `./gradlew test` (validando 100% de éxito en tests de cursos) <!-- id: 43 -->
+- [x] 5. Commit y push a GitHub para despliegue en Render y actualización de Memory Bank <!-- id: 44 -->

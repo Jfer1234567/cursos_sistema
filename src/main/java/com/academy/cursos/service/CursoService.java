@@ -6,6 +6,7 @@ import com.academy.cursos.model.Curso;
 import com.academy.cursos.model.enums.EstadoCurso;
 import com.academy.cursos.repository.AreaInvestigacionRepository;
 import com.academy.cursos.repository.CursoRepository;
+import com.academy.cursos.repository.InscripcionRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,14 +25,17 @@ public class CursoService {
     private final CursoRepository cursoRepository;
     private final AreaInvestigacionRepository areaRepository;
     private final ArchivoService archivoService;
+    private final InscripcionRepository inscripcionRepository;
 
     public CursoService(
             CursoRepository cursoRepository,
             AreaInvestigacionRepository areaRepository,
-            ArchivoService archivoService) {
+            ArchivoService archivoService,
+            InscripcionRepository inscripcionRepository) {
         this.cursoRepository = cursoRepository;
         this.areaRepository = areaRepository;
         this.archivoService = archivoService;
+        this.inscripcionRepository = inscripcionRepository;
     }
 
     @Cacheable(value = "cursosPublicados", key = "#lineaId != null ? #lineaId : -1")
@@ -117,8 +121,8 @@ public class CursoService {
             curso.setFlyerUrl(dto.getFlyerUrl().trim());
         }
 
-        // Estado de publicación del flyer en el Inicio
-        boolean publicarFlyer = dto.getFlyerPublicado() != null && dto.getFlyerPublicado();
+        // Estado de publicación del flyer en el Inicio: solo se permite si el curso está PUBLICADO
+        boolean publicarFlyer = dto.getFlyerPublicado() != null && dto.getFlyerPublicado() && dto.getEstado() == EstadoCurso.PUBLICADO;
         if (publicarFlyer) {
             // El nuevo evento ocupa la posición superior; los eventos anteriores bajan a la lista inferior
             List<Curso> anteriores = cursoRepository.findByFlyerPublicadoTrueAndFlyerUrlIsNotNullOrderByUpdatedAtDesc();
@@ -136,7 +140,8 @@ public class CursoService {
 
     @Cacheable(value = "flyerPrincipal")
     public Optional<Curso> obtenerFlyerPrincipal() {
-        Optional<Curso> flyer = cursoRepository.findFirstByFlyerPublicadoTrueAndFlyerUrlIsNotNullOrderByUpdatedAtDesc();
+        // Solo los cursos en estado PUBLICADO pueden proyectarse en el Inicio
+        Optional<Curso> flyer = cursoRepository.findFirstByEstadoAndFlyerPublicadoTrueAndFlyerUrlIsNotNullOrderByUpdatedAtDesc(EstadoCurso.PUBLICADO);
         if (flyer.isPresent()) {
             return flyer;
         }
@@ -152,7 +157,7 @@ public class CursoService {
     }
 
     public List<Curso> obtenerFlyersPublicados() {
-        return cursoRepository.findByFlyerPublicadoTrueAndFlyerUrlIsNotNullOrderByUpdatedAtDesc();
+        return cursoRepository.findByEstadoAndFlyerPublicadoTrueAndFlyerUrlIsNotNullOrderByUpdatedAtDesc(EstadoCurso.PUBLICADO);
     }
 
     @Transactional
@@ -160,6 +165,11 @@ public class CursoService {
     public void alternarPublicacionFlyer(Long id, boolean publicado) {
         Curso curso = cursoRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Curso no encontrado"));
+
+        if (publicado && curso.getEstado() != EstadoCurso.PUBLICADO) {
+            throw new IllegalStateException("Solo los cursos en estado PUBLICADO pueden mostrar su afiche en la portada de Inicio.");
+        }
+
         if (publicado) {
             List<Curso> anteriores = cursoRepository.findByFlyerPublicadoTrueAndFlyerUrlIsNotNullOrderByUpdatedAtDesc();
             for (Curso ant : anteriores) {
@@ -179,12 +189,25 @@ public class CursoService {
         Curso curso = cursoRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Curso no encontrado"));
         curso.setEstado(nuevoEstado);
+        // Si el curso pasa a BORRADOR o FINALIZADO, se despublica de inmediato de la portada
+        if (nuevoEstado != EstadoCurso.PUBLICADO) {
+            curso.setFlyerPublicado(false);
+        }
         cursoRepository.save(curso);
     }
 
     @Transactional
     @CacheEvict(value = {"cursosPublicados", "cursosDestacados", "flyerPrincipal"}, allEntries = true)
     public void eliminar(Long id) {
-        cursoRepository.deleteById(id);
+        Curso curso = cursoRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Curso no encontrado con ID: " + id));
+
+        long inscritos = inscripcionRepository.countByCursoId(id);
+        if (inscritos > 0) {
+            throw new IllegalStateException("No es posible eliminar el curso '" + curso.getNombre() + "' porque cuenta con " 
+                    + inscritos + " participante(s) inscrito(s). Para retirarlo de la vista pública, cambia su estado a BORRADOR o FINALIZADO.");
+        }
+
+        cursoRepository.delete(curso);
     }
 }

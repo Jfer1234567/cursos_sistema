@@ -78,6 +78,18 @@
                                         <a th:href="@{'/admin/cursos/' + ${curso.id} + '/editar'}" class="btn btn-sm btn-outline-primary" title="Editar">
                                             Editar
                                         </a>
+                                        <form th:action="@{'/admin/cursos/' + ${curso.id} + '/eliminar'}" method="post" style="display: inline;"
+                                              onsubmit="return confirm('¿Estás seguro de que deseas eliminar permanentemente este curso? Esta acción no se puede deshacer.');">
+                                            <button type="submit" class="btn btn-sm" title="Eliminar curso"
+                                                    style="border: 1px solid #FCA5A5; color: #DC2626; background: #FEF2F2; font-size: 0.75rem; padding: 0.35rem 0.5rem; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; border-radius: var(--radius-sm);"
+                                                    onmouseover="this.style.background='#DC2626'; this.style.color='white';"
+                                                    onmouseout="this.style.background='#FEF2F2'; this.style.color='#DC2626';">
+                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <polyline points="3 6 5 6 21 6"/>
+                                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                                </svg>
+                                            </button>
+                                        </form>
                                     </div>
                                 </td>
                             </tr>
