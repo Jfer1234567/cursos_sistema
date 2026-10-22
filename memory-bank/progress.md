@@ -228,3 +228,9 @@
   - *Tipografía y Formularios Táctiles:* Escalado tipográfico adaptativo con `clamp()`, dimensiones táctiles mínimas de 44px (estándar WCAG 2.1 AA) y forzado de tamaño de fuente a `16px` en campos de texto en dispositivos móviles para erradicar el auto-zoom indeseado en Safari iOS.
   - *Refactorización Modular de Grillas:* Implementación de clases utilitarias (`.form-row-responsive-2`, `.form-row-responsive-3`, `.form-row-responsive-split`, `.grid-split-card`, `.dashboard-metrics-grid`) sustituyendo estilos inline rígidos en formularios administrativos, detalle de cursos, página de quiénes somos, contacto, verificación de certificados y paneles de métricas.
   - *Pruebas e Integridad:* Suite de pruebas automatizadas al 100% con Gradle (`./gradlew test`, 31/31 tests exitosos). Listo para sincronización con GitHub y despliegue automático en Render.
+
+- **Rediseño Ejecutivo del Panel de Administración (Estilo Institucional IIICCD):**
+  - *Banner Editorial:* Encabezado con acento dorado `— ÁREA ADMINISTRATIVA`, título de gran formato `Bienvenido al espacio de gestión académica`, subtítulo descriptivo y barra de utilidades (`Mensajes`, `Alumnos`, `Configurar Yape` y botón primario `+ Nuevo Curso`).
+  - *Módulos Ejecutivos "¿Qué deseas gestionar hoy?":* Matriz de navegación 2x2 en desktop (1 columna en móvil) con tarjetas enriquecidas para Cursos, Inscripciones, Pagos y Certificados, con íconos vectoriales sobrios, descripciones claras, micro-animación al hover y contadores dinámicos.
+  - *Cache-Busting:* Versionado `v=4` en `main.html` para forzar refresco inmediato de estilos en clientes y Render.
+  - *Pruebas:* Suite completa pasando al 100% (31/31 tests). Sincronizado en GitHub `main`.

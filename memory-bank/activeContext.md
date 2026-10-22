@@ -193,7 +193,13 @@
   - *Tipografía y Formularios Adaptativos:* Jerarquía fluida calculada con funciones `clamp()`, ajuste de botones a objetivos táctiles mínimos de 44px (estándares WCAG 2.1 AA) y forzado de `font-size: 16px` en inputs móviles para erradicar el auto-zoom indeseado en navegadores iOS Safari.
   - *Refactorización de Grillas Rígidas:* Implementación de clases utilitarias (.form-row-responsive-2, .form-row-responsive-3, .form-row-responsive-split, .grid-split-card y .dashboard-metrics-grid) sustituyendo estilos inline en `form.html`, `curso-detalle.html`, `quienes-somos.html`, `contacto.html`, `inscripcion.html`, `detalle.html`, `certificado.html` y `dashboard.html`.
 
+- **Rediseño Ejecutivo del Panel de Administración (Estilo Institucional IIICCD):**
+  - *Banner de Bienvenida:* Cintillo dorado `— ÁREA ADMINISTRATIVA`, título editorial `Bienvenido al espacio de gestión académica`, subtítulo descriptivo y barra de herramientas compacta (`Mensajes`, `Alumnos`, `Configurar Yape` y botón primario `+ Nuevo Curso`).
+  - *Sección Modular "¿Qué deseas gestionar hoy?":* Grilla de tarjetas interactivas 2x2 en escritorio (1 columna en móvil) para **Cursos** (con badge de activos), **Inscripciones** (con badge de aprobadas), **Pagos** (con badge de pendientes) y **Certificados** (con badge de emitidos), con íconos vectoriales granates y flechas dinámicas de avance.
+  - *Tabla de Comprobantes Yape:* Preservada en tarjeta inferior estilizada con feedback visual de bandeja al día.
+  - *Cache-Busting:* Añadido parámetro de versión `v=4` en `layout/main.html` para invalidación inmediata de caché persistente en navegadores de usuario.
+
 **Próximos Pasos:**
 - Monitoreo en vivo de la plataforma en producción en Render tras el despliegue automático.
-- Pruebas adicionales en dispositivos móviles físicos.
+- Pruebas adicionales en dispositivos móviles y de escritorio.
 - Carga de primeros cursos y afiches oficiales desde el panel de administración.

@@ -2270,6 +2270,268 @@
     color: #FFFFFF;
 }
 
+/* ==========================================================================
+   Panel de Administración Ejecutivo (Estilo Institucional IIICCD)
+   ========================================================================== */
+.admin-welcome-hero {
+    background: #FFFFFF;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 2.75rem 2.5rem;
+    margin-bottom: 2.5rem;
+    box-shadow: 0 4px 20px -2px rgba(109, 26, 36, 0.04), 0 2px 6px -1px rgba(0, 0, 0, 0.02);
+    position: relative;
+    overflow: hidden;
+}
+
+.admin-welcome-hero::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 350px;
+    background: radial-gradient(circle at 100% 50%, rgba(200, 169, 81, 0.08) 0%, rgba(139, 26, 26, 0.04) 50%, transparent 80%);
+    pointer-events: none;
+}
+
+.admin-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    color: #92400E;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 0.85rem;
+}
+
+.admin-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 24px;
+    height: 2px;
+    background: var(--accent);
+}
+
+.admin-welcome-title {
+    font-size: clamp(1.85rem, 3.2vw + 0.5rem, 2.75rem);
+    font-weight: 800;
+    color: #0F172A;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.75rem;
+    font-family: var(--font-sans);
+}
+
+.admin-welcome-desc {
+    font-size: 1.05rem;
+    color: #64748B;
+    margin-bottom: 1.75rem;
+    max-width: 650px;
+    line-height: 1.5;
+}
+
+.admin-welcome-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-subtle);
+}
+
+.admin-utility-links {
+    display: flex;
+    gap: 0.65rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.admin-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+}
+
+.admin-section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #1E293B;
+    margin-bottom: 0;
+}
+
+.admin-section-title::before {
+    content: '';
+    display: inline-block;
+    width: 28px;
+    height: 2.5px;
+    background: var(--accent);
+}
+
+/* Grilla de Módulos Ejecutivos 2x2 */
+.admin-modules-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2.75rem;
+}
+
+.admin-module-card {
+    background: #FFFFFF;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.6rem 1.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-decoration: none;
+    transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    position: relative;
+    overflow: hidden;
+}
+
+.admin-module-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 3.5px;
+    background: transparent;
+    transition: background 0.2s ease;
+}
+
+.admin-module-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(139, 26, 26, 0.3);
+    box-shadow: 0 8px 24px -4px rgba(109, 26, 36, 0.08), 0 2px 6px -1px rgba(0, 0, 0, 0.04);
+}
+
+.admin-module-card:hover::before {
+    background: var(--primary);
+}
+
+.admin-module-left {
+    display: flex;
+    align-items: center;
+    gap: 1.35rem;
+}
+
+.admin-module-icon-wrap {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    background: rgba(139, 26, 26, 0.06);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.admin-module-card:hover .admin-module-icon-wrap {
+    background: rgba(139, 26, 26, 0.12);
+    transform: scale(1.04);
+}
+
+.admin-module-info h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #0F172A;
+    margin-bottom: 0.25rem;
+    transition: color 0.2s ease;
+}
+
+.admin-module-card:hover .admin-module-info h3 {
+    color: var(--primary);
+}
+
+.admin-module-info p {
+    font-size: 0.88rem;
+    color: #64748B;
+    margin-bottom: 0.35rem;
+    line-height: 1.4;
+}
+
+.admin-module-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-shrink: 0;
+}
+
+.admin-module-badge {
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 0.25rem 0.65rem;
+    border-radius: 9999px;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+}
+
+.admin-module-arrow {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.admin-module-card:hover .admin-module-arrow {
+    background: rgba(139, 26, 26, 0.08);
+    transform: translateX(3px);
+}
+
+@media (max-width: 900px) {
+    .admin-modules-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    .admin-welcome-hero {
+        padding: 2rem 1.5rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .admin-welcome-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .admin-utility-links {
+        flex-direction: column;
+    }
+    .admin-utility-links .btn {
+        width: 100%;
+        justify-content: center;
+    }
+    .admin-module-card {
+        padding: 1.25rem 1.15rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    .admin-module-right {
+        width: 100%;
+        justify-content: space-between;
+        padding-top: 0.5rem;
+        border-top: 1px dashed var(--border-subtle);
+    }
+}
+
+
 
 
 

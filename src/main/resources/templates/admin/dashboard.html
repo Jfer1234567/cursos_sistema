@@ -9,77 +9,173 @@
     </div>
 
     <div class="container" style="padding: 2.5rem 1.5rem;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
-            <div>
-                <span class="badge badge-primary">Área de Gestión</span>
-                <h1 style="font-size: 2rem; margin-top: 0.25rem;">Panel de Administración IIICCD</h1>
-            </div>
-            <div style="display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap;">
-                <a th:href="@{/admin/mensajes}" class="btn btn-sm btn-outline" style="display: inline-flex; align-items: center; gap: 0.45rem;" title="Bandeja de Mensajes de Contacto">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-                    </svg>
-                    <span>Mensajes</span>
-                    <span th:if="${mensajesNoLeidos > 0}" style="margin-left: 0.2rem; font-size: 0.72rem; padding: 0.1rem 0.45rem; background: #DC2626; color: #FFFFFF; border-radius: 999px; font-weight: 700;" th:text="${mensajesNoLeidos}">1</span>
-                </a>
-                <a th:href="@{/admin/usuarios}" class="btn btn-sm btn-outline" style="display: inline-flex; align-items: center; gap: 0.45rem;" title="Directorio de Alumnos Registrados">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="9" cy="7" r="4"></circle>
-                        <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
-                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                    </svg>
-                    <span>Alumnos</span>
-                    <span th:if="${totalUsuarios > 0}" style="margin-left: 0.2rem; font-size: 0.72rem; padding: 0.1rem 0.45rem; background: #2563EB; color: #FFFFFF; border-radius: 999px; font-weight: 700;" th:text="${totalUsuarios}">5</span>
-                </a>
-                <a th:href="@{/admin/config/pago}" class="btn btn-sm btn-outline" style="display: inline-flex; align-items: center; gap: 0.4rem;" title="Configurar Cuentas y QR Yape">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="3"></circle>
-                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-                    </svg>
-                    <span>Configurar Yape</span>
-                </a>
-                <a th:href="@{/admin/cursos/nuevo}" class="btn btn-primary" style="font-weight: 600;">+ Nuevo Curso</a>
+        <!-- Banner Institucional de Bienvenida -->
+        <div class="admin-welcome-hero">
+            <div class="admin-eyebrow">Área Administrativa</div>
+            <h1 class="admin-welcome-title">Bienvenido al espacio<br>de gestión académica</h1>
+            <p class="admin-welcome-desc">Administra los cursos, participantes, pagos y certificaciones oficiales desde un solo lugar.</p>
+
+            <div class="admin-welcome-toolbar">
+                <div class="admin-utility-links">
+                    <a th:href="@{/admin/mensajes}" class="btn btn-sm btn-outline" title="Bandeja de Mensajes de Contacto">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                        </svg>
+                        <span>Mensajes</span>
+                        <span th:if="${mensajesNoLeidos > 0}" style="margin-left: 0.2rem; font-size: 0.72rem; padding: 0.1rem 0.45rem; background: #DC2626; color: #FFFFFF; border-radius: 999px; font-weight: 700;" th:text="${mensajesNoLeidos}">1</span>
+                    </a>
+                    <a th:href="@{/admin/usuarios}" class="btn btn-sm btn-outline" title="Directorio de Alumnos Registrados">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                        <span>Alumnos</span>
+                        <span th:if="${totalUsuarios > 0}" style="margin-left: 0.2rem; font-size: 0.72rem; padding: 0.1rem 0.45rem; background: #2563EB; color: #FFFFFF; border-radius: 999px; font-weight: 700;" th:text="${totalUsuarios}">5</span>
+                    </a>
+                    <a th:href="@{/admin/config/pago}" class="btn btn-sm btn-outline" title="Configurar Cuentas y QR Yape">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                        </svg>
+                        <span>Configurar Yape</span>
+                    </a>
+                </div>
+                <div>
+                    <a th:href="@{/admin/cursos/nuevo}" class="btn btn-primary" style="font-weight: 600; box-shadow: 0 4px 14px rgba(139, 26, 26, 0.25);">
+                        + Nuevo Curso
+                    </a>
+                </div>
             </div>
         </div>
 
-        <!-- Métricas Principales -->
-        <div class="dashboard-metrics-grid">
+        <!-- Sección de Módulos Ejecutivos "¿Qué deseas gestionar hoy?" -->
+        <div class="admin-section-header">
+            <h2 class="admin-section-title">¿Qué deseas gestionar hoy?</h2>
+        </div>
 
-            <div class="card card-body" style="border-left: 4px solid var(--primary);">
-                <span style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Cursos Activos</span>
-                <div style="font-size: 2.2rem; font-weight: 800; color: var(--primary); margin: 0.25rem 0;" th:text="${cursosActivos}">0</div>
-                <a th:href="@{/admin/cursos}" style="font-size: 0.85rem;">Gestionar cursos &rarr;</a>
-            </div>
+        <div class="admin-modules-grid">
+            <!-- 1. Cursos -->
+            <a th:href="@{/admin/cursos}" class="admin-module-card">
+                <div class="admin-module-left">
+                    <div class="admin-module-icon-wrap">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                        </svg>
+                    </div>
+                    <div class="admin-module-info">
+                        <h3>Cursos</h3>
+                        <p>Crear y actualizar la oferta académica</p>
+                    </div>
+                </div>
+                <div class="admin-module-right">
+                    <span class="badge badge-primary admin-module-badge" th:text="${cursosActivos + ' Activos'}">1 Activo</span>
+                    <div class="admin-module-arrow">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </div>
+                </div>
+            </a>
 
-            <div class="card card-body" style="border-left: 4px solid var(--warning);">
-                <span style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Pagos por Verificar</span>
-                <div style="font-size: 2.2rem; font-weight: 800; color: var(--warning); margin: 0.25rem 0;" th:text="${pagosPendientes}">0</div>
-                <a th:href="@{/admin/inscripciones/pendientes}" style="font-size: 0.85rem;">Revisar comprobantes &rarr;</a>
-            </div>
+            <!-- 2. Inscripciones -->
+            <a th:href="@{/admin/usuarios}" class="admin-module-card">
+                <div class="admin-module-left">
+                    <div class="admin-module-icon-wrap">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                    </div>
+                    <div class="admin-module-info">
+                        <h3>Inscripciones</h3>
+                        <p>Revisar solicitudes de participantes</p>
+                    </div>
+                </div>
+                <div class="admin-module-right">
+                    <span class="badge badge-success admin-module-badge" th:text="${inscripcionesAprobadas + ' Aprobadas'}">4 Aprobadas</span>
+                    <div class="admin-module-arrow">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </div>
+                </div>
+            </a>
 
-            <div class="card card-body" style="border-left: 4px solid var(--success);">
-                <span style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Inscripciones Aprobadas</span>
-                <div style="font-size: 2.2rem; font-weight: 800; color: var(--success); margin: 0.25rem 0;" th:text="${inscripcionesAprobadas}">0</div>
-                <span style="font-size: 0.85rem; color: var(--text-muted);">Participantes con acceso</span>
-            </div>
+            <!-- 3. Pagos -->
+            <a th:href="@{/admin/inscripciones/pendientes}" class="admin-module-card">
+                <div class="admin-module-left">
+                    <div class="admin-module-icon-wrap">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                            <polyline points="10 9 9 9 8 9"></polyline>
+                        </svg>
+                    </div>
+                    <div class="admin-module-info">
+                        <h3>Pagos</h3>
+                        <p>Validar comprobantes recibidos</p>
+                    </div>
+                </div>
+                <div class="admin-module-right">
+                    <span th:if="${pagosPendientes > 0}" class="badge badge-warning admin-module-badge" th:text="${pagosPendientes + ' Pendientes'}">1 Pendiente</span>
+                    <span th:unless="${pagosPendientes > 0}" class="badge badge-secondary admin-module-badge">Al día</span>
+                    <div class="admin-module-arrow">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </div>
+                </div>
+            </a>
 
-            <div class="card card-body" style="border-left: 4px solid var(--accent);">
-                <span style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Certificados Emitidos</span>
-                <div style="font-size: 2.2rem; font-weight: 800; color: var(--accent); margin: 0.25rem 0;" th:text="${certificadosEmitidos}">0</div>
-                <a th:href="@{/admin/certificados}" style="font-size: 0.85rem;">Ver registros emitidos &rarr;</a>
-            </div>
+            <!-- 4. Certificados -->
+            <a th:href="@{/admin/certificados}" class="admin-module-card">
+                <div class="admin-module-left">
+                    <div class="admin-module-icon-wrap">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="8" r="7"></circle>
+                            <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+                        </svg>
+                    </div>
+                    <div class="admin-module-info">
+                        <h3>Certificados</h3>
+                        <p>Emitir y consultar constancias</p>
+                    </div>
+                </div>
+                <div class="admin-module-right">
+                    <span class="badge badge-accent admin-module-badge" th:text="${certificadosEmitidos + ' Emitidos'}">2 Emitidos</span>
+                    <div class="admin-module-arrow">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </div>
+                </div>
+            </a>
         </div>
 
         <!-- Accesos Directos y Pagos Recientes -->
-        <div class="card">
-            <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
-                <h3 style="font-size: 1.2rem; margin-bottom: 0;">Pagos de Yape Pendientes de Verificación</h3>
+        <div class="card" style="box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04); border-radius: var(--radius-md);">
+            <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; background: #FFFFFF; padding: 1.25rem 1.75rem;">
+                <h3 style="font-size: 1.15rem; font-weight: 700; color: #1E293B; margin-bottom: 0;">Pagos de Yape Pendientes de Verificación</h3>
                 <a th:href="@{/admin/inscripciones/pendientes}" class="btn btn-sm btn-outline-primary">Ver Todos</a>
             </div>
-            <div class="card-body">
-                <div th:if="${ultimosPagosPendientes.empty}" style="text-align: center; padding: 2rem; color: var(--text-muted);">
-                     No hay pagos pendientes por revisar en este momento.
+            <div class="card-body" style="padding: 1.75rem;">
+                <div th:if="${ultimosPagosPendientes.empty}" style="text-align: center; padding: 2.5rem 1.5rem; color: var(--text-muted);">
+                    <div style="width: 48px; height: 48px; margin: 0 auto 1rem; border-radius: 50%; background: #F1F5F9; display: flex; align-items: center; justify-content: center; color: #64748B;">
+                        ✓
+                    </div>
+                    <strong style="color: #334155; display: block; margin-bottom: 0.25rem;">Bandeja al día</strong>
+                    <span style="font-size: 0.88rem;">No hay pagos pendientes por revisar en este momento.</span>
                 </div>
 
                 <div th:unless="${ultimosPagosPendientes.empty}" class="table-responsive">
