@@ -2091,7 +2091,7 @@
     justify-content: center;
 }
 
-.destacado-editorial-visual a {
+.destacado-editorial-visual a:not(.destacado-visual-tag) {
     display: flex;
     width: 100%;
     height: 100%;
@@ -2133,11 +2133,64 @@
     gap: 0.4rem;
     text-decoration: none;
     transition: background-color 0.2s ease;
+    cursor: pointer;
+    font-family: inherit;
+    outline: none;
 }
 
 .destacado-visual-tag:hover {
     background: rgba(15, 23, 42, 0.95);
     color: #FBBF24;
+}
+
+/* Lightbox para visualizar el afiche en alta resolución sin descargar */
+.flyer-lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: rgba(0, 0, 0, 0.88);
+    backdrop-filter: blur(6px);
+    align-items: center;
+    justify-content: center;
+    cursor: zoom-out;
+    padding: 2rem;
+    animation: flyerLbFadeIn 0.25s ease;
+}
+
+.flyer-lightbox.active {
+    display: flex;
+}
+
+@keyframes flyerLbFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.flyer-lightbox img {
+    max-width: 92vw;
+    max-height: 90vh;
+    object-fit: contain;
+    border-radius: 12px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+    cursor: default;
+}
+
+.flyer-lightbox-close {
+    position: absolute;
+    top: 1.25rem;
+    right: 1.75rem;
+    color: #FFFFFF;
+    font-size: 2.25rem;
+    font-weight: 300;
+    cursor: pointer;
+    line-height: 1;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
+.flyer-lightbox-close:hover {
+    opacity: 1;
 }
 
 /* Responsividad para Dispositivos Móviles y Tablets */

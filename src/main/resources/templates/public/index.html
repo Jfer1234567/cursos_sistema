@@ -171,7 +171,7 @@
                     <a th:href="@{'/cursos/' + ${flyerDestacado.id}}" title="Ver programa académico e inscribirse">
                         <img th:src="${flyerDestacado.flyerUrl}" alt="Afiche Oficial de Convocatoria" class="destacado-editorial-img" loading="eager" decoding="async">
                     </a>
-                    <a th:href="${flyerDestacado.flyerUrl}" target="_blank" class="destacado-visual-tag" title="Ver afiche en alta resolución HD">
+                    <button type="button" class="destacado-visual-tag" th:data-img="${flyerDestacado.flyerUrl}" onclick="document.getElementById('flyerLightbox').querySelector('img').src=this.dataset.img;document.getElementById('flyerLightbox').classList.add('active');" title="Ver afiche en tamaño completo">
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="11" cy="11" r="8"></circle>
                             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -179,10 +179,17 @@
                             <line x1="8" y1="11" x2="14" y2="11"></line>
                         </svg>
                         <span>Ver en HD</span>
-                    </a>
+                    </button>
                 </div>
             </div>
         </div>
+
+        <!-- Lightbox para ver el afiche en alta resolución sin descargarlo -->
+        <div id="flyerLightbox" class="flyer-lightbox" onclick="if(event.target===this)this.classList.remove('active');">
+            <span class="flyer-lightbox-close" onclick="this.parentElement.classList.remove('active');">&times;</span>
+            <img src="" alt="Afiche en alta resolución">
+        </div>
+        <script>document.addEventListener('keydown',function(e){if(e.key==='Escape'){var lb=document.getElementById('flyerLightbox');if(lb)lb.classList.remove('active');}});</script>
     </section>
 
     <!-- Cursos Destacados -->
