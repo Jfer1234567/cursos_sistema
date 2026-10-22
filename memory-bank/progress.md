@@ -2,11 +2,11 @@
 
 **Tareas Completadas:**
 - [x] **Rediseño Editorial Limpio del Curso Destacado en Portada (`public/index.html`):**
-  - Modernización visual completa de la sección de afiche oficial/curso destacado hacia un diseño editorial académico limpio (fondo blanco, tipografía nítida `#0F172A`, insignia sutil granate `#991B1B`, acento dorado, fila de metadatos académicos con íconos vectoriales circulares, pastillas de precio diferenciadas para Comunidad UNA y Público General, y marco de afiche redondeado `18px`).
-  - **Ampliación del Flyer y Proporción Visual:** Expansión del área del flyer a `1fr 1.25fr` con `max-height: 720px;` para mayor escala, nitidez y legibilidad.
-  - **Fondo Institucional Sutil con Logotipo:** Integración de marcas de agua decorativas del isotipo oficial (`logo-isotipo-watermark.png`) en el fondo blanco de la sección (`opacity: 0.055`).
+  - Modernización visual completa de la sección de afiche oficial/curso destacado hacia un diseño editorial académico limpio (fondo blanco puro, tipografía nítida `#0F172A`, insignia sutil granate `#991B1B`, acento dorado, fila de metadatos académicos con íconos vectoriales circulares, pastillas de precio diferenciadas para Comunidad UNA y Público General, y marco de afiche redondeado `18px`).
+  - **Flyer a Tamaño Completo:** Expansión del área del flyer a `1fr 1.35fr` con `align-items: stretch;`, `height: 100%; min-height: 520px;` y `object-fit: cover;`, llenando el 100% de la vitrina visual de arriba a abajo exactamente según el recuadro indicado por el usuario.
+  - **Fondo Limpio Inmaculado:** Eliminación total de marcas de agua para un fondo blanco despejado.
   - Actualización de `pages.css` con estilos modulares y responsivos para móviles y tablets.
-  - Incremento de versión de assets a `v=6` en `layout/main.html` para invalidar la caché del navegador.
+  - Incremento de versión de assets a `v=7` en `layout/main.html` para invalidar la caché del navegador.
   - Validación completa con pruebas unitarias (`./gradlew test` exitoso al 100%).
 - [x] Elaboración y actualización del Informe Técnico Oficial en formato Microsoft Word (`.docx`): ubicado en `informe/Informe_Tecnico_Sistema_Cursos_IIICCD_Actualizado.docx` (incluye Especificación Formal de Requerimientos bajo estándar IEEE 830 con 22 RF y 10 RNF, y Diagrama Gráfico de Base de Datos Relacional PostgreSQL 16 en alta resolución 300 DPI con análisis de cardinalidades y diccionario completo de tablas).
 - [x] Configuración inicial y creación de estructura `memory-bank/`.

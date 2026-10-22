@@ -53,10 +53,6 @@
 
     <!-- Sección de Flyer Oficial Publicado (Convocatoria Destacada) - Diseño Editorial Limpio -->
     <section th:if="${flyerDestacado != null and flyerDestacado.flyerUrl != null and !flyerDestacado.flyerUrl.isEmpty()}" class="seccion-flyer-destacado">
-        <!-- Marcas de Agua Institucionales Sutiles del Isotipo de Fondo -->
-        <img th:src="@{/images/logo-isotipo-watermark.png}" class="destacado-bg-watermark destacado-bg-watermark-left" alt="" />
-        <img th:src="@{/images/logo-isotipo-watermark.png}" class="destacado-bg-watermark destacado-bg-watermark-right" alt="" />
-
         <div class="container">
             <div class="destacado-editorial-grid">
                 <!-- Información y Acciones del Curso -->
