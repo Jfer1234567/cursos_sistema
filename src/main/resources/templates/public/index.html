@@ -51,44 +51,49 @@
         </div>
     </section>
 
-    <!-- Sección de Flyer Oficial Publicado (Convocatoria Destacada) - Diseño Premium -->
+    <!-- Sección de Flyer Oficial Publicado (Convocatoria Destacada) - Diseño Editorial Limpio -->
     <section th:if="${flyerDestacado != null and flyerDestacado.flyerUrl != null and !flyerDestacado.flyerUrl.isEmpty()}" class="seccion-flyer-destacado">
         <div class="container">
-            <div class="flyer-destacado-grid">
-                <!-- Información y Botones del Curso -->
-                <div>
-                    <!-- Badge con Pulso Activo -->
-                    <div class="flyer-badge-pulse-wrap">
-                        <span class="flyer-pulse-dot"></span>
-                        <span>Convocatoria Oficial &bull; Vacantes Abiertas</span>
+            <div class="destacado-editorial-grid">
+                <!-- Información y Acciones del Curso -->
+                <div class="destacado-editorial-content">
+                    <!-- Insignia Suave -->
+                    <div class="destacado-badge-pill">
+                        <span class="destacado-badge-dot"></span>
+                        <span>INSCRIPCIONES ABIERTAS</span>
                     </div>
 
-                    <h2 class="flyer-destacado-title">
-                        <span th:text="${flyerDestacado.nombre}">Nombre Oficial del Curso</span>
-                    </h2>
+                    <h2 class="destacado-title" th:text="${flyerDestacado.nombre}">Ciencia de Datos 2</h2>
+                    
+                    <div class="destacado-subtitle" 
+                         th:text="${flyerDestacado.areaInvestigacion != null ? flyerDestacado.areaInvestigacion.nombre : 'Especialización Avanzada'}">
+                        Fundamentos
+                    </div>
+                    
+                    <div class="destacado-gold-accent"></div>
 
-                    <p class="flyer-destacado-desc"
-                       th:text="${flyerDestacado.descripcionCorta != null and !flyerDestacado.descripcionCorta.isEmpty() ? flyerDestacado.descripcionCorta : 'Programa intensivo de alta especialización científica con certificación universitaria avalada por el Instituto de Investigación IIICCD y la Facultad de Ingeniería Estadística e Informática.'}">
-                        Descripción corta del curso y especialización.
+                    <p class="destacado-desc"
+                       th:text="${flyerDestacado.descripcionCorta != null and !flyerDestacado.descripcionCorta.isEmpty() ? flyerDestacado.descripcionCorta : 'Fortalece tus competencias en análisis de datos con una formación académica especializada.'}">
+                        Fortalece tus competencias en análisis de datos con una formación académica especializada.
                     </p>
 
-                    <!-- Ficha Técnica con Íconos Vectoriales SVG -->
-                    <div class="flyer-destacado-meta">
-                        <div class="flyer-meta-card">
-                            <div class="flyer-meta-icon">
+                    <!-- Fila de Metadatos Académicos con Íconos Circulares -->
+                    <div class="destacado-meta-row">
+                        <div class="destacado-meta-item">
+                            <div class="destacado-meta-icon" title="Docente / Ponente">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                                     <circle cx="12" cy="7" r="4"></circle>
                                 </svg>
                             </div>
-                            <div class="flyer-meta-content">
-                                <div class="flyer-meta-item-label">Docente / Ponente</div>
-                                <div class="flyer-meta-item-val" th:text="${flyerDestacado.docenteResponsable}">Dr. Leonid Alemán</div>
+                            <div class="destacado-meta-content">
+                                <span class="destacado-meta-label">DOCENTE</span>
+                                <span class="destacado-meta-val" th:text="${flyerDestacado.docenteResponsable}">Mg. Renzo Apaza Cutipa</span>
                             </div>
                         </div>
 
-                        <div class="flyer-meta-card">
-                            <div class="flyer-meta-icon">
+                        <div class="destacado-meta-item">
+                            <div class="destacado-meta-icon" title="Fecha de Inicio">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
                                     <line x1="16" y1="2" x2="16" y2="6"></line>
@@ -96,94 +101,92 @@
                                     <line x1="3" y1="10" x2="21" y2="10"></line>
                                 </svg>
                             </div>
-                            <div class="flyer-meta-content">
-                                <div class="flyer-meta-item-label">Fecha de Inicio</div>
-                                <div class="flyer-meta-item-val" th:text="${flyerDestacado.fechaInicio != null ? #temporals.format(flyerDestacado.fechaInicio, 'dd/MM/yyyy') : 'Próximo Inicio'}">Próximo Inicio</div>
+                            <div class="destacado-meta-content">
+                                <span class="destacado-meta-label">INICIO</span>
+                                <span class="destacado-meta-val" th:text="${flyerDestacado.fechaInicio != null ? #temporals.format(flyerDestacado.fechaInicio, 'dd/MM/yyyy') : 'Próximo Inicio'}">05/10/2026</span>
                             </div>
                         </div>
 
-                        <div class="flyer-meta-card">
-                            <div class="flyer-meta-icon">
+                        <div class="destacado-meta-item">
+                            <div class="destacado-meta-icon" title="Duración del Programa">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <circle cx="12" cy="12" r="10"></circle>
                                     <polyline points="12 6 12 12 16 14"></polyline>
                                 </svg>
                             </div>
-                            <div class="flyer-meta-content">
-                                <div class="flyer-meta-item-label">Duración</div>
-                                <div class="flyer-meta-item-val" th:text="${flyerDestacado.duracion}">40 horas</div>
+                            <div class="destacado-meta-content">
+                                <span class="destacado-meta-label">DURACIÓN</span>
+                                <span class="destacado-meta-val" th:text="${flyerDestacado.duracion}">20</span>
                             </div>
                         </div>
 
-                        <div class="flyer-meta-card">
-                            <div class="flyer-meta-icon">
+                        <div class="destacado-meta-item">
+                            <div class="destacado-meta-icon" title="Créditos Académicos">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="12" cy="8" r="6"></circle>
-                                    <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"></path>
+                                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
                                 </svg>
                             </div>
-                            <div class="flyer-meta-content">
-                                <div class="flyer-meta-item-label">Créditos</div>
-                                <div class="flyer-meta-item-val" th:text="${(flyerDestacado.creditos != null ? flyerDestacado.creditos : 2) + ' créditos'}">2 créditos</div>
+                            <div class="destacado-meta-content">
+                                <span class="destacado-meta-label">CRÉDITOS</span>
+                                <span class="destacado-meta-val" th:text="${(flyerDestacado.creditos != null ? flyerDestacado.creditos : 2) + ' créditos'}">2 créditos</span>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Tarifas Oficiales Diferenciadas -->
-                    <div class="flyer-destacado-precios">
-                        <div th:if="${flyerDestacado.esGratuito()}" class="flyer-precio-pill" style="border-color: #10B981; background: rgba(16,185,129,0.1);">
-                            <div class="label" style="color: #065F46;">Modalidad</div>
-                            <div class="amount" style="color: #047857;">Acceso Libre (Gratuito)</div>
-                        </div>
-                        <div th:unless="${flyerDestacado.esGratuito()}" class="flyer-precio-pill">
-                            <div class="label">Público General</div>
-                            <div class="amount" th:text="${'S/ ' + flyerDestacado.precio}">S/ 120.00</div>
-                        </div>
-                        <div th:if="${!flyerDestacado.esGratuito() and flyerDestacado.precioComunidad != null}" class="flyer-precio-pill-una">
-                            <span class="tag-beneficio">Beneficio UNA</span>
-                            <div class="label">Comunidad UNA Puno</div>
-                            <div class="amount" th:text="${'S/ ' + flyerDestacado.precioComunidad}">S/ 80.00</div>
-                        </div>
-                    </div>
-
-                    <!-- Botones de Acción de Alta Conversión -->
-                    <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
-                        <a th:href="@{'/cursos/' + ${flyerDestacado.id}}" class="flyer-btn-cta">
+                    <!-- Botones de Acción -->
+                    <div class="destacado-actions-row">
+                        <a th:href="@{'/cursos/' + ${flyerDestacado.id}}" class="destacado-btn-primary">
                             <span sec:authorize="hasRole('ADMIN')">Ver Detalles del Curso</span>
                             <span sec:authorize="!hasRole('ADMIN')">
-                                <span th:if="${flyerDestacado.esGratuito()}">Inscribirme Gratis &rarr;</span>
-                                <span th:unless="${flyerDestacado.esGratuito()}">Inscribirme en este Curso</span>
+                                <span th:if="${flyerDestacado.esGratuito()}">Inscribirme Gratis</span>
+                                <span th:unless="${flyerDestacado.esGratuito()}">Inscribirme al curso</span>
                             </span>
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                 <line x1="5" y1="12" x2="19" y2="12"></line>
                                 <polyline points="12 5 19 12 12 19"></polyline>
                             </svg>
                         </a>
-                        <a th:href="${flyerDestacado.flyerUrl}" target="_blank" class="flyer-btn-secondary" title="Ver afiche oficial a resolución completa">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="11" cy="11" r="8"></circle>
-                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                                <line x1="11" y1="8" x2="11" y2="14"></line>
-                                <line x1="8" y1="11" x2="14" y2="11"></line>
+                        <a th:href="@{'/cursos/' + ${flyerDestacado.id}}" class="destacado-btn-secondary">
+                            <span>Ver programa académico</span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polyline points="12 5 19 12 12 19"></polyline>
                             </svg>
-                            <span>Ver Afiche en HD</span>
                         </a>
+                    </div>
+
+                    <!-- Tarifas Oficiales Diferenciadas -->
+                    <div class="destacado-pricing-row">
+                        <div th:if="${flyerDestacado.esGratuito()}" class="destacado-price-card destacado-price-general">
+                            <div class="destacado-price-label">MODALIDAD</div>
+                            <div class="destacado-price-val">Acceso Gratuito</div>
+                        </div>
+                        <div th:unless="${flyerDestacado.esGratuito()}" class="destacado-price-card destacado-price-general">
+                            <div class="destacado-price-label">PÚBLICO GENERAL</div>
+                            <div class="destacado-price-val" th:text="${'S/ ' + flyerDestacado.precio}">S/ 120.00</div>
+                        </div>
+                        <div th:if="${!flyerDestacado.esGratuito() and flyerDestacado.precioComunidad != null}" class="destacado-price-card destacado-price-una">
+                            <div class="destacado-price-label">COMUNIDAD UNA PUNO</div>
+                            <div class="destacado-price-val" th:text="${'S/ ' + flyerDestacado.precioComunidad}">S/ 20.00</div>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Presentación Vitrina del Flyer Publicado -->
-                <div class="flyer-destacado-showcase">
-                    <div class="flyer-showcase-badge">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                <div class="destacado-editorial-visual">
+                    <a th:href="@{'/cursos/' + ${flyerDestacado.id}}" title="Ver programa académico e inscribirse">
+                        <img th:src="${flyerDestacado.flyerUrl}" alt="Afiche Oficial de Convocatoria" class="destacado-editorial-img" loading="eager" decoding="async">
+                    </a>
+                    <a th:href="${flyerDestacado.flyerUrl}" target="_blank" class="destacado-visual-tag" title="Ver afiche en alta resolución HD">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            <line x1="11" y1="8" x2="11" y2="14"></line>
+                            <line x1="8" y1="11" x2="14" y2="11"></line>
                         </svg>
-                        <span>Afiche Oficial del Programa</span>
-                    </div>
-                    <div class="flyer-destacado-frame">
-                        <a th:href="@{'/cursos/' + ${flyerDestacado.id}}" title="Ver detalles e inscribirse">
-                            <img th:src="${flyerDestacado.flyerUrl}" alt="Afiche Oficial de Convocatoria" class="flyer-destacado-img" loading="eager" decoding="async">
-                        </a>
-                    </div>
+                        <span>Ver en HD</span>
+                    </a>
                 </div>
             </div>
         </div>

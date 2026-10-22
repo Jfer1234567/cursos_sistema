@@ -1,9 +1,6 @@
-# Tareas: Rediseño Ejecutivo del Panel de Administración (Estilo Institucional IIICCD)
+# Tareas: Rediseño Editorial Limpio de la Sección de Curso Destacado en Inicio
 
-- [x] 1. Estilos del Panel Ejecutivo en `pages.css` (`admin-dashboard-hero`, `admin-modules-grid`, `admin-module-card`) <!-- id: 69 -->
-- [x] 2. Rediseñar la vista `src/main/resources/templates/admin/dashboard.html` <!-- id: 70 -->
-  - [x] Banner de bienvenida con acento institucional dorado (`— ÁREA ADMINISTRATIVA`), tipografía académica y botones de acción rápida.
-  - [x] Sección `— ¿Qué deseas gestionar hoy?` con grilla 2x2 de tarjetas modulares elegantes (Cursos, Inscripciones, Pagos, Certificados) incluyendo íconos vectoriales granates, descripciones y contadores dinámicos.
-  - [x] Preservar la tabla de comprobantes pendientes de Yape con diseño limpio y responsivo.
-- [x] 3. Versionamiento de assets en `layout/main.html` para invalidar caché en navegadores <!-- id: 71 -->
-- [x] 4. Verificación técnica (`./gradlew test`), despliegue en GitHub `main` para Render y actualización de Memory Bank <!-- id: 72 -->
+- [x] 1. Crear los estilos CSS para la sección destacada limpia en `pages.css` (`seccion-flyer-destacado`, `destacado-editorial-grid`, `destacado-meta-row`, etc.) <!-- id: 73 -->
+- [x] 2. Actualizar la plantilla `src/main/resources/templates/public/index.html` con la nueva estructura editorial <!-- id: 74 -->
+- [x] 3. Actualizar versionamiento de assets `(v=5)` en `layout/main.html` para invalidar la caché del navegador <!-- id: 75 -->
+- [x] 4. Verificación técnica (`./gradlew test`), despliegue a GitHub `main` para Render y actualización de Memory Bank <!-- id: 76 -->

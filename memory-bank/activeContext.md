@@ -18,6 +18,15 @@
 - **Configuración Dinámica de Cobros (`ConfigPago`):** La directiva puede modificar el número de Yape, el titular, las instrucciones y la imagen del código QR desde el panel de administración sin tocar código ni reiniciar la aplicación.
 - **Canal Exclusivo de WhatsApp:** Enlace específico por curso que se entrega únicamente a estudiantes con pago aprobado en su panel personal y en el correo electrónico transaccional.
 - **Exportación de Padrón Excel (CSV con BOM UTF-8):** Endpoint administrativo que descarga el padrón completo con nombres, contactos, documento, estado y código de operación con soporte nativo para tildes y caracteres especiales en Microsoft Excel.
+- **Rediseño Editorial Limpio del Curso Destacado en Inicio (`public/index.html`):**
+  - Transformación integral de la sección de afiche oficial/curso destacado (anteriormente oscura/cyber) a un diseño editorial limpio y elegante con fondo blanco (#FFFFFF) inspirado en la maqueta académica compartida por el usuario.
+  - Insignia suave `INSCRIPCIONES ABIERTAS` en tono granate (#991B1B) sobre fondo crema/rosa tenue.
+  - Título editorial en gran formato (`#0F172A`) con subtítulo de especialización y acento lineal dorado (#D97706).
+  - Fila de metadatos académicos con íconos vectoriales circulares discretos en tono ámbar suave (`DOCENTE`, `INICIO`, `DURACIÓN`, `CRÉDITOS`).
+  - Botón primario de alta conversión granate `Inscribirme al curso →` y enlace sutil subrayado `Ver programa académico →`.
+  - Pastillas de precios suaves diferenciadas para `Público General` (verde menta suave `#F0FDF4`) y `Comunidad UNA Puno` (dorado/ámbar suave `#FEF9C3`).
+  - Vitrina de afiche a la derecha enmarcada con esquinas redondeadas (`border-radius: 16px`), elevación suave y tag para ver en alta resolución HD.
+  - Totalmente responsivo para móviles, tablets y escritorios, con invalidación de caché de assets a `v=5`.
 - **Doble Esquema Tarifario (Comunidad UNA vs. General):** Distinción visual y transparente para la comunidad universitaria de la UNA Puno y público externo.
 - **Valor Curricular Formal (Créditos Universitarios):** Los créditos académicos universitarios se guardan en el snapshot inmutable del certificado, se expresan en el PDF formal y son validados públicamente en `/verificar`.
 - **Estudio y Generador de Flyers Oficiales (`/admin/flyer`):** Herramienta integrada en el panel administrativo para crear y personalizar afiches publicitarios de los cursos en tiempo real. Permite alternar 3 temas visuales institucionales (Granate UNA, Cyber Dark y Deep Emerald), formatos vertical (4:5) y cuadrado (1:1), cargar datos automáticos de cualquier curso y descargar el afiche en PNG de alta resolución (2.5x con `html2canvas`) o copiarlo directo al portapapeles para WhatsApp y redes sociales. Incluye soporte interactivo para subir la fotografía profesional del ponente/docente con previsualización circular instantánea y recorte institucional.
