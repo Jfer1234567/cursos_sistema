@@ -1816,13 +1816,18 @@
 }
 
 .seccion-flyer-destacado .container {
-    max-width: 1320px;
+    max-width: 1560px;
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
 }
 
 .destacado-editorial-grid {
     display: grid;
-    grid-template-columns: 1fr 1.3fr;
-    gap: 3.5rem;
+    grid-template-columns: minmax(360px, 440px) 1fr;
+    gap: 3rem;
     align-items: center;
 }
 
@@ -2073,37 +2078,41 @@
 /* Vitrina Visual del Afiche */
 .destacado-editorial-visual {
     position: relative;
-    border-radius: 18px;
+    border-radius: 20px;
     overflow: hidden;
-    box-shadow: 0 16px 45px -4px rgba(15, 23, 42, 0.14), 0 0 0 1px rgba(15, 23, 42, 0.05);
+    box-shadow: 0 20px 50px -6px rgba(15, 23, 42, 0.16), 0 0 0 1px rgba(15, 23, 42, 0.06);
     border: 1px solid #E2E8F0;
-    background: #0B1120;
+    background: #F8FAFC;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     width: 100%;
+    min-height: 480px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .destacado-editorial-visual a {
-    display: block;
+    display: flex;
     width: 100%;
-    text-align: center;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    line-height: 0;
 }
 
 .destacado-editorial-visual:hover {
     transform: translateY(-3px);
-    box-shadow: 0 22px 55px -4px rgba(15, 23, 42, 0.2), 0 0 0 1px rgba(15, 23, 42, 0.08);
+    box-shadow: 0 26px 65px -6px rgba(15, 23, 42, 0.22), 0 0 0 1px rgba(15, 23, 42, 0.08);
 }
 
 .destacado-editorial-img {
     display: block;
     width: 100%;
     height: auto;
-    max-height: 650px;
+    max-height: 750px;
     object-fit: contain;
     margin: 0 auto;
-    border-radius: 17px;
+    border-radius: 19px;
 }
 
 .destacado-visual-tag {
@@ -2138,6 +2147,10 @@
         gap: 2.5rem;
     }
 
+    .destacado-editorial-visual {
+        min-height: auto;
+    }
+
     .destacado-title {
         font-size: 2.15rem;
     }
@@ -2153,7 +2166,7 @@
     }
 
     .destacado-editorial-img {
-        max-height: 480px;
+        max-height: 520px;
     }
 }
 
