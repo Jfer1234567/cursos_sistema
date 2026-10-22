@@ -224,12 +224,56 @@
             setInCache(window.location.href, document.documentElement.outerHTML);
         }
 
-        // A. Menú móvil responsive
+        // A. Menú móvil responsive con drawer, animación a 'X' y telón táctil
         const menuToggle = document.querySelector('.menu-toggle');
         const mainNav = document.querySelector('.main-nav');
-        if (menuToggle && mainNav) {
-            menuToggle.onclick = () => mainNav.classList.toggle('show');
+        const backdrop = document.getElementById('mobile-nav-backdrop');
+
+        function closeMobileNav() {
+            if (mainNav) mainNav.classList.remove('show');
+            if (menuToggle) menuToggle.classList.remove('active');
+            if (backdrop) backdrop.classList.remove('show');
+            document.body.style.overflow = '';
         }
+
+        function toggleMobileNav() {
+            if (!mainNav || !menuToggle) return;
+            const isOpen = mainNav.classList.toggle('show');
+            menuToggle.classList.toggle('active', isOpen);
+            if (backdrop) backdrop.classList.toggle('show', isOpen);
+            document.body.style.overflow = isOpen ? 'hidden' : '';
+        }
+
+        if (menuToggle) {
+            menuToggle.onclick = (e) => {
+                e.stopPropagation();
+                toggleMobileNav();
+            };
+        }
+
+        if (backdrop) {
+            backdrop.onclick = closeMobileNav;
+        }
+
+        // Cerrar menú al hacer clic en enlaces dentro del nav
+        if (mainNav) {
+            mainNav.querySelectorAll('a, button').forEach(el => {
+                el.addEventListener('click', () => {
+                    closeMobileNav();
+                });
+            });
+        }
+
+        // Cerrar menú con tecla ESC o si se redimensiona a pantalla ancha
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeMobileNav();
+        });
+
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 992) {
+                closeMobileNav();
+            }
+        });
 
         // B. Auto-ocultar alertas flash después de 5 segundos
         document.querySelectorAll('.alert').forEach(alert => {

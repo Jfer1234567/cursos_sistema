@@ -58,10 +58,10 @@ h1, h2, h3, h4, h5, h6 {
     line-height: 1.25;
 }
 
-h1 { font-size: 2.25rem; }
-h2 { font-size: 1.75rem; }
-h3 { font-size: 1.35rem; }
-h4 { font-size: 1.15rem; }
+h1 { font-size: clamp(1.75rem, 3.5vw + 0.75rem, 2.25rem); }
+h2 { font-size: clamp(1.4rem, 2.8vw + 0.5rem, 1.75rem); }
+h3 { font-size: clamp(1.15rem, 2vw + 0.4rem, 1.35rem); }
+h4 { font-size: clamp(1rem, 1.5vw + 0.35rem, 1.15rem); }
 
 p {
     color: var(--secondary);
@@ -104,6 +104,12 @@ a:hover {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+@media (max-width: 640px) {
+    .top-bar {
+        display: none;
+    }
 }
 
 /* Navbar con Efecto Cristal (Glassmorphism) */
@@ -202,22 +208,72 @@ a:hover {
     margin-left: 0.5rem;
 }
 
-/* Responsive Nav Toggle */
+/* Responsive Nav Toggle (Botón Hamburguesa Animado) */
 .menu-toggle {
     display: none;
     background: none;
     border: none;
     cursor: pointer;
     padding: 0.5rem;
+    min-width: 44px;
+    min-height: 44px;
+    border-radius: var(--radius-sm);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    transition: background-color 0.2s ease;
+    z-index: 1002;
+}
+
+.menu-toggle:hover {
+    background: rgba(109, 26, 36, 0.08);
 }
 
 .menu-toggle span {
     display: block;
     width: 24px;
-    height: 2px;
+    height: 2.5px;
     background-color: var(--text);
-    margin: 5px 0;
-    transition: var(--transition);
+    border-radius: 2px;
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease, background-color 0.2s ease;
+}
+
+/* Transformación fluida a 'X' de cierre */
+.menu-toggle.active span:nth-child(1) {
+    transform: translateY(7.5px) rotate(45deg);
+    background-color: var(--primary);
+}
+
+.menu-toggle.active span:nth-child(2) {
+    opacity: 0;
+    transform: translateX(-10px);
+}
+
+.menu-toggle.active span:nth-child(3) {
+    transform: translateY(-7.5px) rotate(-45deg);
+    background-color: var(--primary);
+}
+
+/* Telón de Fondo Oscuro (Backdrop) para Menú Móvil */
+.mobile-nav-backdrop {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(15, 23, 42, 0.5);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 998;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}
+
+.mobile-nav-backdrop.show {
+    display: block;
+    opacity: 1;
 }
 
 /* Footer Institucional */
@@ -271,11 +327,13 @@ a:hover {
 .footer-links a {
     color: #9CA3AF;
     font-size: 0.9rem;
+    display: inline-block;
+    transition: color 0.2s ease, transform 0.2s ease;
 }
 
 .footer-links a:hover {
     color: #FFFFFF;
-    padding-left: 4px;
+    transform: translateX(4px);
 }
 
 .footer-bottom {
@@ -287,42 +345,148 @@ a:hover {
     color: #9CA3AF;
 }
 
-/* Responsive Rules */
+/* ==========================================================================
+   Reglas Responsivas Universales
+   ========================================================================== */
+
+/* 1. Laptops y Pantallas Medianas (1024px a 1240px) */
+@media (max-width: 1240px) {
+    .container {
+        padding: 0 1.25rem;
+    }
+    .footer-grid {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 2rem;
+    }
+}
+
+/* 2. Tablets y Móviles (< 992px) */
 @media (max-width: 992px) {
     .menu-toggle {
-        display: block;
+        display: flex;
     }
 
     .main-nav {
-        display: none;
-        position: absolute;
+        display: flex;
+        position: fixed;
         top: 76px;
         left: 0;
         right: 0;
+        max-height: calc(100vh - 76px);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
         background: var(--surface);
         flex-direction: column;
         padding: 1.5rem;
-        box-shadow: var(--shadow-lg);
-        border-bottom: 1px solid var(--border);
-        gap: 1.25rem;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        border-bottom: 2px solid var(--border);
+        gap: 0.75rem;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-8px);
+        transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.25s;
+        pointer-events: none;
+        z-index: 999;
     }
 
     .main-nav.show {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+        pointer-events: auto;
+    }
+
+    .nav-link {
+        width: 100%;
+        padding: 0.75rem 0.85rem;
+        font-size: 1rem;
+        border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .nav-auth {
+        width: 100%;
         display: flex;
+        flex-direction: column;
+        gap: 0.65rem;
+        margin-left: 0;
+        margin-top: 0.75rem;
+        padding-top: 0.75rem;
+        border-top: 1px solid var(--border);
+    }
+
+    .nav-auth .btn,
+    .nav-auth form,
+    .nav-auth form button {
+        width: 100%;
+        justify-content: center;
+        min-height: 44px;
     }
 
     .footer-grid {
         grid-template-columns: 1fr 1fr;
+        gap: 2rem;
     }
 }
 
+/* 3. Tablets Verticales y Celulares (< 768px) */
+@media (max-width: 768px) {
+    /* Prevención del zoom automático en iOS Safari al enfocar inputs */
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="number"],
+    input[type="tel"],
+    input[type="date"],
+    select,
+    textarea,
+    .form-control,
+    .form-select {
+        font-size: 16px !important;
+    }
+
+    .main-content {
+        padding: 1.75rem 0;
+    }
+}
+
+/* 4. Celulares Estándar (< 640px) */
 @media (max-width: 640px) {
+    .container {
+        padding: 0 1rem;
+    }
+
     .footer-grid {
         grid-template-columns: 1fr;
+        gap: 2rem;
     }
+
     .footer-bottom {
         flex-direction: column;
         gap: 0.75rem;
         text-align: center;
+    }
+}
+
+/* 5. Celulares Pequeños Android e iPhone (<= 480px) */
+@media (max-width: 480px) {
+    .nav-container {
+        height: 64px;
+    }
+
+    .main-nav {
+        top: 64px;
+        max-height: calc(100vh - 64px);
+    }
+
+    .brand-logo {
+        height: 38px;
+    }
+
+    .brand-acronym {
+        font-size: 1.15rem;
+    }
+
+    .brand-sub {
+        display: none;
     }
 }

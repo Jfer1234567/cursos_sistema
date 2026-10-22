@@ -28,7 +28,7 @@
             </div>
 
             <!-- Datos del Participante y Curso -->
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; background: #F8FAFC; padding: 1.5rem; border-radius: var(--radius-sm); margin-bottom: 2rem; border: 1px solid var(--border);">
+            <div class="form-row-responsive-2" style="background: #F8FAFC; padding: 1.5rem; border-radius: var(--radius-sm); margin-bottom: 2rem; border: 1px solid var(--border);">
                 <div>
                     <h4 style="margin-bottom: 0.75rem; color: var(--text);">Datos del Participante:</h4>
                     <p style="margin-bottom: 0.3rem;"><strong>Nombre:</strong> <span th:text="${inscripcion.usuario.nombreCompleto}">Nombre</span></p>
@@ -84,7 +84,7 @@
                 </div>
 
                 <!-- Botones de Acción (Aprobar / Rechazar) -->
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; border-top: 1px solid var(--border); padding-top: 2rem;">
+                <div class="form-row-responsive-2" style="gap: 2rem; border-top: 1px solid var(--border); padding-top: 2rem;">
                     <!-- Aprobar -->
                     <div>
                         <h4 style="color: var(--success); margin-bottom: 0.5rem;">¿El pago es correcto?</h4>

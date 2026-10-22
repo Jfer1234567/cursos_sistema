@@ -1190,16 +1190,71 @@
     max-width: 270px;
 }
 
-/* Responsiveness */
-@media (max-width: 850px) {
+.dashboard-metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+
+/* ==========================================================================
+   Responsividad Integral de Páginas
+   ========================================================================== */
+@media (max-width: 992px) {
     .hero-grid {
         grid-template-columns: 1fr;
+        gap: 2.5rem;
     }
     .curso-detail-layout {
         grid-template-columns: 1fr;
     }
+    .curso-sidebar-card {
+        position: static;
+    }
     .hero-title {
-        font-size: 2.2rem;
+        font-size: clamp(2rem, 4vw + 1rem, 2.6rem);
+    }
+}
+
+@media (max-width: 640px) {
+    .hero {
+        padding: 3.25rem 0 3.5rem;
+    }
+    .hero-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+    .hero-actions .btn {
+        width: 100%;
+    }
+    .hero-card {
+        padding: 1.5rem;
+    }
+    .hero-stat-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 1.25rem;
+    }
+    .hero-stat-num {
+        font-size: 1.85rem;
+    }
+    .cursos-grid,
+    .lineas-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    .dashboard-metrics-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.85rem;
+    }
+}
+
+@media (max-width: 420px) {
+    .hero-stat-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    .dashboard-metrics-grid {
+        grid-template-columns: 1fr;
     }
 }
 

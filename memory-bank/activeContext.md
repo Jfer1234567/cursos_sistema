@@ -187,6 +187,13 @@
   - *Identidad Visual:* Badges verdes `GRATIS / Acceso Libre` en catálogo, detalle de curso y portada institucional. En el listado administrativo se muestra `Gratis`, y en el formulario se documenta `0.00` como clave de gratuidad.
   - *Pruebas:* Suite ampliada a 31 pruebas automatizadas con 100% de éxito.
 
+- **Diseño Web Responsivo Integral (Responsive Web Design Multi-Dispositivo):**
+  - *Breakpoints y Cobertura:* Soporte optimizado para Computadoras (1440px, 1920px+), Laptops (1366px, 1280px, 1024px), Tablets en orientación horizontal (1024px) y vertical (768px - 992px), y Celulares Android e iPhone (360px a 430px).
+  - *Navegación Móvil de Alto Rendimiento:* Botón hamburguesa accesible con micro-animación fluida hacia ícono de 'X' (`.menu-toggle.active`), menú desplegable tipo Drawer fijado en parte superior con scroll táctil acelerado (`-webkit-overflow-scrolling: touch`), cierre automático al tocar cualquier enlace, backdrop sombreado táctil o tecla Escape, y bloqueo de scroll de fondo mientras el menú esté visible.
+  - *Tipografía y Formularios Adaptativos:* Jerarquía fluida calculada con funciones `clamp()`, ajuste de botones a objetivos táctiles mínimos de 44px (estándares WCAG 2.1 AA) y forzado de `font-size: 16px` en inputs móviles para erradicar el auto-zoom indeseado en navegadores iOS Safari.
+  - *Refactorización de Grillas Rígidas:* Implementación de clases utilitarias (.form-row-responsive-2, .form-row-responsive-3, .form-row-responsive-split, .grid-split-card y .dashboard-metrics-grid) sustituyendo estilos inline en `form.html`, `curso-detalle.html`, `quienes-somos.html`, `contacto.html`, `inscripcion.html`, `detalle.html`, `certificado.html` y `dashboard.html`.
+
 **Próximos Pasos:**
 - Monitoreo en vivo de la plataforma en producción en Render tras el despliegue automático.
-- Carga de primeros cursos y flyers oficiales desde el panel de administración.
+- Pruebas adicionales en dispositivos móviles físicos.
+- Carga de primeros cursos y afiches oficiales desde el panel de administración.
