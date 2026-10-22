@@ -19,15 +19,15 @@
 - **Canal Exclusivo de WhatsApp:** Enlace específico por curso que se entrega únicamente a estudiantes con pago aprobado en su panel personal y en el correo electrónico transaccional.
 - **Exportación de Padrón Excel (CSV con BOM UTF-8):** Endpoint administrativo que descarga el padrón completo con nombres, contactos, documento, estado y código de operación con soporte nativo para tildes y caracteres especiales en Microsoft Excel.
 - **Rediseño Editorial Limpio del Curso Destacado en Inicio (`public/index.html`):**
-  - Transformación integral de la sección de afiche oficial/curso destacado (anteriormente oscura/cyber) a un diseño editorial limpio y elegante con fondo blanco puro (#FFFFFF) inspirado en la maqueta académica compartida por el usuario.
-  - Insignia suave `INSCRIPCIONES ABIERTAS` en tono granate (#991B1B) sobre fondo crema/rosa tenue.
+  - Transformación integral de la sección de afiche oficial/curso destacado a un diseño editorial limpio y elegante con fondo blanco puro (#FFFFFF) inspirado en la maqueta académica.
+  - Insignia suave `INSCRIPCIONES ABIERTAS` en tono granate (#991B1B) sobre fondo crema/rosa tenue con ancho autoajustado (`align-self: flex-start; width: fit-content;`).
   - Título editorial en gran formato (`#0F172A`) con subtítulo de especialización y acento lineal dorado (#D97706).
   - Fila de metadatos académicos con íconos vectoriales circulares discretos en tono ámbar suave (`DOCENTE`, `INICIO`, `DURACIÓN`, `CRÉDITOS`).
-  - Botón primario de alta conversión granate `Inscribirme al curso →` y enlace sutil subrayado `Ver programa académico →`.
+  - Único botón de acción enfocado y de alta conversión: `Inscribirme al curso →` (se eliminó el botón redundante `[Ver programa académico]` por indicación del usuario).
   - Pastillas de precios suaves diferenciadas para `Público General` (verde menta suave `#F0FDF4`) y `Comunidad UNA Puno` (dorado/ámbar suave `#FEF9C3`).
-  - **Flyer a Tamaño Completo (Llenado Total del Recuadro):** Se ajustó el grid a `1fr 1.35fr` con `align-items: stretch;`, de manera que la vitrina visual ocupa de arriba a abajo toda la altura del bloque de información (`height: 100%; min-height: 520px;`). La imagen se configuró con `width: 100%; height: 100%; object-fit: cover;` para que llene el 100% del marco redondeado (`18px`) sin dejar vacíos superior o inferior, tal como en el recuadro indicado por el usuario.
-  - **Fondo Blanco Puro:** Se retiraron completamente las marcas de agua de fondo a petición del usuario para mantener la tarjeta inmaculada.
-  - Totalmente responsivo para móviles, tablets y escritorios, con invalidación de caché de assets a `v=7`.
+  - **Vitrina del Flyer a Escala Completa sin Recorte:** Cuadrícula balanceada `1fr 1.3fr` con `align-items: center;`. La imagen del flyer se renderiza completa al 100% con `object-fit: contain; width: 100%; height: auto; max-height: 650px;` dentro de un marco redondeado (`18px`) con sombra multicapa, garantizando que ningún texto, encabezado ni detalle del afiche sea recortado.
+  - **Fondo Blanco Inmaculado:** Eliminación total de marcas de agua.
+  - Totalmente responsivo para móviles, tablets y escritorios, con invalidación de caché de assets a `v=8`.
 - **Doble Esquema Tarifario (Comunidad UNA vs. General):** Distinción visual y transparente para la comunidad universitaria de la UNA Puno y público externo.
 - **Valor Curricular Formal (Créditos Universitarios):** Los créditos académicos universitarios se guardan en el snapshot inmutable del certificado, se expresan en el PDF formal y son validados públicamente en `/verificar`.
 - **Estudio y Generador de Flyers Oficiales (`/admin/flyer`):** Herramienta integrada en el panel administrativo para crear y personalizar afiches publicitarios de los cursos en tiempo real. Permite alternar 3 temas visuales institucionales (Granate UNA, Cyber Dark y Deep Emerald), formatos vertical (4:5) y cuadrado (1:1), cargar datos automáticos de cualquier curso y descargar el afiche en PNG de alta resolución (2.5x con `html2canvas`) o copiarlo directo al portapapeles para WhatsApp y redes sociales. Incluye soporte interactivo para subir la fotografía profesional del ponente/docente con previsualización circular instantánea y recorte institucional.
