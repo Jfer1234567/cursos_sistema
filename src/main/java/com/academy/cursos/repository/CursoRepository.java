@@ -21,7 +21,7 @@ public interface CursoRepository extends JpaRepository<Curso, Long> {
     List<Curso> findByEstadoAndLineaInvestigacion(@Param("estado") EstadoCurso estado, @Param("lineaId") Long lineaId);
 
     @EntityGraph(attributePaths = {"areaInvestigacion", "areaInvestigacion.lineaInvestigacion"})
-    List<Curso> findTop6ByEstadoOrderByCreatedAtDesc(EstadoCurso estado);
+    List<Curso> findTop6ByEstadoOrderByFechaInicioDescCreatedAtDesc(EstadoCurso estado);
 
     long countByEstado(EstadoCurso estado);
 
@@ -33,5 +33,5 @@ public interface CursoRepository extends JpaRepository<Curso, Long> {
 
     List<Curso> findByEstadoAndFlyerPublicadoTrueAndFlyerUrlIsNotNullOrderByUpdatedAtDesc(EstadoCurso estado);
 
-    Optional<Curso> findFirstByEstadoAndFlyerPublicadoTrueAndFlyerUrlIsNotNullOrderByUpdatedAtDesc(EstadoCurso estado);
+    Optional<Curso> findFirstByEstadoAndFlyerPublicadoTrueAndFlyerUrlIsNotNullOrderByFechaInicioDescCreatedAtDesc(EstadoCurso estado);
 }
