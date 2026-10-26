@@ -1,9 +1,8 @@
-# Tareas: Eliminación Completa del Generador de Flyers Oficiales
+# Tareas: Secuencia Cronológica de Publicación (Recién Creado Arriba - createdAt DESC)
 
-- [x] 1. Eliminar controlador backend `AdminFlyerController.java` y su prueba unitaria `AdminFlyerControllerTest.java` <!-- id: 94 -->
-- [x] 2. Eliminar vista de edición `templates/admin/flyer/editor.html` y script frontend `static/js/flyer-generator.js` <!-- id: 95 -->
-- [x] 3. Remover la opción "Estudio de Flyer Oficial" del menú desplegable de acciones en `templates/admin/cursos/lista.html` <!-- id: 96 -->
-- [x] 4. Limpiar reglas CSS del editor de flyers en `static/css/pages.css` (~420 líneas) y filtro SPA en `static/js/main.js` <!-- id: 97 -->
-- [x] 5. Actualizar el contexto del sistema en `memory-bank/` (`activeContext.md` y `progress.md`) <!-- id: 98 -->
-- [x] 6. Ejecutar suite de pruebas con `./gradlew test` asegurando 100% de éxito <!-- id: 99 -->
-- [x] 7. Realizar commit y sincronizar con `origin/main` para despliegue en Render <!-- id: 100 -->
+- [x] 1. Actualizar repositorio `CursoRepository.java` sustituyendo ordenamiento por `createdAt DESC` (inmutable ante ediciones) <!-- id: 101 -->
+- [x] 2. Ajustar `CursoService.java` en `obtenerFlyerPrincipal()`, `listarDestacados()` y fallback para priorizar `createdAt DESC` <!-- id: 102 -->
+- [x] 3. Mejorar formulario `admin/cursos/form.html` para que al subir afiche active publicación y estado `PUBLICADO` si estaba en borrador <!-- id: 103 -->
+- [x] 4. Actualizar o verificar pruebas unitarias en `CursoFlyerTest.java` y `PublicControllerTest.java` <!-- id: 104 -->
+- [x] 5. Ejecutar suite de pruebas con `./gradlew test` (100% aprobadas) <!-- id: 105 -->
+- [x] 6. Confirmar cambios con git commit y push a `main` para Render <!-- id: 106 -->

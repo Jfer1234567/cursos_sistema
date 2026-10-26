@@ -17,21 +17,21 @@ public interface CursoRepository extends JpaRepository<Curso, Long> {
     List<Curso> findByEstado(EstadoCurso estado);
 
     @EntityGraph(attributePaths = {"areaInvestigacion", "areaInvestigacion.lineaInvestigacion"})
-    @Query("SELECT c FROM Curso c WHERE c.estado = :estado AND (:lineaId IS NULL OR c.areaInvestigacion.lineaInvestigacion.id = :lineaId)")
+    @Query("SELECT c FROM Curso c WHERE c.estado = :estado AND (:lineaId IS NULL OR c.areaInvestigacion.lineaInvestigacion.id = :lineaId) ORDER BY c.createdAt DESC")
     List<Curso> findByEstadoAndLineaInvestigacion(@Param("estado") EstadoCurso estado, @Param("lineaId") Long lineaId);
 
     @EntityGraph(attributePaths = {"areaInvestigacion", "areaInvestigacion.lineaInvestigacion"})
-    List<Curso> findTop6ByEstadoOrderByFechaInicioDescCreatedAtDesc(EstadoCurso estado);
+    List<Curso> findTop6ByEstadoOrderByCreatedAtDesc(EstadoCurso estado);
 
     long countByEstado(EstadoCurso estado);
 
     long countByEstadoIn(List<EstadoCurso> estados);
 
-    List<Curso> findByFlyerPublicadoTrueAndFlyerUrlIsNotNullOrderByUpdatedAtDesc();
+    List<Curso> findByFlyerPublicadoTrueAndFlyerUrlIsNotNullOrderByCreatedAtDesc();
 
-    Optional<Curso> findFirstByFlyerPublicadoTrueAndFlyerUrlIsNotNullOrderByUpdatedAtDesc();
+    Optional<Curso> findFirstByFlyerPublicadoTrueAndFlyerUrlIsNotNullOrderByCreatedAtDesc();
 
-    List<Curso> findByEstadoAndFlyerPublicadoTrueAndFlyerUrlIsNotNullOrderByUpdatedAtDesc(EstadoCurso estado);
+    List<Curso> findByEstadoAndFlyerPublicadoTrueAndFlyerUrlIsNotNullOrderByCreatedAtDesc(EstadoCurso estado);
 
-    Optional<Curso> findFirstByEstadoAndFlyerPublicadoTrueAndFlyerUrlIsNotNullOrderByFechaInicioDescCreatedAtDesc(EstadoCurso estado);
+    Optional<Curso> findFirstByEstadoAndFlyerPublicadoTrueAndFlyerUrlIsNotNullOrderByCreatedAtDesc(EstadoCurso estado);
 }

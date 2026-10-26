@@ -49,7 +49,7 @@
   - Reducción del tamaño total del proyecto de **65.6 MB a 5.63 MB** (código fuente limpio: 1.46 MB), manteniendo el servidor de desarrollo activo sin interrupciones.
 - [x] **Carga y Publicación Manual de Flyers Oficiales:**
   - Sustitución de la herramienta de diseño interactivo (`/admin/flyer`) por flujo directo de subida manual de imágenes oficiales (`flyerFile` / `flyerUrl`).
-  - Capacidad de destacar cualquier afiche en la portada del Inicio con orden cronológico por fecha de inicio (`fechaInicio DESC`).
+  - Capacidad de destacar cualquier afiche en la portada del Inicio con orden cronológico por fecha de creación (`createdAt DESC`) para que el evento recién creado suba a la cima y se preserve inmutable ante ediciones.
   - Limpieza de controladores, vistas y scripts redundantes (`AdminFlyerController`, `editor.html`, `flyer-generator.js`, y estilos asociados).
 - [x] **Fotografía y Perfil del Ponente / Docente Investigador:**
   - Incorporados los campos `docenteFotoUrl` y `docenteCargo` en la entidad `Curso` y en `CursoDTO`.

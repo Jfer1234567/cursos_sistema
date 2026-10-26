@@ -128,4 +128,46 @@ public class CursoFlyerTest {
         // Verificar que ya no existe en la base de datos
         assertTrue(cursoRepository.findById(cursoId).isEmpty());
     }
+
+    @Test
+    @DisplayName("El curso recién creado con flyer debe desplazar al anterior como flyer principal (createdAt DESC)")
+    void testRecienCreadoDesplazaAnterior() throws InterruptedException {
+        AreaInvestigacion area = areaRepository.findAll().stream().findFirst().orElseThrow();
+
+        CursoDTO dto1 = new CursoDTO();
+        dto1.setNombre("Curso Primer Evento");
+        dto1.setDescripcion("Descripción primer evento");
+        dto1.setAreaInvestigacionId(area.getId());
+        dto1.setDocenteResponsable("Docente 1");
+        dto1.setPrecio(new BigDecimal("100.00"));
+        dto1.setCuposTotales(20);
+        dto1.setDuracion("20 horas");
+        dto1.setCreditos(2);
+        dto1.setEstado(EstadoCurso.PUBLICADO);
+        dto1.setFlyerUrl("https://res.cloudinary.com/fq7lbg0c/image/upload/v12345/flyer_1.jpg");
+        dto1.setFlyerPublicado(true);
+
+        Curso c1 = cursoService.guardarOActualizar(dto1);
+        assertEquals(c1.getId(), cursoService.obtenerFlyerPrincipal().orElseThrow().getId());
+
+        Thread.sleep(50);
+
+        CursoDTO dto2 = new CursoDTO();
+        dto2.setNombre("Curso Segundo Evento Recién Creado");
+        dto2.setDescripcion("Descripción segundo evento");
+        dto2.setAreaInvestigacionId(area.getId());
+        dto2.setDocenteResponsable("Docente 2");
+        dto2.setPrecio(new BigDecimal("120.00"));
+        dto2.setCuposTotales(25);
+        dto2.setDuracion("30 horas");
+        dto2.setCreditos(3);
+        dto2.setEstado(EstadoCurso.PUBLICADO);
+        dto2.setFlyerUrl("https://res.cloudinary.com/fq7lbg0c/image/upload/v12345/flyer_2.jpg");
+        dto2.setFlyerPublicado(true);
+
+        Curso c2 = cursoService.guardarOActualizar(dto2);
+
+        // El segundo curso (recién creado) debe ocupar la posición del flyer principal
+        assertEquals(c2.getId(), cursoService.obtenerFlyerPrincipal().orElseThrow().getId());
+    }
 }

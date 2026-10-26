@@ -45,7 +45,7 @@ public class CursoService {
 
     @Cacheable(value = "cursosDestacados")
     public List<Curso> listarDestacados() {
-        return cursoRepository.findTop6ByEstadoOrderByFechaInicioDescCreatedAtDesc(EstadoCurso.PUBLICADO);
+        return cursoRepository.findTop6ByEstadoOrderByCreatedAtDesc(EstadoCurso.PUBLICADO);
     }
 
     public List<Curso> listarTodos() {
@@ -125,7 +125,7 @@ public class CursoService {
         boolean publicarFlyer = dto.getFlyerPublicado() != null && dto.getFlyerPublicado() && dto.getEstado() == EstadoCurso.PUBLICADO;
         if (publicarFlyer) {
             // El nuevo evento ocupa la posición superior; los eventos anteriores bajan a la lista inferior
-            List<Curso> anteriores = cursoRepository.findByFlyerPublicadoTrueAndFlyerUrlIsNotNullOrderByUpdatedAtDesc();
+            List<Curso> anteriores = cursoRepository.findByFlyerPublicadoTrueAndFlyerUrlIsNotNullOrderByCreatedAtDesc();
             for (Curso ant : anteriores) {
                 if (curso.getId() == null || !ant.getId().equals(curso.getId())) {
                     ant.setFlyerPublicado(false);
@@ -141,22 +141,16 @@ public class CursoService {
     @Cacheable(value = "flyerPrincipal")
     public Optional<Curso> obtenerFlyerPrincipal() {
         // Solo los cursos en estado PUBLICADO pueden proyectarse en el Inicio.
-        // Prioridad: curso con flyer manualmente publicado, ordenado por fecha de inicio más reciente.
-        Optional<Curso> flyer = cursoRepository.findFirstByEstadoAndFlyerPublicadoTrueAndFlyerUrlIsNotNullOrderByFechaInicioDescCreatedAtDesc(EstadoCurso.PUBLICADO);
+        // Prioridad: curso con flyer manualmente publicado, ordenado por fecha de creación más reciente (createdAt DESC).
+        Optional<Curso> flyer = cursoRepository.findFirstByEstadoAndFlyerPublicadoTrueAndFlyerUrlIsNotNullOrderByCreatedAtDesc(EstadoCurso.PUBLICADO);
         if (flyer.isPresent()) {
             return flyer;
         }
         // Fallback: si no hay ninguno marcado explícitamente pero hay cursos publicados con afiche,
-        // tomar el curso publicado con la fecha de inicio más próxima/reciente.
+        // tomar el curso publicado más recientemente (createdAt DESC).
         return cursoRepository.findByEstado(EstadoCurso.PUBLICADO).stream()
                 .filter(c -> c.getFlyerUrl() != null && !c.getFlyerUrl().trim().isEmpty())
                 .sorted((a, b) -> {
-                    // Ordenar por fechaInicio DESC (el más reciente primero), con fallback a createdAt
-                    if (a.getFechaInicio() != null && b.getFechaInicio() != null) {
-                        return b.getFechaInicio().compareTo(a.getFechaInicio());
-                    }
-                    if (b.getFechaInicio() != null) return 1;
-                    if (a.getFechaInicio() != null) return -1;
                     if (b.getCreatedAt() == null || a.getCreatedAt() == null) return 0;
                     return b.getCreatedAt().compareTo(a.getCreatedAt());
                 })
@@ -164,7 +158,7 @@ public class CursoService {
     }
 
     public List<Curso> obtenerFlyersPublicados() {
-        return cursoRepository.findByEstadoAndFlyerPublicadoTrueAndFlyerUrlIsNotNullOrderByUpdatedAtDesc(EstadoCurso.PUBLICADO);
+        return cursoRepository.findByEstadoAndFlyerPublicadoTrueAndFlyerUrlIsNotNullOrderByCreatedAtDesc(EstadoCurso.PUBLICADO);
     }
 
     @Transactional
@@ -178,7 +172,7 @@ public class CursoService {
         }
 
         if (publicado) {
-            List<Curso> anteriores = cursoRepository.findByFlyerPublicadoTrueAndFlyerUrlIsNotNullOrderByUpdatedAtDesc();
+            List<Curso> anteriores = cursoRepository.findByFlyerPublicadoTrueAndFlyerUrlIsNotNullOrderByCreatedAtDesc();
             for (Curso ant : anteriores) {
                 if (!ant.getId().equals(id)) {
                     ant.setFlyerPublicado(false);

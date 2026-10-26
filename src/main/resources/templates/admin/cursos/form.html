@@ -289,6 +289,10 @@
                     if (checkbox && !checkbox.checked) {
                         checkbox.checked = true; // Activar publicación al seleccionar un nuevo afiche
                     }
+                    const estadoSelect = document.getElementById('estado');
+                    if (estadoSelect && estadoSelect.value === 'BORRADOR') {
+                        estadoSelect.value = 'PUBLICADO';
+                    }
                 };
                 reader.readAsDataURL(input.files[0]);
             }
