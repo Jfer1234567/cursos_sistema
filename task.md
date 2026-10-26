@@ -1,7 +1,9 @@
-# Tareas: Aumento Significativo del Tamaño de Muestra del Flyer Destacado
+# Tareas: Eliminación Completa del Generador de Flyers Oficiales
 
-- [x] 1. Ampliar el contenedor y redistribuir el grid en `pages.css` para darle protagonismo masivo a la columna del flyer (`max-width: 1560px`, `grid-template-columns: minmax(360px, 440px) 1fr`, `min-height: 480px`, `max-height: 750px`) <!-- id: 89 -->
-- [x] 2. Eliminar el fondo oscuro `#0B1120` de `.destacado-editorial-visual` para que no encajone las imágenes con marco negro y colocarlas sobre una vitrina pulcra `#F8FAFC` <!-- id: 90 -->
-- [x] 3. Incrementar versión de caché a `(v=9)` en `layout/main.html` <!-- id: 91 -->
-- [x] 4. Ejecutar verificación con `./gradlew test` (31/31 pruebas) <!-- id: 92 -->
-- [x] 5. Registrar commit y desplegar a GitHub `main` para Render <!-- id: 93 -->
+- [x] 1. Eliminar controlador backend `AdminFlyerController.java` y su prueba unitaria `AdminFlyerControllerTest.java` <!-- id: 94 -->
+- [x] 2. Eliminar vista de edición `templates/admin/flyer/editor.html` y script frontend `static/js/flyer-generator.js` <!-- id: 95 -->
+- [x] 3. Remover la opción "Estudio de Flyer Oficial" del menú desplegable de acciones en `templates/admin/cursos/lista.html` <!-- id: 96 -->
+- [x] 4. Limpiar reglas CSS del editor de flyers en `static/css/pages.css` (~420 líneas) y filtro SPA en `static/js/main.js` <!-- id: 97 -->
+- [x] 5. Actualizar el contexto del sistema en `memory-bank/` (`activeContext.md` y `progress.md`) <!-- id: 98 -->
+- [x] 6. Ejecutar suite de pruebas con `./gradlew test` asegurando 100% de éxito <!-- id: 99 -->
+- [x] 7. Realizar commit y sincronizar con `origin/main` para despliegue en Render <!-- id: 100 -->

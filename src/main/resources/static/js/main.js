@@ -70,7 +70,6 @@
             // Excluir rutas de descarga o acciones no aptas para swap SPA
             if (url.pathname.includes('/logout') || url.pathname.includes('/pdf') || url.pathname.includes('/descargar')) return false;
             if (url.pathname.endsWith('.pdf') || url.pathname.endsWith('.png') || url.pathname.endsWith('.jpg') || url.pathname.endsWith('.jpeg')) return false;
-            if (url.pathname.includes('/admin/flyer')) return false; // Editor especializado
             return true;
         } catch (e) {
             return false;

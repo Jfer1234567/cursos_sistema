@@ -47,15 +47,10 @@
 - [x] **Optimización y Limpieza del Espacio en Disco:**
   - Depuración del artefacto fat JAR de compilación previa (`build/libs/cursos-0.0.1-SNAPSHOT.jar` de 61.4 MB) y eliminación de archivos plantilla innecesarios (`HELP.md`).
   - Reducción del tamaño total del proyecto de **65.6 MB a 5.63 MB** (código fuente limpio: 1.46 MB), manteniendo el servidor de desarrollo activo sin interrupciones.
-- [x] **Estudio de Diseño y Generador de Flyers Oficiales del IIICCD (`/admin/flyer`):**
-  - Implementado `AdminFlyerController` con endpoints `/admin/flyer`, `/admin/flyer/curso/{id}` y `/admin/cursos/{id}/flyer`.
-  - Diseñada la interfaz gráfica interactiva en `editor.html` con layout dividido: panel de control visual reactivo a la izquierda y lienzo del afiche a la derecha.
-  - Implementado `flyer-generator.js` con enlace reactivo bidireccional en tiempo real para textos, badges, docentes, fechas, horas, créditos, inversión y QR.
-  - Soporte de 3 temas de color corporativos: Granate UNA Puno (Oficial), Cyber Deep IA (Azul Noche) y Esmeralda Ciencia de Datos.
-  - Soporte de formato vertical (4:5 para WhatsApp y feed) y cuadrado (1:1).
-  - Motor de exportación a imagen PNG Ultra HD con escala 2.5x (`html2canvas`) y botón para copiado directo al portapapeles.
-  - Integración en la navegación administrativa (`header.html`) y botones de acceso directo "🎨 Crear Flyer" en la lista y detalle de cursos.
-  - Pruebas automatizadas en `AdminFlyerControllerTest.java` ejecutadas y aprobadas al 100% con Gradle.
+- [x] **Carga y Publicación Manual de Flyers Oficiales:**
+  - Sustitución de la herramienta de diseño interactivo (`/admin/flyer`) por flujo directo de subida manual de imágenes oficiales (`flyerFile` / `flyerUrl`).
+  - Capacidad de destacar cualquier afiche en la portada del Inicio con orden cronológico por fecha de inicio (`fechaInicio DESC`).
+  - Limpieza de controladores, vistas y scripts redundantes (`AdminFlyerController`, `editor.html`, `flyer-generator.js`, y estilos asociados).
 - [x] **Fotografía y Perfil del Ponente / Docente Investigador:**
   - Incorporados los campos `docenteFotoUrl` y `docenteCargo` en la entidad `Curso` y en `CursoDTO`.
   - Integrada la subida de archivos en `CursoService` con almacenamiento estructurado en `uploads/docentes/`.
