@@ -21,14 +21,14 @@
         </div>
 
         <!-- Formulario de Búsqueda -->
-        <div class="card card-body" style="padding: 2rem; margin-bottom: 2.5rem; background: #FFFFFF; border-top: 4px solid var(--accent);">
+        <div class="card card-body cert-search-card" style="margin-bottom: 2.5rem; background: #FFFFFF; border-top: 4px solid var(--accent);">
             <form th:action="@{/verificar}" method="get">
-                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                    <div style="flex: 1; min-width: 250px;">
-                        <input type="text" name="codigo" class="form-control" style="font-size: 1.1rem; text-transform: uppercase;"
+                <div class="cert-search-form-row" style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <div style="flex: 1 1 200px; min-width: 0; width: 100%;">
+                        <input type="text" name="codigo" class="form-control" style="font-size: 1.05rem; text-transform: uppercase; min-height: 48px;"
                                placeholder="Ej. IIICCD-A3F7K9" th:value="${codigoBuscado}" required autofocus>
                     </div>
-                    <button type="submit" class="btn btn-primary" style="padding: 0.75rem 2rem;">
+                    <button type="submit" class="btn btn-primary" style="padding: 0.75rem 2rem; min-height: 48px; white-space: nowrap;">
                         Validar Código
                     </button>
                 </div>

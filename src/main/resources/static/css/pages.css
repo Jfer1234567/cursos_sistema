@@ -493,13 +493,147 @@
 .curso-detail-layout {
     display: grid;
     grid-template-columns: 2fr 1fr;
-    gap: 2.5rem;
+    grid-template-areas:
+        "header sidebar"
+        "content sidebar";
+    gap: 1.5rem 2.5rem;
     align-items: start;
 }
 
+.curso-detail-header {
+    grid-area: header;
+}
+
+.curso-detail-main {
+    grid-area: content;
+}
+
 .curso-sidebar-card {
+    grid-area: sidebar;
     position: sticky;
     top: 100px;
+}
+
+.curso-detail-title {
+    font-size: clamp(1.45rem, 4vw + 0.5rem, 2.35rem);
+    line-height: 1.25;
+    margin-bottom: 0.5rem;
+    color: var(--primary);
+    word-break: break-word;
+}
+
+.curso-price-hero {
+    font-size: clamp(2rem, 5vw, 2.6rem);
+    font-weight: 800;
+    color: var(--primary);
+    margin: 0.3rem 0 0.5rem;
+    line-height: 1.1;
+}
+
+.curso-tarifa-una-box {
+    background: #ECFDF5;
+    border: 1px solid #A7F3D0;
+    border-radius: var(--radius-sm);
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.curso-tarifa-una-val {
+    font-size: clamp(1.4rem, 4vw, 1.8rem);
+    font-weight: 800;
+    color: #047857;
+    margin: 0.2rem 0;
+}
+
+.curso-docente-card {
+    grid-column: span 2;
+    display: flex;
+    align-items: center;
+    gap: 1.15rem;
+    background: #F8FAFC;
+    padding: 1.15rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+}
+
+.curso-docente-avatar {
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2.5px solid var(--primary);
+    flex-shrink: 0;
+    background: #E2E8F0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-sm);
+}
+
+.curso-docente-tag {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--primary);
+    letter-spacing: 0.5px;
+    display: block;
+}
+
+.curso-docente-name {
+    font-size: 1.1rem;
+    color: var(--text-dark);
+    display: block;
+}
+
+.curso-docente-cargo {
+    margin: 0.2rem 0 0 0;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    display: block;
+}
+
+.curso-sidebar-body {
+    padding: 2rem;
+    text-align: center;
+}
+
+/* ==========================================================================
+   Flujo de Inscripción y Pago Yape
+   ========================================================================== */
+.yape-flow-card {
+    border-top: 5px solid var(--primary);
+    padding: 2.5rem;
+}
+
+.yape-course-title {
+    font-size: clamp(1.4rem, 4vw, 1.85rem);
+    margin-bottom: 0.25rem;
+    color: var(--text-dark);
+}
+
+.yape-info-box {
+    background: #F8FAFC;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 2rem;
+    margin-bottom: 2.5rem;
+}
+
+.yape-phone-val {
+    font-size: clamp(1.4rem, 5vw, 1.8rem);
+    font-weight: 800;
+    color: #7209B7;
+    letter-spacing: 1px;
+}
+
+.yape-qr-img {
+    width: 170px;
+    height: 170px;
+    object-fit: contain;
+    border-radius: var(--radius-sm);
+    border: 2px solid #7209B7;
+    background: #FFFFFF;
+    padding: 4px;
 }
 
 /* ==========================================================================
@@ -1068,19 +1202,64 @@
 
 @media (max-width: 480px) {
     .auth-page-container {
-        padding: 1.25rem 0.75rem;
+        padding: 1rem 0.5rem;
     }
 
     .auth-brand-pane {
-        padding: 2rem 1.5rem;
+        padding: 1.5rem 1.15rem;
     }
 
     .auth-form-pane {
-        padding: 2rem 1.5rem;
+        padding: 1.5rem 1.15rem;
     }
 
     .auth-form-title {
-        font-size: 1.5rem;
+        font-size: 1.35rem;
+    }
+
+    .yape-flow-card {
+        padding: 1.25rem 0.85rem;
+    }
+
+    .yape-info-box {
+        padding: 1rem 0.75rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .yape-qr-img {
+        width: 145px;
+        height: 145px;
+    }
+}
+
+@media (max-width: 360px) {
+    .auth-page-container {
+        padding: 0.75rem 0.25rem;
+    }
+
+    .auth-brand-pane {
+        padding: 1.25rem 0.75rem;
+    }
+
+    .auth-form-pane {
+        padding: 1.25rem 0.75rem;
+    }
+
+    .auth-form-title {
+        font-size: 1.2rem;
+    }
+
+    .yape-flow-card {
+        padding: 1rem 0.5rem;
+    }
+
+    .yape-info-box {
+        padding: 0.85rem 0.5rem;
+    }
+
+    .yape-qr-img {
+        width: 130px;
+        height: 130px;
     }
 }
 
@@ -1194,6 +1373,71 @@
     max-width: 270px;
 }
 
+.cert-title-honor {
+    font-size: clamp(1.4rem, 4.5vw, 2.5rem);
+    font-weight: 900;
+    color: var(--primary);
+    margin-bottom: 1.25rem;
+    letter-spacing: 1.5px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.cert-participant-name {
+    font-size: clamp(1.25rem, 4.5vw, 2.2rem);
+    font-weight: 900;
+    color: #0F172A;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
+    word-break: break-word;
+}
+
+.cert-course-name {
+    font-size: clamp(1.1rem, 3.8vw, 1.65rem);
+    font-weight: 800;
+    color: var(--primary);
+    margin-bottom: 1.25rem;
+    word-break: break-word;
+}
+
+.cert-header-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+/* ==========================================================================
+   Panel de Participante ("Mis Cursos")
+   ========================================================================== */
+.participante-card-layout {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+.participante-card-info {
+    flex: 1 1 340px;
+    min-width: 0;
+}
+
+.participante-card-actions {
+    flex: 0 1 250px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+}
+
+.participante-curso-name {
+    font-size: clamp(1.15rem, 3.5vw, 1.4rem);
+    margin-bottom: 0.4rem;
+    color: var(--text-dark);
+    word-break: break-word;
+}
+
 .dashboard-metrics-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -1210,13 +1454,85 @@
         gap: 2.5rem;
     }
     .curso-detail-layout {
-        grid-template-columns: 1fr;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+    .curso-detail-header {
+        order: 1;
+        width: 100%;
     }
     .curso-sidebar-card {
+        order: 2;
+        width: 100%;
         position: static;
+        margin-bottom: 0.5rem;
+    }
+    .curso-detail-main {
+        order: 3;
+        width: 100%;
+    }
+    .curso-sidebar-body {
+        padding: 1.5rem 1.25rem;
+    }
+    .curso-content-card {
+        padding: 1.25rem;
     }
     .hero-title {
         font-size: clamp(2rem, 4vw + 1rem, 2.6rem);
+    }
+}
+
+@media (max-width: 768px) {
+    .participante-card-layout {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1.25rem;
+    }
+    .participante-card-actions {
+        flex: 1 1 100%;
+        width: 100%;
+        padding-top: 1rem;
+        border-top: 1px dashed var(--border);
+    }
+    .cert-preview-box {
+        padding: 2.25rem 1.25rem;
+        margin: 1.25rem auto;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), inset 0 0 0 4px #FFFFFF, inset 0 0 0 6px var(--accent), inset 0 0 0 8px #FFFFFF;
+    }
+    .cert-signatures-grid {
+        grid-template-columns: 1fr;
+        gap: 2.25rem;
+        margin-top: 2rem;
+    }
+    .cert-signature-line {
+        width: 190px;
+    }
+    .cert-curriculum-badge {
+        padding: 0.65rem 1rem;
+        font-size: 0.85rem;
+        width: 100%;
+    }
+    .diploma-card {
+        padding: 1.75rem 1.25rem;
+    }
+    .diploma-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.25rem;
+    }
+    .diploma-actions {
+        flex-direction: column;
+        width: 100%;
+        gap: 0.75rem;
+    }
+    .diploma-actions .btn,
+    .diploma-actions .btn-copy-link,
+    .diploma-actions .btn-linkedin {
+        width: 100%;
+        justify-content: center;
+        min-height: 44px;
+        box-sizing: border-box;
     }
 }
 
@@ -1252,6 +1568,55 @@
     }
 }
 
+@media (max-width: 480px) {
+    .curso-docente-card {
+        gap: 0.85rem;
+        padding: 0.85rem;
+    }
+    .curso-docente-avatar {
+        width: 48px;
+        height: 48px;
+    }
+    .curso-docente-name {
+        font-size: 1rem;
+    }
+    .curso-sidebar-body {
+        padding: 1.25rem 1rem;
+    }
+    .curso-content-card {
+        padding: 1rem 0.85rem;
+    }
+    .cert-preview-box {
+        padding: 1.5rem 0.85rem;
+        border-width: 2.5px;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08), inset 0 0 0 2px #FFFFFF, inset 0 0 0 4px var(--accent), inset 0 0 0 6px #FFFFFF;
+    }
+    .cert-corner {
+        width: 14px;
+        height: 14px;
+    }
+    .cert-corner-tl { top: 8px; left: 8px; }
+    .cert-corner-tr { top: 8px; right: 8px; }
+    .cert-corner-bl { bottom: 8px; left: 8px; }
+    .cert-corner-br { bottom: 8px; right: 8px; }
+    .cert-header-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+    .cert-header-actions .btn {
+        width: 100%;
+        justify-content: center;
+        min-height: 44px;
+    }
+    .diploma-card {
+        padding: 1.25rem 0.85rem;
+    }
+    .gold-seal {
+        width: 64px;
+        height: 64px;
+    }
+}
+
 @media (max-width: 420px) {
     .hero-stat-grid {
         grid-template-columns: 1fr;
@@ -1262,9 +1627,51 @@
     }
 }
 
+@media (max-width: 360px) {
+    .curso-docente-card {
+        flex-direction: column;
+        text-align: center;
+        align-items: center;
+    }
+    .curso-sidebar-body {
+        padding: 1rem 0.65rem;
+    }
+    .cert-preview-box {
+        padding: 1.25rem 0.5rem;
+    }
+    .cert-signature-line {
+        width: 150px;
+    }
+    .diploma-card {
+        padding: 1rem 0.5rem;
+    }
+    .gold-seal {
+        width: 52px;
+        height: 52px;
+    }
+}
+
 /* ==========================================================================
    Ficha de Validación con Sello Dorado Oficial (Diploma Digital)
    ========================================================================== */
+.cert-search-card {
+    padding: 2rem;
+}
+@media (max-width: 640px) {
+    .cert-search-card {
+        padding: 1.25rem 1rem;
+    }
+    .cert-search-form-row button {
+        width: 100%;
+        justify-content: center;
+    }
+}
+@media (max-width: 360px) {
+    .cert-search-card {
+        padding: 1rem 0.75rem;
+    }
+}
+
 .diploma-card {
     background: #FFFFFF;
     background-image: 
@@ -1841,6 +2248,45 @@
     .destacado-editorial-img {
         max-height: 380px;
     }
+
+    .flyer-lightbox {
+        padding: 1rem 0.5rem;
+    }
+
+    .flyer-lightbox-close {
+        top: 0.75rem;
+        right: 1rem;
+        font-size: 2.5rem;
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .destacado-visual-tag {
+        padding: 0.45rem 0.95rem;
+        min-height: 38px;
+    }
+}
+
+@media (max-width: 360px) {
+    .destacado-title {
+        font-size: 1.45rem;
+    }
+
+    .destacado-subtitle {
+        font-size: 1.05rem;
+    }
+
+    .destacado-meta-item {
+        padding: 0.65rem 0.75rem;
+    }
+
+    .destacado-price-general .destacado-price-val,
+    .destacado-price-una .destacado-price-val {
+        font-size: 1.25rem;
+    }
 }
 
 /* ==========================================================================
@@ -2164,6 +2610,59 @@
     }
 }
 
+@media (max-width: 768px) {
+    .participante-card-layout {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1.25rem;
+    }
+    .participante-card-actions {
+        flex: 1 1 100%;
+        width: 100%;
+        padding-top: 1rem;
+        border-top: 1px dashed var(--border);
+    }
+    .cert-preview-box {
+        padding: 2.25rem 1.25rem;
+        margin: 1.25rem auto;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), inset 0 0 0 4px #FFFFFF, inset 0 0 0 6px var(--accent), inset 0 0 0 8px #FFFFFF;
+    }
+    .cert-signatures-grid {
+        grid-template-columns: 1fr;
+        gap: 2.25rem;
+        margin-top: 2rem;
+    }
+    .cert-signature-line {
+        width: 190px;
+    }
+    .cert-curriculum-badge {
+        padding: 0.65rem 1rem;
+        font-size: 0.85rem;
+        width: 100%;
+    }
+    .diploma-card {
+        padding: 1.75rem 1.25rem;
+    }
+    .diploma-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.25rem;
+    }
+    .diploma-actions {
+        flex-direction: column;
+        width: 100%;
+        gap: 0.75rem;
+    }
+    .diploma-actions .btn,
+    .diploma-actions .btn-copy-link,
+    .diploma-actions .btn-linkedin {
+        width: 100%;
+        justify-content: center;
+        min-height: 44px;
+        box-sizing: border-box;
+    }
+}
+
 @media (max-width: 640px) {
     .admin-welcome-toolbar {
         flex-direction: column;
@@ -2187,6 +2686,11 @@
         justify-content: space-between;
         padding-top: 0.5rem;
         border-top: 1px dashed var(--border-subtle);
+    }
+    .course-dropdown-menu {
+        right: 0 !important;
+        left: auto !important;
+        max-width: calc(100vw - 32px) !important;
     }
 }
 

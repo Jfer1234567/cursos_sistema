@@ -22,10 +22,10 @@
         </div>
 
         <!-- Barra de Filtros y Búsqueda -->
-        <div class="card card-body" style="margin-bottom: 2.5rem; background: #FFFFFF;">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem;">
+        <div class="card card-body" style="margin-bottom: 2rem; background: #FFFFFF; padding: 1.25rem 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
                 <!-- Filtros de Línea -->
-                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; flex: 1 1 auto;">
                     <a th:href="@{/catalogo}"
                        class="btn btn-sm"
                        th:classappend="${lineaSeleccionada == null} ? 'btn-primary' : 'btn-outline'">
@@ -41,8 +41,8 @@
                 </div>
 
                 <!-- Buscador Rápido -->
-                <div style="min-width: 260px;">
-                    <input type="text" id="searchCurso" class="form-control" placeholder="Buscar curso por nombre...">
+                <div style="flex: 1 1 220px; width: 100%;">
+                    <input type="text" id="searchCurso" class="form-control" placeholder="Buscar curso por nombre..." style="width: 100%;">
                 </div>
             </div>
         </div>

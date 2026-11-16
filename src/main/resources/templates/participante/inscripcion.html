@@ -13,11 +13,11 @@
             <a th:href="@{/participante/dashboard}" class="btn btn-sm btn-outline">&larr; Volver a Mis Cursos</a>
         </div>
 
-        <div class="card card-body" style="border-top: 5px solid var(--primary); padding: 2.5rem;">
+        <div class="card card-body yape-flow-card">
             <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
                 <div>
                     <span class="badge badge-primary" style="margin-bottom: 0.5rem;">Paso de Pago</span>
-                    <h1 style="font-size: 1.85rem;" th:text="${inscripcion.curso.nombre}">Curso</h1>
+                    <h1 class="yape-course-title" th:text="${inscripcion.curso.nombre}">Curso</h1>
                     <p style="color: var(--text-muted); margin-bottom: 0;">
                         Inversión General: <strong style="color: var(--primary); font-size: 1.25rem;" th:text="${'S/ ' + inscripcion.curso.precio}">S/ 150.00</strong>
                         <span th:if="${inscripcion.curso.precioComunidad != null}">
@@ -46,7 +46,7 @@
             </div>
 
             <!-- Datos de Yape -->
-            <div style="background: #F8FAFC; border: 1px solid var(--border); border-radius: var(--radius-md); padding: 2rem; margin-bottom: 2.5rem;">
+            <div class="yape-info-box">
                 <h3 style="color: var(--primary); margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
                     Datos Oficiales para Pago por Yape
                 </h3>
@@ -55,7 +55,7 @@
                     <div>
                         <div style="margin-bottom: 1rem;">
                             <span style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Número de Celular:</span>
-                            <div style="font-size: 1.8rem; font-weight: 800; color: #7209B7; letter-spacing: 1px;" th:text="${configPago.numeroYape}">
+                            <div class="yape-phone-val" th:text="${configPago.numeroYape}">
                                 951 234 567
                             </div>
                         </div>
@@ -73,18 +73,18 @@
                         </div>
                     </div>
 
-                    <div style="text-align: center;">
+                    <div style="text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center;">
                         <img th:src="${configPago.qrImagenUrl != null ? configPago.qrImagenUrl : '/images/yape-qr-default.png'}"
                              alt="QR de Pago Yape"
-                             style="width: 170px; height: 170px; object-fit: contain; border-radius: var(--radius-sm); border: 2px solid #7209B7; background: #FFFFFF; padding: 4px;">
-                        <span style="display: block; font-size: 0.75rem; color: var(--text-muted); margin-top: 0.3rem;">Escanea desde tu app Yape</span>
+                             class="yape-qr-img">
+                        <span style="display: block; font-size: 0.78rem; color: var(--text-muted); margin-top: 0.4rem; font-weight: 500;">Escanea desde tu app Yape</span>
                     </div>
                 </div>
             </div>
 
             <!-- Formulario de Subida del Comprobante -->
             <div>
-                <h3 style="margin-bottom: 1rem;">Subir Comprobante de Pago</h3>
+                <h3 style="margin-bottom: 0.75rem;">Subir Comprobante de Pago</h3>
                 <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
                     Por favor, adjunta la captura de pantalla legible del voucher de Yape y escribe el número de operación que figura en tu aplicativo.
                 </p>
@@ -92,7 +92,7 @@
                 <form th:action="@{'/inscripcion/' + ${inscripcion.id} + '/pago'}" method="post" enctype="multipart/form-data">
                     <div class="form-group">
                         <label class="form-label" for="referenciaExterna">Número de Operación / Código de Aprobación *</label>
-                        <input type="text" id="referenciaExterna" name="referenciaExterna" class="form-control" required placeholder="Ej. 12849302">
+                        <input type="text" id="referenciaExterna" name="referenciaExterna" class="form-control" required placeholder="Ej. 12849302" inputmode="numeric" pattern="[0-9]*" autocomplete="off">
                         <span class="form-text">Aparece en la parte inferior de tu voucher de Yape.</span>
                     </div>
 
@@ -102,7 +102,7 @@
                         <span class="form-text">Formatos permitidos: JPG, PNG o PDF (Máximo 5MB).</span>
                     </div>
 
-                    <button type="submit" class="btn btn-lg btn-primary btn-block" style="margin-top: 1.5rem;">
+                    <button type="submit" class="btn btn-lg btn-primary btn-block" style="margin-top: 1.5rem; min-height: 48px;">
                         Enviar Comprobante para Verificación
                     </button>
                 </form>

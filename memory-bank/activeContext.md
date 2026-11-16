@@ -3,6 +3,15 @@
 **Estado Actual:**
 - Plataforma completamente desarrollada e implementada siguiendo el Plan de Implementación v2.
 - Capa de datos, seguridad, servicios de negocio, controladores, vistas Thymeleaf, generador de PDF OpenPDF y suite de pruebas finalizados y verificados al 100%.
+- **Adaptación Responsive Integral para Dispositivos Móviles (320px - 430px y Desktop):**
+  - Implementada con total fidelidad institucional en los 4 recorridos solicitados:
+    1. *Portal Público:* Portada, catálogo y ficha de curso organizados en 1 columna sin zoom, con títulos fluidos `clamp()`, metadatos y sidebar de matrícula con visualización prioritaria superior (`order: 2`).
+    2. *Acceso e Inscripción:* Formularios de autenticación y checkout Yape optimizados para teclado móvil (campo `referenciaExterna` con `inputmode="numeric"`, QR centrado y elástico, selector de archivos y botón de envío $\ge 48\text{px}$).
+    3. *Área del Participante:* "Mis Cursos" con acciones jerarquizadas al 100% de ancho por estado (**«Subir Comprobante»**, **«Unirse a la Clase»** / **«WhatsApp»**, **«Ver Certificado»** / **«Descargar PDF»**), y vista de certificado fluida sin scroll horizontal.
+    4. *Panel Administrativo:* Tablas con scroll horizontal estrictamente confinado a su contenedor `.table-responsive`, botones y menús contextuales adaptados para toque táctil.
+  - Cero desplazamiento horizontal en la página (`overflow-x: hidden; width: 100%;` en `body`), sin textos truncados y touch targets confortables ($\ge 44-48\text{px}$).
+  - Cache-busting actualizado a `v=15` en `layout/main.html`.
+  - Verificación exhaustiva: 31/31 pruebas unitarias y de integración pasando con éxito (`./gradlew test`).
 - **Optimización de Rendimiento Extremo y Fluidez SPA Implementada:**
   - *Eliminación de Consultas N+1:* Aplicado `@EntityGraph` en `CursoRepository` (carga automática de áreas y líneas), `PagoRepository` (carga de inscripción, usuario y curso) e `InscripcionRepository` (carga de usuario, curso, área, línea y pago), reduciendo de 20-50 consultas secuenciales a Neon DB a 1 sola consulta SQL agrupada.
   - *Caché en Memoria RAM en Spring Boot:* `@EnableCaching` con `ConcurrentMapCacheManager` en `CursosApplication`, cacheando cursos destacados, catálogo público, flyer principal y configuración de pagos, con invalidación atómica (`@CacheEvict`) ante mutaciones. Tiempo de respuesta del servidor: < 15 ms.

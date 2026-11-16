@@ -64,7 +64,8 @@
                                     <div th:if="${curso.flyerPublicado and curso.flyerUrl != null}" style="margin-top: 0.35rem;">
                                         <span class="badge badge-accent" style="font-size: 0.72rem;">Flyer en Portada</span>
                                     </div>
-                                                                <td>
+                                </td>
+                                <td>
                                     <div style="display: inline-flex; align-items: center; gap: 0.45rem;">
                                         <!-- Acción Primaria: Editar -->
                                         <a th:href="@{'/admin/cursos/' + ${curso.id} + '/editar'}" class="btn btn-sm btn-outline-primary" style="font-weight: 600; padding: 0.35rem 0.75rem;">
