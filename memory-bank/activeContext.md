@@ -228,10 +228,19 @@
   - *Capa de Sesión Spring Security:* En `SecurityConfig.java`, se blindó el cierre de sesión con `invalidateHttpSession(true)`, `clearAuthentication(true)`, `deleteCookies("JSESSIONID")` y la cabecera estándar `Clear-Site-Data: "cache", "cookies", "storage"`.
   - *Capa Cliente SPA y BFCache:* En `main.js`, se implementó `isProtectedPath()` para excluir rutas privadas de la caché en memoria `pageCache`, se purga la caché al enviar formularios `/logout`, se detecta BFCache (`pageshow` con `event.persisted`) forzando recarga inmediata con redirección a `/login`, y se detectan redirecciones al login en `navigateInstant()`. Versión de scripts actualizada a `v=13`.
 
+- **Integración Visual Limpia del Logotipo Institucional IIICCD:**
+  - *Diagnóstico y Causa Raíz:* El recurso anterior era un JPEG con fondo blanco sólido y drop-shadow CSS que proyectaba un recuadro artificial de tarjeta.
+  - *Recursos Transparentes:* Creados `logo-iiiccd.png` (885x776 con canal alfa ARGB 100% limpio) y `logo-iiiccd.svg` para pantallas Retina.
+  - *Estilos CSS:* Reconfigurado `.brand-logo` en `main.css` y `.auth-brand-logo-clean` en `pages.css` con fondo transparente, sin bordes, sin sombras artificiales, `object-fit: contain` y alineación calibrada con el texto institucional.
+  - *Plantillas Actualizadas:* `header.html`, `header-auth.html`, `footer.html`, `login.html`, `registro.html` y `main.html` con versión de assets `v=14`.
+  - *Verificación:* Compilación limpia y 31/31 pruebas unitarias/integración pasadas exitosamente. Commit local `204671c` generado.
+  - *Despliegue a Render:* Render compila automáticamente desde GitHub `main` (demora ~3-5 min). Git local y entorno IDE configurados para permitir el push final hacia el repositorio remoto.
+
 **Próximos Pasos:**
-- Monitoreo en vivo de la plataforma en producción en Render tras el despliegue automático.
-- Pruebas adicionales en dispositivos móviles y de escritorio.
-- Carga de primeros cursos y afiches oficiales desde el panel de administración.
+- Ejecutar el push final hacia GitHub `main` para disparar el webhook de despliegue en Render.
+- Monitoreo en vivo de la plataforma en producción (`https://cursos-sistema.onrender.com/`).
+- Verificar que el navegador invalide la caché con `Ctrl + F5` o parámetro `v=14`.
+
 
 
 

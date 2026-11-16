@@ -8,3 +8,5 @@
 - [x] 6. Actualizar versión de assets en `layout/main.html` para invalidar caché (`v=14`) <!-- id: 606 -->
 - [x] 7. Ejecutar suite de pruebas (`./gradlew test`) y verificar compilación limpia <!-- id: 607 -->
 - [x] 8. Actualizar `memory-bank/` y documentar cambios <!-- id: 608 -->
+- [x] 9. Crear commit local (`204671c`) y configurar entorno Git en el IDE <!-- id: 609 -->
+- [/] 10. Despliegue en producción (Push a GitHub `main` y compilación automática en Render) <!-- id: 610 -->
