@@ -260,5 +260,13 @@
   - *Blindaje de Sesión:* Destrucción de sesión en `SecurityConfig.java` con `invalidateHttpSession`, `clearAuthentication`, eliminación de cookie `JSESSIONID` y cabecera `Clear-Site-Data: "cache", "cookies", "storage"`.
   - *Defensa contra BFCache y Caché SPA:* En `main.js`, exclusión de rutas protegidas en `pageCache`, purga en submit de logout, detección de BFCache en `pageshow` con recarga forzada, y redirección a login en `navigateInstant`. Versionado de assets a `v=13`.
 
+- [x] **Integración Visual Limpia del Logotipo Institucional IIICCD:**
+  - *Identidad y Limpieza:* Eliminado el recuadro blanco y los drop-shadows rígidos. Creados `logo-iiiccd.png` con canal alfa transparente ARGB y `logo-iiiccd.svg` para vectorización Retina.
+  - *Estilos CSS y Proporciones:* Reestructurado `.brand-logo` en `main.css` y `.auth-brand-logo-clean` en `pages.css` con `object-fit: contain`, fondo transparente y alineación equilibrada con el texto institucional.
+  - *Unificación de Componentes:* Actualizados `fragments/header.html`, `fragments/header-auth.html`, `fragments/footer.html`, `auth/login.html` y `auth/registro.html`.
+  - *Cache-Busting:* Actualizado a `v=14` en `layout/main.html`.
+  - *Verificación y Despliegue:* 31/31 pruebas unitarias y de integración pasando. Commits sincronizados en GitHub `main` y desplegados en vivo en Render (`https://cursos-sistema.onrender.com/`).
+
+
 
 
