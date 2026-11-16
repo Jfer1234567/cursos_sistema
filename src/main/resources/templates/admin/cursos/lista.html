@@ -77,7 +77,7 @@
                                                     onclick="toggleCourseDropdown(this, event)"
                                                     title="Más opciones del curso"
                                                     style="padding: 0.35rem 0.55rem; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--radius-sm); color: var(--text-muted); cursor: pointer;">
-                                                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                                                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" style="pointer-events: none;">
                                                     <circle cx="12" cy="5" r="2"/>
                                                     <circle cx="12" cy="12" r="2"/>
                                                     <circle cx="12" cy="19" r="2"/>
@@ -114,7 +114,9 @@
                                                 <div style="height: 1px; background: #E2E8F0; margin: 0.35rem 0;"></div>
 
                                                 <form th:action="@{'/admin/cursos/' + ${curso.id} + '/eliminar'}" method="post" 
-                                                      onsubmit="return confirm('¿Estás seguro de que deseas eliminar permanentemente este curso? Esta acción no se puede deshacer.');" 
+                                                      th:onsubmit="${curso.estado != null and (curso.estado.name() == 'PUBLICADO' or curso.estado.name() == 'EN_CURSO')} ? 
+                                                                   'alert(\'No se puede eliminar un curso en estado ' + ${curso.estado} + '. Para poder eliminarlo, primero cámbialo a BORRADOR o FINALIZADO.\'); return false;' : 
+                                                                   'return confirm(\'¿Estás seguro de que deseas eliminar permanentemente este curso (' + ${curso.nombre} + ')? Esta acción no se puede deshacer y borrará sus registros asociados.\');'" 
                                                       style="margin: 0;">
                                                     <button type="submit" class="dropdown-menu-item dropdown-menu-delete" 
                                                             style="width: 100%; display: flex; align-items: center; gap: 0.6rem; padding: 0.55rem 0.95rem; font-size: 0.83rem; color: #DC2626; background: none; border: none; text-align: left; cursor: pointer; font-weight: 500; transition: background 0.15s;">

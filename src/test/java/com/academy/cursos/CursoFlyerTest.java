@@ -7,6 +7,13 @@ import com.academy.cursos.model.enums.EstadoCurso;
 import com.academy.cursos.repository.AreaInvestigacionRepository;
 import com.academy.cursos.repository.CursoRepository;
 import com.academy.cursos.service.CursoService;
+import com.academy.cursos.model.Inscripcion;
+import com.academy.cursos.model.Usuario;
+import com.academy.cursos.model.enums.EstadoInscripcion;
+import com.academy.cursos.model.enums.Rol;
+import com.academy.cursos.model.enums.TipoDocumento;
+import com.academy.cursos.repository.InscripcionRepository;
+import com.academy.cursos.repository.UsuarioRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +37,12 @@ public class CursoFlyerTest {
 
     @Autowired
     private AreaInvestigacionRepository areaRepository;
+
+    @Autowired
+    private InscripcionRepository inscripcionRepository;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
     @Test
     @DisplayName("Debe registrar y consultar un flyer publicado en un curso")
@@ -169,5 +182,108 @@ public class CursoFlyerTest {
 
         // El segundo curso (recién creado) debe ocupar la posición del flyer principal
         assertEquals(c2.getId(), cursoService.obtenerFlyerPrincipal().orElseThrow().getId());
+    }
+
+    @Test
+    @DisplayName("Debe permitir eliminar un curso en estado BORRADOR que cuenta con participantes inscritos")
+    void testEliminarCursoEnBorradorConInscritos() {
+        AreaInvestigacion area = areaRepository.findAll().stream().findFirst().orElseThrow();
+        Usuario usuario = obtenerOUsuarioPrueba();
+
+        CursoDTO dto = new CursoDTO();
+        dto.setNombre("Curso Borrador con Inscritos");
+        dto.setDescripcion("Curso para validar eliminación en borrador");
+        dto.setAreaInvestigacionId(area.getId());
+        dto.setDocenteResponsable("Docente Test");
+        dto.setPrecio(new BigDecimal("80.00"));
+        dto.setCuposTotales(20);
+        dto.setDuracion("15 horas");
+        dto.setCreditos(2);
+        dto.setEstado(EstadoCurso.BORRADOR);
+
+        Curso creado = cursoService.guardarOActualizar(dto);
+        Long cursoId = creado.getId();
+
+        Inscripcion inscripcion = new Inscripcion();
+        inscripcion.setCurso(creado);
+        inscripcion.setUsuario(usuario);
+        inscripcion.setEstado(EstadoInscripcion.PENDIENTE_PAGO);
+        inscripcion = inscripcionRepository.save(inscripcion);
+        Long inscripcionId = inscripcion.getId();
+
+        assertDoesNotThrow(() -> cursoService.eliminar(cursoId));
+
+        assertTrue(cursoRepository.findById(cursoId).isEmpty(), "El curso borrador debe ser eliminado");
+        assertTrue(inscripcionRepository.findById(inscripcionId).isEmpty(), "Las inscripciones del curso deben eliminarse");
+    }
+
+    @Test
+    @DisplayName("Debe permitir eliminar un curso en estado FINALIZADO que cuenta con participantes inscritos")
+    void testEliminarCursoFinalizadoConInscritos() {
+        AreaInvestigacion area = areaRepository.findAll().stream().findFirst().orElseThrow();
+        Usuario usuario = obtenerOUsuarioPrueba();
+
+        CursoDTO dto = new CursoDTO();
+        dto.setNombre("Curso Finalizado con Inscritos");
+        dto.setDescripcion("Curso terminado que se desea depurar");
+        dto.setAreaInvestigacionId(area.getId());
+        dto.setDocenteResponsable("Docente Test");
+        dto.setPrecio(new BigDecimal("100.00"));
+        dto.setCuposTotales(20);
+        dto.setDuracion("25 horas");
+        dto.setCreditos(2);
+        dto.setEstado(EstadoCurso.FINALIZADO);
+
+        Curso creado = cursoService.guardarOActualizar(dto);
+        Long cursoId = creado.getId();
+
+        Inscripcion inscripcion = new Inscripcion();
+        inscripcion.setCurso(creado);
+        inscripcion.setUsuario(usuario);
+        inscripcion.setEstado(EstadoInscripcion.APROBADA);
+        inscripcion = inscripcionRepository.save(inscripcion);
+        Long inscripcionId = inscripcion.getId();
+
+        assertDoesNotThrow(() -> cursoService.eliminar(cursoId));
+
+        assertTrue(cursoRepository.findById(cursoId).isEmpty(), "El curso finalizado debe ser eliminado");
+        assertTrue(inscripcionRepository.findById(inscripcionId).isEmpty(), "Las inscripciones del curso finalizado deben eliminarse");
+    }
+
+    @Test
+    @DisplayName("No debe permitir eliminar un curso en estado PUBLICADO")
+    void testNoPermitirEliminarCursoPublicado() {
+        AreaInvestigacion area = areaRepository.findAll().stream().findFirst().orElseThrow();
+
+        CursoDTO dto = new CursoDTO();
+        dto.setNombre("Curso Activo en Venta");
+        dto.setDescripcion("Curso publicado actualmente en catálogo");
+        dto.setAreaInvestigacionId(area.getId());
+        dto.setDocenteResponsable("Docente Test");
+        dto.setPrecio(new BigDecimal("150.00"));
+        dto.setCuposTotales(30);
+        dto.setDuracion("40 horas");
+        dto.setCreditos(3);
+        dto.setEstado(EstadoCurso.PUBLICADO);
+
+        Curso creado = cursoService.guardarOActualizar(dto);
+        Long cursoId = creado.getId();
+
+        IllegalStateException ex = assertThrows(IllegalStateException.class, () -> cursoService.eliminar(cursoId));
+        assertTrue(ex.getMessage().contains("PUBLICADO"));
+        assertTrue(cursoRepository.findById(cursoId).isPresent(), "El curso publicado debe seguir existiendo");
+    }
+
+    private Usuario obtenerOUsuarioPrueba() {
+        return usuarioRepository.findAll().stream().findFirst().orElseGet(() -> {
+            Usuario u = new Usuario();
+            u.setNombreCompleto("Usuario Test Eliminación");
+            u.setCorreo("test_eliminar_" + System.currentTimeMillis() + "@test.com");
+            u.setTipoDocumento(TipoDocumento.DNI);
+            u.setNumeroDocumento("99" + (System.currentTimeMillis() % 1000000));
+            u.setPasswordHash("$2a$10$abcdefghijklmnopqrstuvwxyz123456");
+            u.setRol(Rol.PARTICIPANTE);
+            return usuarioRepository.save(u);
+        });
     }
 }

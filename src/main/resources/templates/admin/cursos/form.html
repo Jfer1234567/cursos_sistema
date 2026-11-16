@@ -235,11 +235,13 @@
                             Zona de Peligro
                         </h4>
                         <p style="margin: 0; color: #7F1D1D; font-size: 0.9rem; line-height: 1.45;">
-                            Eliminar permanentemente este curso de la base de datos. Esta acción no se puede deshacer y solo está permitida si el curso aún no cuenta con participantes inscritos.
+                            Eliminar permanentemente este curso y todos sus registros asociados de la base de datos. Esta acción no se puede deshacer y solo está permitida si el curso se encuentra en estado <strong>BORRADOR</strong> o <strong>FINALIZADO</strong>.
                         </p>
                     </div>
                     <form th:action="@{'/admin/cursos/' + ${cursoDTO.id} + '/eliminar'}" method="post" 
-                          onsubmit="return confirm('¿Estás seguro de que deseas eliminar permanentemente este curso? Esta acción no se puede deshacer.');">
+                          th:onsubmit="${cursoDTO.estado != null and (cursoDTO.estado.name() == 'PUBLICADO' or cursoDTO.estado.name() == 'EN_CURSO')} ? 
+                                       'alert(\'No se puede eliminar un curso en estado ' + ${cursoDTO.estado} + '. Primero debes cambiar su estado a BORRADOR o FINALIZADO y guardar los cambios.\'); return false;' : 
+                                       'return confirm(\'¿Estás seguro de que deseas eliminar permanentemente este curso (' + ${cursoDTO.nombre} + ')? Esta acción no se puede deshacer y borrará sus registros asociados.\');'">
                         <button type="submit" class="btn" 
                                 style="background: #DC2626; color: white; border: none; font-weight: 600; display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.35rem; border-radius: var(--radius-sm); cursor: pointer; transition: background 0.2s;"
                                 onmouseover="this.style.background='#B91C1C'" onmouseout="this.style.background='#DC2626'">

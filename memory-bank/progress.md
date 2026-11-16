@@ -1,6 +1,12 @@
 # Progreso (Progress)
 
 **Tareas Completadas:**
+- [x] **Integración Visual Limpia del Logotipo Institucional IIICCD:**
+  - *Eliminación del Recuadro Blanco y Sombra Rígida:* Reemplazo del JPEG estático opaco (`logo-iiiccd.jpeg`) por el logotipo oficial con transparencia nativa ARGB (`logo-iiiccd.png`, 885x776 px) y recurso vectorial escalable (`logo-iiiccd.svg`).
+  - *CSS Limpio y Moderno:* Removido terminantemente `filter: drop-shadow(...)` y reseteado cualquier borde o fondo en `.brand-logo` en `main.css` y `pages.css`.
+  - *Alineación Espacial Armónica:* Calibrada la altura a `44px` en desktop y `36px` en móvil, con alineación centrada respecto a `IIICCD` y su subtítulo con espaciado de `0.85rem`.
+  - *Consistencia en Toda la Plataforma:* Implementado en `header.html`, `header-auth.html`, bloque `.footer-brand` en `footer.html`, pantallas de `login.html`, `registro.html` y favicon en `layout/main.html` (`v=14`).
+  - *Verificación Integral:* 31/31 pruebas unitarias y de integración pasando al 100% con Gradle (`./gradlew test`). Servidor local activo en `http://localhost:8085`.
 - [x] **Rediseño Editorial Limpio del Curso Destacado en Portada (`public/index.html`):**
   - Modernización visual completa de la sección de afiche oficial/curso destacado hacia un diseño editorial académico limpio (fondo blanco puro, tipografía nítida `#0F172A`, insignia sutil granate `#991B1B` con ancho ajustado `fit-content`, acento dorado, fila de metadatos académicos con íconos vectoriales circulares, pastillas de precio diferenciadas para Comunidad UNA y Público General, y marco de afiche redondeado `18px`).
   - **Flyer a Escala Completa sin Recorte:** Cuadrícula balanceada `1fr 1.3fr` con `align-items: center;` y renderizado nítido `object-fit: contain; width: 100%; height: auto; max-height: 650px;`, mostrando el afiche completo al 100% sin recortar texto ni cabeceras.
@@ -237,3 +243,22 @@
   - *Módulos Ejecutivos "¿Qué deseas gestionar hoy?":* Matriz de navegación 2x2 en desktop (1 columna en móvil) con tarjetas enriquecidas para Cursos, Inscripciones, Pagos y Certificados, con íconos vectoriales sobrios, descripciones claras, micro-animación al hover y contadores dinámicos.
   - *Cache-Busting:* Versionado `v=4` en `main.html` para forzar refresco inmediato de estilos en clientes y Render.
   - *Pruebas:* Suite completa pasando al 100% (31/31 tests). Sincronizado en GitHub `main`.
+
+- [x] **Eliminación Segura y Controlada de Cursos en Estado BORRADOR o FINALIZADO:**
+  - *Regla de Negocio Senior:* Corrección de la restricción que impedía borrar cursos cuando el mensaje aconsejaba pasarlos a BORRADOR o FINALIZADO. Se restringe la eliminación únicamente para cursos en `PUBLICADO` o `EN_CURSO` (protegiendo eventos en vitrina o activos).
+  - *Cascada Transaccional Limpia:* Para cursos en `BORRADOR` o `FINALIZADO`, se eliminan en bloque y de forma transaccional (`@Transactional`) todas las inscripciones asociadas (`inscripcionRepository.deleteAll(inscripciones)`), las cuales eliminan automáticamente sus pagos y certificados vinculados gracias a `CascadeType.ALL`, garantizando integridad referencial y cero errores de claves foráneas en PostgreSQL.
+  - *Auditoría y Feedback UI:* Se agregaron mensajes informativos en `form.html` y validaciones en los botones de eliminación (`lista.html` y `form.html`) con alerta inmediata si se intenta borrar un curso publicado.
+  - *Pruebas de Integración:* Nuevos tests añadidos en `CursoFlyerTest.java` (`testEliminarCursoEnBorradorConInscritos`, `testEliminarCursoFinalizadoConInscritos`, `testNoPermitirEliminarCursoPublicado`) pasando al 100% con Gradle (`./gradlew test`).
+
+- [x] **Optimización Instantánea y Resiliente del Menú de Opciones (3 Puntos `⋮`):**
+  - *Arquitectura Global en `main.js`:* Centralizada la apertura y cierre mediante delegación global de eventos a nivel de `document` para `.dropdown-btn`, garantizando respuesta inmediata en 0 ms tanto en navegación SPA como tras refresco F5.
+  - *Reactivación de Scripts SPA:* Implementada la función `executeScripts()` en `renderPage()` para reactivar e instanciar scripts en vistas inyectadas por `innerHTML`.
+  - *Precisión Táctil y Cache-Busting:* Asignado `pointer-events: none` al `<svg>` interno y versionado a `v=12` en `layout/main.html`.
+
+- [x] **Prevención de Acceso a Páginas Protegidas con el Botón Atrás tras Logout (OWASP):**
+  - *Cabeceras Anti-Caché:* Implementado `HandlerInterceptor` en `WebMvcConfig.java` inyectando `Cache-Control: no-cache, no-store, max-age=0, must-revalidate` y `Pragma: no-cache` en todas las rutas protegidas.
+  - *Blindaje de Sesión:* Destrucción de sesión en `SecurityConfig.java` con `invalidateHttpSession`, `clearAuthentication`, eliminación de cookie `JSESSIONID` y cabecera `Clear-Site-Data: "cache", "cookies", "storage"`.
+  - *Defensa contra BFCache y Caché SPA:* En `main.js`, exclusión de rutas protegidas en `pageCache`, purga en submit de logout, detección de BFCache en `pageshow` con recarga forzada, y redirección a login en `navigateInstant`. Versionado de assets a `v=13`.
+
+
+

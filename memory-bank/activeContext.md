@@ -12,6 +12,13 @@
   - *HikariCP Keepalive:* Ping periódico de 30s (`keepalive-time=30000`) para mantener conexiones TLS activas con Neon DB sin renegociaciones SSL.
 
 **Decisiones de Diseño Clave Implementadas:**
+- **Integración Visual Limpia del Logotipo Institucional IIICCD:**
+  - *Eliminación de Recuadro y Sombra Rígida:* Sustituido el archivo JPEG (`logo-iiiccd.jpeg`) con fondo blanco y sombra perimetral por el logotipo oficial con transparencia nativa ARGB (`logo-iiiccd.png`, 885x776 px) y versión vectorial escalable (`logo-iiiccd.svg`).
+  - *Estilos CSS Depurados:* Eliminado terminantemente `filter: drop-shadow(...)`, fondos opacos, bordes y paddings artificiales en `.brand-logo`.
+  - *Alineación Espacial y Tipográfica:* `.brand-logo` calibrado a `44px` de altura (`36px` en móvil) con alineación vertical al centro óptico del acrónimo `IIICCD` (`font-weight: 800; font-size: 1.35rem; color: var(--primary)`) y subtítulo `Inteligencia Computacional & Ciencia de Datos` con espaciado armónico (`gap: 0.85rem`).
+  - *Consistencia Global:* Aplicado en el encabezado principal (`header.html`), encabezado de autenticación (`header-auth.html`), pie de página con bloque `.footer-brand` (`footer.html`), pantallas de autenticación (`login.html` y `registro.html`) y favicon en `layout/main.html` con cache-busting a `v=14`.
+  - *Verificación:* 31/31 pruebas automatizadas pasando al 100% con Gradle (`./gradlew test`). Servidor local activo en `http://localhost:8085`.
+
 - **Snapshots Inmutables en Certificados:** Al completarse un curso, se copian como texto plano los datos del estudiante, curso, línea, área, docente y duración en la entidad `Certificado`. Esto previene alteraciones históricas si los cursos sufren modificaciones posteriores.
 - **Seguridad en Comprobantes de Pago:** Los comprobantes de Yape subidos por los participantes se sirven a través de un endpoint protegido (`/comprobantes/{archivo}`) que restringe la visualización exclusivamente al propietario de la inscripción y a los administradores del sistema.
 - **Enlace de Sesión Protegido (`enlaceClase`):** Los enlaces de Zoom o Google Meet solo se exponen en las vistas de los estudiantes cuya inscripción tenga el estado `APROBADA` o `COMPLETADA`.
@@ -180,9 +187,10 @@
 - **Repositorio Sincronizado:** Rama `main` en GitHub (`Jfer1234567/cursos_sistema`).
 
 **Servidor Local:**
-- Aplicación local disponible en `http://localhost:8085`.
-- Base de datos local: PostgreSQL `cursos_2`.
-- Integridad: 100% de tests pasando (30/30 tests ejecutados exitosamente).
+- Aplicación local ejecutándose activamente en segundo plano en `http://localhost:8085` (PID 13188, Apache Tomcat 11.0.24).
+- Base de datos local: PostgreSQL 17 aprovisionada con base de datos `cursos_2` y sembrado automático de líneas, áreas, usuario admin y configuración inicial de Yape.
+- Compatibilidad Gradle: `build.gradle` ajustado con `sourceCompatibility = JavaVersion.VERSION_17` y `targetCompatibility = JavaVersion.VERSION_17` para compilación transparente con el runtime Java local.
+- Verificación HTTP: Endpoints `/`, `/catalogo`, `/login`, `/contacto`, `/lineas-investigacion`, `/quienes-somos` validados con código de estado HTTP 200 OK.
 
 - **Optimización de Usabilidad y Eliminación de Sobrecarga de Botones (Leyes de Hick y Nielsen):**
   - *Tabla de Cursos (`/admin/cursos`):* Se sustituyeron los 4 botones dispersos por fila (`Publicar Flyer`, `Inscritos`, `Editar`, `Eliminar`) por el patrón enterprise: Botón visible principal `[ Editar ]` y menú desplegable contextual `[ ⋮ ]` que contiene ordenadamente las acciones secundarias y la opción destructiva en rojo con confirmación nativa. Se dotó al contenedor de `min-height: 280px` para prevenir recortes verticales de menú en listas cortas.
@@ -207,7 +215,23 @@
   - *Tabla de Comprobantes Yape:* Preservada en tarjeta inferior estilizada con feedback visual de bandeja al día.
   - *Cache-Busting:* Añadido parámetro de versión `v=4` en `layout/main.html` para invalidación inmediata de caché persistente en navegadores de usuario.
 
+- **Eliminación Segura y Controlada de Cursos (BORRADOR y FINALIZADO):**
+  - *Regla de Negocio de Ciclo de Vida:* Se protege a los cursos en estado `PUBLICADO` y `EN_CURSO` contra eliminación directa accidental. Si se intenta eliminarlos, el sistema rechaza la operación informando que primero deben pasar a estado `BORRADOR` o `FINALIZADO`.
+  - *Cascada Transaccional:* En estado `BORRADOR` o `FINALIZADO`, la eliminación es permitida y limpia de forma transaccional (`@Transactional`) todas las inscripciones asociadas (`inscripcionRepository.deleteAll(inscripciones)`), las cuales a su vez eliminan en cascada sus pagos y certificados vinculados, previniendo excepciones de clave foránea (`DataIntegrityViolationException`) en PostgreSQL.
+- **Menú de Opciones Contextual Rápido (3 Puntos `⋮`) en Tablas Administrativas:**
+  - *Diagnóstico y Solución:* La navegación SPA reemplazaba el DOM mediante `innerHTML`, lo cual omitía la ejecución de bloques `<script>` locales, provocando que `toggleCourseDropdown` quedara `undefined` hasta un refresco manual F5. Se implementó delegación global de eventos en `main.js` escuchando a nivel de `document` para `.dropdown-btn`, abriendo y cerrando el menú en **0 ms** sin importar la vía de navegación.
+  - *Soporte Retrocompatible y SPA:* Se expuso `window.toggleCourseDropdown` a nivel global y se añadió la función `executeScripts()` en `renderPage()` para reactivar scripts embebidos en vistas SPA.
+  - *Interacción Fina:* Se agregó `pointer-events: none` al `<svg>` del botón de tres puntos para canalizar el clic con precisión instantánea y se incrementó la versión de script a `v=12` para invalidación inmediata de caché de clientes.
+
+- **Protección de Vistas Protegidas tras Cierre de Sesión (OWASP Back Button & Cache Invalidation):**
+  - *Capa Backend HTTP:* En `WebMvcConfig.java`, se registró un `HandlerInterceptor` que inyecta en cada respuesta hacia `/admin/**`, `/participante/**` e `/inscripcion/**` las cabeceras `Cache-Control: no-cache, no-store, max-age=0, must-revalidate`, `Pragma: no-cache` y `Expires: 0`.
+  - *Capa de Sesión Spring Security:* En `SecurityConfig.java`, se blindó el cierre de sesión con `invalidateHttpSession(true)`, `clearAuthentication(true)`, `deleteCookies("JSESSIONID")` y la cabecera estándar `Clear-Site-Data: "cache", "cookies", "storage"`.
+  - *Capa Cliente SPA y BFCache:* En `main.js`, se implementó `isProtectedPath()` para excluir rutas privadas de la caché en memoria `pageCache`, se purga la caché al enviar formularios `/logout`, se detecta BFCache (`pageshow` con `event.persisted`) forzando recarga inmediata con redirección a `/login`, y se detectan redirecciones al login en `navigateInstant()`. Versión de scripts actualizada a `v=13`.
+
 **Próximos Pasos:**
 - Monitoreo en vivo de la plataforma en producción en Render tras el despliegue automático.
 - Pruebas adicionales en dispositivos móviles y de escritorio.
 - Carga de primeros cursos y afiches oficiales desde el panel de administración.
+
+
+

@@ -732,20 +732,24 @@
 .auth-brand-logo-clean {
     display: inline-flex;
     align-items: center;
-    gap: 1rem;
+    gap: 0.9rem;
     margin-bottom: 2rem;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    padding: 0.7rem 1.15rem;
-    border-radius: 14px;
-    backdrop-filter: blur(8px);
+    background: transparent;
+    border: none;
+    padding: 0;
+    border-radius: 0;
+    backdrop-filter: none;
 }
 
 .auth-brand-logo-clean img {
     height: 48px;
     width: auto;
     display: block;
-    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.3));
+    object-fit: contain;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    filter: none;
 }
 
 .auth-brand-logo-text {

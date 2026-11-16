@@ -99,68 +99,220 @@ public class Curso {
     }
 
     // Getters and Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public String getNombre() { return nombre; }
-    public void setNombre(String nombre) { this.nombre = nombre; }
-    public String getDescripcionCorta() { return descripcionCorta; }
-    public void setDescripcionCorta(String descripcionCorta) { this.descripcionCorta = descripcionCorta; }
-    public String getDescripcion() { return descripcion; }
-    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
-    public AreaInvestigacion getAreaInvestigacion() { return areaInvestigacion; }
-    public void setAreaInvestigacion(AreaInvestigacion areaInvestigacion) { this.areaInvestigacion = areaInvestigacion; }
-    public String getDuracion() { return duracion; }
-    public void setDuracion(String duracion) { this.duracion = duracion; }
-    public String getDocenteResponsable() { return docenteResponsable; }
-    public void setDocenteResponsable(String docenteResponsable) { this.docenteResponsable = docenteResponsable; }
-    public BigDecimal getPrecio() { return precio; }
-    public void setPrecio(BigDecimal precio) { this.precio = precio; }
-    public Integer getCuposTotales() { return cuposTotales; }
-    public void setCuposTotales(Integer cuposTotales) { this.cuposTotales = cuposTotales; }
-    public Integer getCuposDisponibles() { return cuposDisponibles; }
-    public void setCuposDisponibles(Integer cuposDisponibles) { this.cuposDisponibles = cuposDisponibles; }
-    public EstadoCurso getEstado() { return estado; }
-    public void setEstado(EstadoCurso estado) { this.estado = estado; }
-    public LocalDate getFechaInicio() { return fechaInicio; }
-    public void setFechaInicio(LocalDate fechaInicio) { this.fechaInicio = fechaInicio; }
-    public LocalDate getFechaFin() { return fechaFin; }
-    public void setFechaFin(LocalDate fechaFin) { this.fechaFin = fechaFin; }
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getDescripcionCorta() {
+        return descripcionCorta;
+    }
+
+    public void setDescripcionCorta(String descripcionCorta) {
+        this.descripcionCorta = descripcionCorta;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public AreaInvestigacion getAreaInvestigacion() {
+        return areaInvestigacion;
+    }
+
+    public void setAreaInvestigacion(AreaInvestigacion areaInvestigacion) {
+        this.areaInvestigacion = areaInvestigacion;
+    }
+
+    public String getDuracion() {
+        return duracion;
+    }
+
+    public void setDuracion(String duracion) {
+        this.duracion = duracion;
+    }
+
+    public String getDocenteResponsable() {
+        return docenteResponsable;
+    }
+
+    public void setDocenteResponsable(String docenteResponsable) {
+        this.docenteResponsable = docenteResponsable;
+    }
+
+    public BigDecimal getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(BigDecimal precio) {
+        this.precio = precio;
+    }
+
+    public Integer getCuposTotales() {
+        return cuposTotales;
+    }
+
+    public void setCuposTotales(Integer cuposTotales) {
+        this.cuposTotales = cuposTotales;
+    }
+
+    public Integer getCuposDisponibles() {
+        return cuposDisponibles;
+    }
+
+    public void setCuposDisponibles(Integer cuposDisponibles) {
+        this.cuposDisponibles = cuposDisponibles;
+    }
+
+    public EstadoCurso getEstado() {
+        return estado;
+    }
+
+    public void setEstado(EstadoCurso estado) {
+        this.estado = estado;
+    }
+
+    public LocalDate getFechaInicio() {
+        return fechaInicio;
+    }
+
+    public void setFechaInicio(LocalDate fechaInicio) {
+        this.fechaInicio = fechaInicio;
+    }
+
+    public LocalDate getFechaFin() {
+        return fechaFin;
+    }
+
+    public void setFechaFin(LocalDate fechaFin) {
+        this.fechaFin = fechaFin;
+    }
+
     private String optimizarUrl(String url) {
-        if (url == null || url.isBlank()) return url;
+        if (url == null || url.isBlank())
+            return url;
         if (url.contains("cloudinary.com") && url.contains("/upload/") && !url.contains("/f_auto")) {
             return url.replace("/upload/", "/upload/f_auto,q_auto/");
         }
         return url;
     }
 
-    public String getImagenUrl() { return imagenUrl; }
-    public String getImagenOptimizadoUrl() { return optimizarUrl(imagenUrl); }
-    public void setImagenUrl(String imagenUrl) { this.imagenUrl = imagenUrl; }
-    public String getEnlaceClase() { return enlaceClase; }
-    public void setEnlaceClase(String enlaceClase) { this.enlaceClase = enlaceClase; }
-    public String getEnlaceWhatsapp() { return enlaceWhatsapp; }
-    public void setEnlaceWhatsapp(String enlaceWhatsapp) { this.enlaceWhatsapp = enlaceWhatsapp; }
-    public BigDecimal getPrecioComunidad() { return precioComunidad; }
-    public void setPrecioComunidad(BigDecimal precioComunidad) { this.precioComunidad = precioComunidad; }
-    public String getDocenteFotoUrl() { return docenteFotoUrl; }
-    public String getDocenteFotoOptimizadoUrl() { return optimizarUrl(docenteFotoUrl); }
-    public void setDocenteFotoUrl(String docenteFotoUrl) { this.docenteFotoUrl = docenteFotoUrl; }
-    public String getDocenteCargo() { return docenteCargo; }
-    public void setDocenteCargo(String docenteCargo) { this.docenteCargo = docenteCargo; }
-    public Integer getCreditos() { return creditos; }
-    public void setCreditos(Integer creditos) { this.creditos = creditos; }
-    public String getFlyerUrl() { return flyerUrl; }
-    public String getFlyerOptimizadoUrl() { return optimizarUrl(flyerUrl); }
-    public void setFlyerUrl(String flyerUrl) { this.flyerUrl = flyerUrl; }
-    public Boolean getFlyerPublicado() { return flyerPublicado != null && flyerPublicado; }
-    public void setFlyerPublicado(Boolean flyerPublicado) { this.flyerPublicado = flyerPublicado; }
+    public String getImagenUrl() {
+        return imagenUrl;
+    }
+
+    public String getImagenOptimizadoUrl() {
+        return optimizarUrl(imagenUrl);
+    }
+
+    public void setImagenUrl(String imagenUrl) {
+        this.imagenUrl = imagenUrl;
+    }
+
+    public String getEnlaceClase() {
+        return enlaceClase;
+    }
+
+    public void setEnlaceClase(String enlaceClase) {
+        this.enlaceClase = enlaceClase;
+    }
+
+    public String getEnlaceWhatsapp() {
+        return enlaceWhatsapp;
+    }
+
+    public void setEnlaceWhatsapp(String enlaceWhatsapp) {
+        this.enlaceWhatsapp = enlaceWhatsapp;
+    }
+
+    public BigDecimal getPrecioComunidad() {
+        return precioComunidad;
+    }
+
+    public void setPrecioComunidad(BigDecimal precioComunidad) {
+        this.precioComunidad = precioComunidad;
+    }
+
+    public String getDocenteFotoUrl() {
+        return docenteFotoUrl;
+    }
+
+    public String getDocenteFotoOptimizadoUrl() {
+        return optimizarUrl(docenteFotoUrl);
+    }
+
+    public void setDocenteFotoUrl(String docenteFotoUrl) {
+        this.docenteFotoUrl = docenteFotoUrl;
+    }
+
+    public String getDocenteCargo() {
+        return docenteCargo;
+    }
+
+    public void setDocenteCargo(String docenteCargo) {
+        this.docenteCargo = docenteCargo;
+    }
+
+    public Integer getCreditos() {
+        return creditos;
+    }
+
+    public void setCreditos(Integer creditos) {
+        this.creditos = creditos;
+    }
+
+    public String getFlyerUrl() {
+        return flyerUrl;
+    }
+
+    public String getFlyerOptimizadoUrl() {
+        return optimizarUrl(flyerUrl);
+    }
+
+    public void setFlyerUrl(String flyerUrl) {
+        this.flyerUrl = flyerUrl;
+    }
+
+    public Boolean getFlyerPublicado() {
+        return flyerPublicado != null && flyerPublicado;
+    }
+
+    public void setFlyerPublicado(Boolean flyerPublicado) {
+        this.flyerPublicado = flyerPublicado;
+    }
 
     public boolean esGratuito() {
         return precio == null || precio.compareTo(BigDecimal.ZERO) <= 0;
     }
 
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
-    public LocalDateTime getUpdatedAt() { return updatedAt; }
-    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 }

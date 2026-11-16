@@ -42,11 +42,25 @@
         }, 80);
     }
 
-    // 2. Caché en Memoria RAM del Navegador para Vistas (0 ms por clic) con TTL de 30s
+    // 2. Caché en Memoria RAM del Navegador para Vistas Públicas (0 ms por clic) con TTL de 30s
     const pageCache = new Map();
     const CACHE_TTL_MS = 30000; // 30 segundos
 
+    // Determinar si una ruta es protegida (requiere autenticación y nunca debe cachearse en memoria)
+    function isProtectedPath(url) {
+        if (!url) return false;
+        try {
+            const u = new URL(url, window.location.origin);
+            return u.pathname.startsWith('/admin') || 
+                   u.pathname.startsWith('/participante') || 
+                   u.pathname.startsWith('/inscripcion');
+        } catch (e) {
+            return false;
+        }
+    }
+
     function getFromCache(url) {
+        if (isProtectedPath(url)) return null;
         const item = pageCache.get(url);
         if (!item) return null;
         if (Date.now() - item.time > CACHE_TTL_MS) {
@@ -57,6 +71,7 @@
     }
 
     function setInCache(url, htmlText) {
+        if (isProtectedPath(url)) return;
         pageCache.set(url, { htmlText, time: Date.now() });
     }
 
@@ -93,9 +108,9 @@
         } catch (e) {}
     }
 
-    // Precargar página completa en memoria RAM al hover o touch
+    // Precargar página completa en memoria RAM al hover o touch (solo rutas públicas)
     async function prefetchToMemory(url) {
-        if (!url || getFromCache(url)) return;
+        if (!url || isProtectedPath(url) || getFromCache(url)) return;
         try {
             const res = await fetch(url, { headers: { 'X-Requested-With': 'SPA-Prefetch' } });
             if (res.ok) {
@@ -122,6 +137,11 @@
             const res = await fetch(url, { headers: { 'X-Requested-With': 'SPA-Fetch' } });
             if (!res.ok) {
                 window.location.href = url;
+                return;
+            }
+            // Si la respuesta fue redirigida al login (ej. sesión caducada o logout)
+            if (res.redirected || (res.url && res.url.includes('/login') && !url.includes('/login'))) {
+                window.location.href = res.url || '/login';
                 return;
             }
             const htmlText = await res.text();
@@ -167,23 +187,69 @@
                 updateActiveNavLinks(url);
                 window.scrollTo({ top: 0, behavior: 'instant' });
                 initInteractiveComponents();
+                executeScripts(currentMain);
             }, 40);
         } else {
             // Si una de las páginas es de diseño atípico (ej. login puro o 404), swap completo
             document.body.innerHTML = doc.body.innerHTML;
             window.scrollTo({ top: 0, behavior: 'instant' });
             initInteractiveComponents();
+            executeScripts(document.body);
         }
+    }
+
+    // Re-ejecutar scripts dinámicos incluidos en páginas intercambiadas por SPA
+    function executeScripts(container) {
+        if (!container) return;
+        const scripts = Array.from(container.querySelectorAll('script'));
+        scripts.forEach(oldScript => {
+            if (oldScript.src && oldScript.src.includes('main.js')) return;
+            const newScript = document.createElement('script');
+            Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
+            if (oldScript.src) {
+                newScript.src = oldScript.src;
+            } else {
+                newScript.textContent = oldScript.textContent;
+            }
+            oldScript.parentNode.replaceChild(newScript, oldScript);
+        });
     }
 
     // Manejar botón Atrás / Adelante del navegador instantáneamente
     window.addEventListener('popstate', (e) => {
         const url = window.location.href;
+        // Las rutas protegidas nunca se sirven de caché: siempre validan con el servidor
+        if (isProtectedPath(url)) {
+            navigateInstant(url, false);
+            return;
+        }
         const cachedHtml = getFromCache(url);
         if (cachedHtml) {
             renderPage(cachedHtml, url, false);
         } else {
             navigateInstant(url, false);
+        }
+    });
+
+    // Detección de BFCache (Back-Forward Cache): si el navegador intenta revivir una página protegida desde RAM
+    window.addEventListener('pageshow', (event) => {
+        const isBfCache = event.persisted || 
+            (window.performance && window.performance.getEntriesByType && 
+             window.performance.getEntriesByType('navigation')[0]?.type === 'back_forward');
+        if (isBfCache && isProtectedPath(window.location.href)) {
+            // Forzar recarga real desde el servidor para que Spring Security verifique autenticación
+            window.location.reload();
+        }
+    });
+
+    // Purgar caché en memoria al enviar cualquier formulario de cierre de sesión
+    document.addEventListener('submit', (e) => {
+        const form = e.target;
+        if (form && form.action && form.action.includes('/logout')) {
+            pageCache.clear();
+            try {
+                sessionStorage.clear();
+            } catch (err) {}
         }
     });
 
@@ -214,7 +280,52 @@
         }
     }, { passive: true });
 
-    // 3. Inicializador de Componentes Interactivos (Re-ejecutable tras navegación SPA)
+    // 3. Manejo Global y Resiliente de Menús Desplegables (.dropdown-btn de 3 puntos)
+    window.toggleCourseDropdown = function(btn, e) {
+        if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        const container = btn.closest('.dropdown-actions-container');
+        const menu = container ? container.querySelector('.course-dropdown-menu') : null;
+        if (!menu) return;
+
+        const isVisible = menu.style.display === 'block';
+        document.querySelectorAll('.course-dropdown-menu').forEach(m => {
+            m.style.display = 'none';
+        });
+
+        if (!isVisible) {
+            menu.style.display = 'block';
+        }
+    };
+
+    // Delegación global de clics para menús desplegables (.dropdown-btn)
+    document.addEventListener('click', (e) => {
+        const btn = e.target.closest('.dropdown-btn');
+        if (btn) {
+            window.toggleCourseDropdown(btn, e);
+            return;
+        }
+
+        // Clic fuera del contenedor: cerrar todos los menús desplegables
+        if (!e.target.closest('.dropdown-actions-container')) {
+            document.querySelectorAll('.course-dropdown-menu').forEach(m => {
+                m.style.display = 'none';
+            });
+        }
+    });
+
+    // Cerrar cualquier menú desplegable al presionar Escape
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            document.querySelectorAll('.course-dropdown-menu').forEach(m => {
+                m.style.display = 'none';
+            });
+        }
+    });
+
+    // 4. Inicializador de Componentes Interactivos (Re-ejecutable tras navegación SPA)
     function initInteractiveComponents() {
         initProgressBar();
 

@@ -53,6 +53,16 @@ public class SecurityConfig {
             .logout(logout -> logout
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login?logout=true")
+                .invalidateHttpSession(true)
+                .clearAuthentication(true)
+                .deleteCookies("JSESSIONID")
+                .addLogoutHandler(new org.springframework.security.web.authentication.logout.HeaderWriterLogoutHandler(
+                    new org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter(
+                        org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter.Directive.CACHE,
+                        org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter.Directive.COOKIES,
+                        org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter.Directive.STORAGE
+                    )
+                ))
                 .permitAll()
             );
 

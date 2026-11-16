@@ -7,6 +7,9 @@ import com.academy.cursos.model.enums.EstadoCurso;
 import com.academy.cursos.repository.AreaInvestigacionRepository;
 import com.academy.cursos.repository.CursoRepository;
 import com.academy.cursos.repository.InscripcionRepository;
+import com.academy.cursos.model.Inscripcion;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +24,9 @@ import java.util.Optional;
 
 @Service
 public class CursoService {
+
+    private static final Logger log = LoggerFactory.getLogger(CursoService.class);
+
 
     private final CursoRepository cursoRepository;
     private final AreaInvestigacionRepository areaRepository;
@@ -203,12 +209,20 @@ public class CursoService {
         Curso curso = cursoRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Curso no encontrado con ID: " + id));
 
-        long inscritos = inscripcionRepository.countByCursoId(id);
-        if (inscritos > 0) {
-            throw new IllegalStateException("No es posible eliminar el curso '" + curso.getNombre() + "' porque cuenta con " 
-                    + inscritos + " participante(s) inscrito(s). Para retirarlo de la vista pública, cambia su estado a BORRADOR o FINALIZADO.");
+        // Regla de negocio senior: Solo se permite eliminar si el estado es BORRADOR o FINALIZADO
+        if (curso.getEstado() != EstadoCurso.BORRADOR && curso.getEstado() != EstadoCurso.FINALIZADO) {
+            throw new IllegalStateException("No es posible eliminar el curso '" + curso.getNombre() + "' porque se encuentra en estado " 
+                    + curso.getEstado() + ". Para poder eliminarlo de forma segura, primero debes cambiar su estado a BORRADOR o FINALIZADO.");
+        }
+
+        // Si cuenta con inscripciones asociadas (incluyendo pagos y certificados en cascada)
+        List<Inscripcion> inscripciones = inscripcionRepository.findByCursoId(id);
+        if (!inscripciones.isEmpty()) {
+            log.info("Eliminando {} inscripción(es) asociada(s) al curso ID {} ('{}')", inscripciones.size(), id, curso.getNombre());
+            inscripcionRepository.deleteAll(inscripciones);
         }
 
         cursoRepository.delete(curso);
+        log.info("Curso ID {} ('{}') eliminado exitosamente", id, curso.getNombre());
     }
 }
